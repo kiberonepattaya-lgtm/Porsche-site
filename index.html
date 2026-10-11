@@ -3,1665 +3,340 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Porsche's Site</title>
-<link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Cdefs%3E%3ClinearGradient id='g' x1='0' y1='0' x2='1' y2='1'%3E%3Cstop offset='0' stop-color='%234db2ff'/%3E%3Cstop offset='1' stop-color='%232563ff'/%3E%3C/linearGradient%3E%3C/defs%3E%3Crect width='64' height='64' rx='14' fill='%23040b1c'/%3E%3Crect x='2' y='2' width='60' height='60' rx='12' fill='none' stroke='url(%23g)' stroke-width='2'/%3E%3Cpath d='M14 22 L50 22 L44 14 L36 14 L42 22 M14 22 L20 14 L28 14 L22 22' fill='none' stroke='url(%23g)' stroke-width='2.5' stroke-linejoin='round'/%3E%3Crect x='14' y='22' width='36' height='26' rx='3' fill='none' stroke='url(%23g)' stroke-width='2.5'/%3E%3Cpath d='M27 30 L38 35 L27 40 Z' fill='url(%23g)'/%3E%3C/svg%3E">
+<title>Porsche's Site — Infinite Void</title>
+<script src="https://cdn.tailwindcss.com/3.4.1"></script>
+<script>
+  tailwind.config = {
+    theme: {
+      extend: {
+        colors: {
+          void: '#000000',
+          space: '#050510',
+          royal: '#2a0f6b',
+          cyan: { neon: '#00E5FF' },
+          azure: '#2f7bff',
+        },
+        fontFamily: {
+          display: ['"Orbitron"', '"Segoe UI"', 'sans-serif'],
+          body: ['"Rajdhani"', '"Segoe UI"', 'sans-serif'],
+        },
+      },
+    },
+  };
+</script>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@500;700;900&family=Rajdhani:wght@400;500;600&display=swap" rel="stylesheet">
 <style>
-  * {
-    box-sizing: border-box;
-  }
-
-  :root {
-    --c1: #4db2ff;
-    --c2: #2563ff;
-    --c3: #00e5ff;
-    --c1-rgb: 77, 178, 255;
-    --c2-rgb: 37, 99, 255;
-    --c3-rgb: 0, 229, 255;
-  }
-
-  html {
-    scrollbar-width: none;
-  }
-
-  html::-webkit-scrollbar {
-    display: none;
-  }
-
-  html, body {
-    margin: 0;
-    min-height: 100%;
-    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-    background: #040b1c;
-    text-align: center;
-    scroll-behavior: smooth;
-    color: #f2f2f2;
-  }
-
+  html { scroll-behavior: smooth; }
   body {
-    padding-bottom: 170px;
-  }
-
-  #bg-canvas {
-    position: fixed;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    z-index: 0;
     background:
-      radial-gradient(ellipse at 20% 20%, rgba(var(--c1-rgb),0.12), transparent 55%),
-      radial-gradient(ellipse at 80% 30%, rgba(var(--c2-rgb),0.12), transparent 55%),
-      radial-gradient(ellipse at 50% 90%, rgba(var(--c3-rgb),0.14), transparent 55%),
-      #040b1c;
-  }
-
-  @keyframes gradientShift {
-    0% { background-position: 0 0, 0 0, 0% 50%; }
-    50% { background-position: 0 0, 0 0, 100% 50%; }
-    100% { background-position: 0 0, 0 0, 0% 50%; }
-  }
-
-  header {
-    position: sticky;
-    top: 0;
-    z-index: 10;
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    padding: 18px 40px;
-    background:
-      linear-gradient(90deg, rgba(var(--c2-rgb), 0.38), rgba(6, 22, 60, 0.82) 45%, rgba(var(--c3-rgb), 0.22)),
-      repeating-linear-gradient(90deg, rgba(var(--c1-rgb), 0.06) 0 1px, transparent 1px 22px),
-      rgba(4, 12, 32, 0.9);
-    backdrop-filter: blur(12px);
-    border-bottom: 1px solid rgba(var(--c1-rgb), 0.7);
-    box-shadow: 0 2px 24px rgba(var(--c2-rgb), 0.55), inset 0 -1px 0 rgba(var(--c3-rgb), 0.35), inset 0 1px 0 rgba(var(--c1-rgb), 0.25);
-  }
-
-  header .logo {
-    font-family: 'Consolas', 'Courier New', monospace;
-    font-size: 1.6rem;
-    font-weight: bold;
-    letter-spacing: 2px;
-    color: #fff;
-    text-shadow: 0 0 10px rgba(var(--c1-rgb), 0.8), 0 0 20px rgba(var(--c2-rgb), 0.5);
-  }
-
-  header .logo::before {
-    content: "// ";
-    color: var(--c1);
-    opacity: 0.8;
-  }
-
-  nav ul {
-    list-style: none;
-    display: flex;
-    gap: 30px;
-    margin: 0;
-    padding: 0;
-  }
-
-  nav a {
-    position: relative;
-    color: #e6f1ff;
-    text-decoration: none;
-    font-size: 1rem;
-    font-weight: 600;
-    letter-spacing: 1px;
-    text-transform: uppercase;
-    padding: 6px 4px;
-    transition: color 0.2s ease, text-shadow 0.2s ease;
-  }
-
-  nav a::after {
-    content: "";
-    position: absolute;
-    left: 0;
-    bottom: -2px;
-    width: 0%;
-    height: 2px;
-    background: linear-gradient(90deg, var(--c1), var(--c2));
-    transition: width 0.25s ease;
-  }
-
-  nav a:hover {
-    color: var(--c1);
-    text-shadow: 0 0 8px rgba(var(--c1-rgb), 0.8);
-  }
-
-  nav a:hover::after {
-    width: 100%;
-  }
-
-  .hero {
-    position: relative;
-    z-index: 1;
-    min-height: calc(100vh - 68px);
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    padding: 20px;
-  }
-
-  .content {
-    padding: 45px 65px;
-    background: rgba(5, 14, 36, 0.55);
-    border: 1px solid rgba(var(--c1-rgb), 0.35);
-    border-radius: 20px;
-    backdrop-filter: blur(6px);
-    box-shadow: 0 0 40px rgba(var(--c3-rgb), 0.35);
-  }
-
-  h1 {
-    font-size: 4rem;
-    color: #fff;
-    letter-spacing: 1px;
-    text-shadow: 0 0 15px rgba(var(--c1-rgb), 0.7), 0 0 35px rgba(var(--c2-rgb), 0.5);
-    margin: 0 0 20px 0;
-  }
-
-  p {
-    font-size: 1.4rem;
-    color: #e6f1ff;
-    text-shadow: 1px 1px 6px rgba(0,0,0,0.4);
-    margin: 0;
-  }
-
-  button {
-    margin-top: 25px;
-    padding: 12px 34px;
-    font-size: 1.05rem;
-    font-weight: bold;
-    letter-spacing: 1px;
-    text-transform: uppercase;
-    font-family: 'Consolas', 'Courier New', monospace;
-    color: #040b1c;
-    background: linear-gradient(90deg, var(--c1), var(--c2));
-    border: none;
-    border-radius: 30px;
-    cursor: pointer;
-    box-shadow: 0 0 15px rgba(var(--c1-rgb), 0.6), 0 0 25px rgba(var(--c2-rgb), 0.4);
-    transition: transform 0.15s ease, box-shadow 0.2s ease;
-  }
-
-  button:hover {
-    transform: scale(1.06);
-    box-shadow: 0 0 25px rgba(var(--c1-rgb), 0.9), 0 0 40px rgba(var(--c2-rgb), 0.6);
-  }
-
-  #greeting {
-    margin-top: 20px;
-    font-size: 1.2rem;
-    font-family: 'Consolas', 'Courier New', monospace;
-    color: var(--c1);
-    text-shadow: 0 0 10px rgba(var(--c1-rgb), 0.7);
-    min-height: 1.5em;
-  }
-
-  section {
-    position: relative;
-    z-index: 1;
-    max-width: 700px;
-    margin: 0 auto 60px auto;
-    padding: 2px;
-    border-radius: 18px;
-    background: linear-gradient(135deg, var(--c1), var(--c2), var(--c3));
-    background-size: 200% 200%;
-    animation: gradientShift 10s ease infinite;
-    box-shadow: 0 10px 35px rgba(0,0,0,0.45);
-    transition: transform 0.25s ease, box-shadow 0.25s ease;
-    scroll-margin-top: 90px;
-  }
-
-  section:hover {
-    transform: translateY(-6px);
-    box-shadow: 0 16px 45px rgba(var(--c1-rgb), 0.35);
-  }
-
-  section .inner {
-    position: relative;
-    background: rgba(4, 12, 32, 0.85);
-    backdrop-filter: blur(12px);
-    border-radius: 16px;
-    padding: 35px 45px;
-    text-align: left;
-    overflow: hidden;
-  }
-
-  section .inner::before {
-    content: "";
-    position: absolute;
-    top: 0;
-    left: 0;
-    width: 4px;
-    height: 100%;
-    background: linear-gradient(180deg, var(--c1), var(--c2));
-  }
-
-  #hobbies .inner {
-    background: rgba(18, 52, 110, 0.85);
-  }
-
-  section h2 {
-    display: flex;
-    align-items: center;
-    gap: 10px;
-    font-family: 'Consolas', 'Courier New', monospace;
-    font-size: 1.7rem;
-    margin: 0 0 15px 0;
-    text-transform: uppercase;
-    letter-spacing: 1px;
-    background: linear-gradient(90deg, var(--c1), #bfe3ff, var(--c2));
-    -webkit-background-clip: text;
-    background-clip: text;
-    color: transparent;
-  }
-
-  section h2::before {
-    content: "";
-    width: 10px;
-    height: 10px;
-    border-radius: 50%;
-    background: var(--c1);
-    box-shadow: 0 0 10px var(--c1), 0 0 20px var(--c1);
-    flex-shrink: 0;
-  }
-
-  section p {
-    font-size: 1.1rem;
-    color: #d3e4fa;
-    text-shadow: none;
-    line-height: 1.7;
-    margin: 0;
-    text-align: left;
-  }
-
-  footer {
-    position: relative;
-    z-index: 1;
-    padding: 25px;
-    background: rgba(3, 9, 24, 0.75);
-    border-top: 1px solid rgba(var(--c1-rgb), 0.3);
-    color: #c4dcff;
-    font-size: 0.95rem;
-    font-family: 'Consolas', 'Courier New', monospace;
-    letter-spacing: 1px;
-    text-shadow: 0 0 8px rgba(var(--c1-rgb), 0.4);
-  }
-
-  /* ===== SURREALIST DREAM STYLE ===== */
-  :root {
-    --c1: #9fd4ff;
-    --c2: #4f8dff;
-    --c3: #2f6fe0;
-    --c1-rgb: 159, 212, 255;
-    --c2-rgb: 79, 141, 255;
-    --c3-rgb: 47, 111, 224;
-    --gold: #8ec5ff;
-    --serif: 'Playfair Display', 'Cormorant Garamond', Georgia, serif;
-    --sans: 'Quicksand', 'Nunito', 'Segoe UI', system-ui, sans-serif;
-    --mono: 'Consolas', 'Courier New', monospace;
-  }
-
-  @keyframes skyDrift {
-    0%   { background-position: 0% 0%, 100% 0%, 50% 100%, 0 0, 0 0; }
-    50%  { background-position: 12% 8%, 88% 10%, 40% 92%, 40px 25px, 0 0; }
-    100% { background-position: 0% 0%, 100% 0%, 50% 100%, 0 0, 0 0; }
-  }
-  @keyframes dreamFloat {
-    0%, 100% { transform: translateY(0); }
-    50% { transform: translateY(-12px); }
-  }
-  @keyframes moonGlow {
-    0%, 100% { opacity: 0.55; transform: translate(0, 0) scale(1); }
-    50% { opacity: 0.9; transform: translate(-30px, 20px) scale(1.12); }
-  }
-  @keyframes shimmer { to { background-position: 250% 0; } }
-  @keyframes twinkle { 0%, 100% { opacity: 0.35; } 50% { opacity: 1; } }
-  @keyframes titleBreath {
-    0%, 100% { text-shadow: 0 0 25px rgba(159,212,255,0.55), 0 0 60px rgba(47,111,224,0.25); letter-spacing: 1px; }
-    50% { text-shadow: 0 0 35px rgba(142,197,255,0.7), 0 0 80px rgba(79,141,255,0.45); letter-spacing: 3px; }
-  }
-
-  html, body {
-    color: #f4f8ff;
-    font-family: var(--sans);
-  }
-
-  /* --- suspended-reality backdrop --- */
-  @keyframes cloudsDrift {
-    0%   { background-position: 0 0, 0 0, 0 0, 0 0, 0 0, 0 0; }
-    50%  { background-position: 60px 10px, -80px -6px, 40px 8px, 0 0, 0 0, 0 0; }
-    100% { background-position: 0 0, 0 0, 0 0, 0 0, 0 0, 0 0; }
-  }
-  @keyframes floorWarp {
-    0%   { transform: perspective(520px) rotateX(64deg) rotateZ(-4deg) scale(1); background-position: 0 0, 0 0; }
-    50%  { transform: perspective(520px) rotateX(71deg) rotateZ(5deg) scale(1.08); background-position: 0 180px, 0 0; }
-    100% { transform: perspective(520px) rotateX(64deg) rotateZ(-4deg) scale(1); background-position: 0 360px, 0 0; }
-  }
-  @keyframes eyeFloat {
-    0%, 100% { transform: translate(0, 0) rotate(-4deg); }
-    50% { transform: translate(-40px, 26px) rotate(5deg); }
-  }
-  @keyframes eyeBlink {
-    0%, 90%, 100% { clip-path: ellipse(50% 50% at 50% 50%); }
-    94% { clip-path: ellipse(50% 6% at 50% 50%); }
-  }
-  @keyframes rockFloat {
-    0%, 100% { transform: translateY(0) rotate(180deg) scale(1); }
-    50% { transform: translateY(-34px) rotate(172deg) scale(1.04); }
-  }
-  @keyframes pearls {
-    0%   { transform: translate(0, 0); }
-    33%  { transform: translate(24px, -40px); }
-    66%  { transform: translate(-30px, -14px); }
-    100% { transform: translate(0, 0); }
-  }
-
-  html {
-    background:
-      radial-gradient(ellipse 260px 70px at 22% 22%, rgba(255,255,255,0.75), transparent 70%),
-      radial-gradient(ellipse 340px 90px at 70% 34%, rgba(188,216,255,0.7), transparent 70%),
-      radial-gradient(ellipse 220px 60px at 46% 12%, rgba(255,255,255,0.6), transparent 70%),
-      radial-gradient(ellipse 60% 30% at 50% 58%, rgba(47,111,224,0.75), transparent 70%),
-      radial-gradient(ellipse 80% 40% at 50% 60%, rgba(142,197,255,0.45), transparent 75%),
-      linear-gradient(180deg, #1d47b8 0%, #4f8dff 28%, #bfe0ff 52%, #9cc4ff 60%, #10286e 61%, #0a1a4d 100%);
+      radial-gradient(ellipse at 15% 10%, rgba(42,15,107,.55), transparent 55%),
+      radial-gradient(ellipse at 85% 30%, rgba(47,123,255,.18), transparent 55%),
+      radial-gradient(ellipse at 50% 100%, rgba(0,229,255,.12), transparent 60%),
+      #050510;
     background-attachment: fixed;
-    background-size: 130% 100%, 130% 100%, 130% 100%, 100% 100%, 100% 100%, 100% 100%;
-    animation: cloudsDrift 40s ease-in-out infinite;
   }
-  body { background: transparent; }
-  #bg-canvas { opacity: 0; }
-
-  /* impossible checkerboard plane, bending toward a horizon that never settles */
-  html::before {
-    content: "";
-    position: fixed;
-    left: -60%;
-    width: 220%;
-    top: 61vh;
-    height: 140vh;
-    z-index: 0;
-    pointer-events: none;
-    transform-origin: 50% 0;
-    background:
-      conic-gradient(rgba(255,255,255,0.9) 25%, rgba(34,80,192,0.9) 0 50%, rgba(255,255,255,0.9) 0 75%, rgba(34,80,192,0.9) 0) 0 0 / 160px 160px,
-      linear-gradient(180deg, rgba(47,111,224,0.7), transparent 30%);
-    -webkit-mask-image: linear-gradient(180deg, transparent 0, #000 22%, #000 70%, transparent 100%);
-    mask-image: linear-gradient(180deg, transparent 0, #000 22%, #000 70%, transparent 100%);
-    animation: floorWarp 24s ease-in-out infinite;
+  /* abstract grid receding into the void */
+  .void-grid {
+    position: fixed; inset: 0; z-index: 0; pointer-events: none;
+    background-image:
+      linear-gradient(rgba(0,229,255,.07) 1px, transparent 1px),
+      linear-gradient(90deg, rgba(0,229,255,.07) 1px, transparent 1px);
+    background-size: 56px 56px;
+    mask-image: radial-gradient(ellipse at center, #000 20%, transparent 75%);
+    -webkit-mask-image: radial-gradient(ellipse at center, #000 20%, transparent 75%);
   }
-
-  /* an upside-down island hanging in the sky */
-  html::after {
-    content: "";
-    position: fixed;
-    left: 5%;
-    top: 24vh;
-    width: 190px;
-    height: 230px;
-    z-index: 0;
-    pointer-events: none;
-    background: linear-gradient(200deg, #7fb0ff 0%, #2f6fe0 30%, #4f8dff 70%, #1a3a9c 100%);
-    clip-path: polygon(0 0, 100% 0, 88% 26%, 66% 58%, 54% 100%, 46% 62%, 22% 30%);
-    opacity: 0.85;
-    animation: rockFloat 15s ease-in-out infinite;
+  /* rotating geometric glowing border */
+  @property --a { syntax: '<angle>'; initial-value: 0deg; inherits: false; }
+  @keyframes spin-a { to { --a: 360deg; } }
+  .glow-card { position: relative; border-radius: 14px; isolation: isolate; }
+  .glow-card::before {
+    content: ''; position: absolute; inset: -1.5px; border-radius: inherit; z-index: -2;
+    background: conic-gradient(from var(--a), transparent 0 55%, #00E5FF 72%, #fff 80%, #2f7bff 88%, transparent 100%);
+    animation: spin-a 5s linear infinite;
   }
-
-  /* giant watching moon-eye that blinks */
-  body::before {
-    content: "";
-    position: fixed;
-    top: 7vh;
-    right: 9%;
-    width: 300px;
-    height: 300px;
-    border-radius: 50%;
-    z-index: 0;
-    pointer-events: none;
-    background: radial-gradient(circle at 50% 50%, #030c30 0 13%, #9fd4ff 14% 21%, #2f64e0 22% 36%, #e3efff 37% 64%, rgba(227,239,255,0) 66%);
-    box-shadow: 0 0 90px rgba(142,197,255,0.55), 0 0 200px rgba(159,212,255,0.4);
-    animation: eyeFloat 18s ease-in-out infinite, eyeBlink 9s ease-in-out infinite;
+  .glow-card::after {
+    content: ''; position: absolute; inset: 0; border-radius: inherit; z-index: -1;
+    background: linear-gradient(160deg, rgba(5,5,16,.96), rgba(12,6,40,.94));
   }
-
-  /* glassy pearls drifting without gravity */
-  body::after {
-    content: "";
-    position: fixed;
-    inset: 0;
-    z-index: 0;
-    pointer-events: none;
-    background:
-      radial-gradient(circle closest-side at 35% 30%, rgba(255,255,255,0.9) 0 4%, rgba(159,212,255,0.55) 8%, rgba(47,111,224,0.35) 60%, transparent 100%) 14% 62% / 120px 120px no-repeat,
-      radial-gradient(circle closest-side at 35% 30%, rgba(255,255,255,0.9) 0 4%, rgba(159,212,255,0.55) 8%, rgba(142,197,255,0.35) 60%, transparent 100%) 78% 70% / 70px 70px no-repeat,
-      radial-gradient(circle closest-side at 35% 30%, rgba(255,255,255,0.9) 0 4%, rgba(159,212,255,0.55) 8%, rgba(47,111,224,0.35) 60%, transparent 100%) 56% 46% / 46px 46px no-repeat,
-      radial-gradient(circle closest-side at 35% 30%, rgba(255,255,255,0.9) 0 4%, rgba(159,212,255,0.55) 8%, rgba(142,197,255,0.35) 60%, transparent 100%) 90% 36% / 90px 90px no-repeat;
-    animation: pearls 20s ease-in-out infinite;
+  .glow-card { box-shadow: 0 0 30px rgba(0,229,255,.18), 0 0 90px rgba(47,123,255,.12); }
+  /* instantaneous space-warp on hover */
+  .warp { transition: transform .28s cubic-bezier(.2,.9,.1,1), filter .28s, box-shadow .28s; }
+  .warp:hover {
+    transform: perspective(700px) scale(1.04) skewX(-2deg) rotateX(3deg);
+    filter: drop-shadow(-3px 0 0 rgba(0,229,255,.7)) drop-shadow(3px 0 0 rgba(120,60,255,.7));
+    box-shadow: 0 0 50px rgba(0,229,255,.55), 0 0 140px rgba(47,123,255,.4);
   }
-
-  header {
-    top: 16px;
-    margin: 16px 32px 0;
-    padding: 14px 34px;
-    border-radius: 60px;
-    background: rgba(255, 255, 255, 0.14);
-    backdrop-filter: blur(18px) saturate(140%);
-    border: 1px solid rgba(255, 255, 255, 0.35);
-    box-shadow: 0 10px 40px rgba(10, 26, 77, 0.35), inset 0 0 20px rgba(255,255,255,0.12);
+  .bloom-text { text-shadow: 0 0 12px rgba(0,229,255,.9), 0 0 40px rgba(0,229,255,.55), 0 0 90px rgba(47,123,255,.5); }
+  .eye-ring {
+    background: radial-gradient(circle, #fff 0 6%, #00E5FF 12% 22%, #2f7bff 30%, rgba(42,15,107,.6) 55%, transparent 70%);
+    animation: pulse 4s ease-in-out infinite;
   }
-  header .logo {
-    font-family: var(--serif);
-    font-style: italic;
-    font-size: 1.8rem;
-    font-weight: 600;
-    letter-spacing: 1px;
-    color: #fff;
-    text-shadow: 0 0 14px rgba(142,197,255,0.8), 0 0 28px rgba(159,212,255,0.6);
+  @keyframes pulse { 0%,100% { transform: scale(1); opacity: .9; } 50% { transform: scale(1.12); opacity: 1; } }
+  /* living void: slowly swirling cosmic blues and purples */
+  .swirl { position: fixed; inset: -30%; z-index: 0; pointer-events: none; opacity: .85; }
+  .swirl-a {
+    background: conic-gradient(from 0deg at 40% 45%, rgba(42,15,107,.75), rgba(5,5,16,0) 25%, rgba(47,123,255,.4) 45%, rgba(5,5,16,0) 65%, rgba(0,229,255,.22) 85%, rgba(42,15,107,.75));
+    filter: blur(70px); animation: swirl 70s linear infinite;
   }
-  header .logo::before { content: "\2726  "; color: var(--gold); opacity: 1; }
-  nav ul { gap: 26px; }
-  nav a {
-    font-family: var(--sans);
-    font-size: 0.95rem;
-    font-weight: 600;
-    letter-spacing: 1.5px;
-    text-transform: lowercase;
-    font-variant: small-caps;
-    color: #fff;
-    padding: 6px 6px 6px 18px;
-    transition: color 0.3s ease, text-shadow 0.3s ease, transform 0.3s ease;
+  .swirl-b {
+    background: conic-gradient(from 90deg at 62% 58%, rgba(0,229,255,.18), rgba(5,5,16,0) 30%, rgba(90,40,200,.5) 55%, rgba(5,5,16,0) 80%, rgba(0,229,255,.18));
+    filter: blur(90px); animation: swirl 110s linear infinite reverse;
   }
-  nav a::before {
-    content: "\263E";
-    position: absolute;
-    left: 0;
-    top: 50%;
-    transform: translateY(-50%) scale(0) rotate(-90deg);
-    color: var(--gold);
-    transition: transform 0.35s ease;
-  }
-  nav a::after { display: none; }
-  nav a:hover { color: var(--gold); text-shadow: 0 0 12px rgba(142,197,255,0.9); transform: translateY(-2px); }
-  nav a:hover::before { transform: translateY(-50%) scale(1) rotate(0deg); }
-
-  .hero { min-height: calc(100vh - 90px); padding: 60px 20px 90px; }
-  .content {
-    background: transparent;
-    border: none;
-    box-shadow: none;
-    backdrop-filter: none;
-    padding: 60px 40px;
-    animation: dreamFloat 7s ease-in-out infinite;
-  }
-  h1 {
-    font-family: var(--serif);
-    font-style: italic;
-    font-size: clamp(3rem, 9vw, 5.8rem);
-    font-weight: 600;
-    text-transform: none;
-    color: #fff;
-    margin-bottom: 28px;
-    animation: titleBreath 9s ease-in-out infinite;
-  }
-  p {
-    font-family: var(--sans);
-    font-size: 1.3rem;
-    font-weight: 500;
-    line-height: 1.7;
-    color: rgba(255, 255, 255, 0.95);
-    text-shadow: 0 1px 12px rgba(10, 26, 77, 0.55);
-  }
-
-  button {
-    font-family: var(--sans);
-    font-weight: 700;
-    font-size: 0.95rem;
-    letter-spacing: 2px;
-    color: #12307f;
-    background: linear-gradient(90deg, #fff, #bcd8ff, #cfe6ff, #fff);
-    background-size: 250% 100%;
-    border: none;
-    border-radius: 40px;
-    padding: 14px 40px;
-    margin-top: 34px;
-    box-shadow: 0 10px 30px rgba(10, 26, 77, 0.4), 0 0 24px rgba(142,197,255, 0.45);
-    animation: shimmer 5s linear infinite;
-  }
-  button:hover { transform: translateY(-4px) scale(1.07); box-shadow: 0 16px 40px rgba(10, 26, 77, 0.5), 0 0 40px rgba(142,197,255, 0.85); }
-  #greeting { font-family: var(--mono); color: var(--gold); text-shadow: 0 0 12px rgba(142,197,255,0.7); }
-
-  section {
-    max-width: 880px;
-    margin: 0 auto 110px auto;
-    padding: 0;
-    background: none;
-    animation: none;
-    border-radius: 36px;
-    box-shadow: none;
-    scroll-margin-top: 120px;
-    transition: transform 0.5s ease, rotate 0.5s ease, translate 0.5s ease;
-  }
-  section:nth-of-type(odd)  { translate: -28px 0; rotate: -0.7deg; }
-  section:nth-of-type(even) { translate: 28px 0; rotate: 0.7deg; }
-  section:hover { transform: translateY(-8px); rotate: 0deg; box-shadow: none; }
-  section .inner {
-    background: linear-gradient(145deg, rgba(255,255,255,0.2), rgba(79,141,255,0.22) 55%, rgba(18,48,127,0.5));
-    backdrop-filter: blur(20px) saturate(150%);
-    border: 1px solid rgba(255, 255, 255, 0.4);
-    border-radius: 36px;
-    padding: 52px 64px;
-    box-shadow: 0 18px 60px rgba(10, 26, 77, 0.4), 0 0 40px rgba(159, 212, 255, 0.25), inset 0 0 30px rgba(255,255,255,0.1);
-    animation: dreamFloat 9s ease-in-out infinite;
-    transition: box-shadow 0.4s ease;
-  }
-  section:nth-of-type(even) .inner { animation-delay: -4s; animation-duration: 11s; }
-  section:hover .inner { box-shadow: 0 24px 70px rgba(10, 26, 77, 0.5), 0 0 70px rgba(142,197,255, 0.5), inset 0 0 30px rgba(255,255,255,0.15); }
-  section .inner::before { display: none; }
-  section h2 {
-    font-family: var(--serif);
-    font-style: italic;
-    font-weight: 600;
-    font-size: 2.1rem;
-    text-transform: none;
-    letter-spacing: 1px;
-    margin-bottom: 22px;
-    background: linear-gradient(90deg, #fff, var(--gold), #fff, #cfe6ff, #fff);
-    background-size: 250% 100%;
-    -webkit-background-clip: text;
-    background-clip: text;
-    color: transparent;
-    animation: shimmer 7s linear infinite;
-  }
-  section h2::before {
-    content: "\2726";
-    width: auto;
-    height: auto;
-    background: none;
-    box-shadow: none;
-    border-radius: 0;
-    font-style: normal;
-    color: var(--gold);
-    -webkit-text-fill-color: var(--gold);
-    text-shadow: 0 0 12px var(--gold);
-    font-size: 1.2rem;
-    animation: twinkle 3s ease-in-out infinite;
-  }
-  section p { font-size: 1.15rem; line-height: 1.9; font-weight: 500; color: #fff; text-shadow: 0 1px 8px rgba(10,26,77,0.4); }
-  #hobbies .inner { background: linear-gradient(145deg, rgba(255,255,255,0.38), rgba(159,212,255,0.4) 55%, rgba(79,141,255,0.45)); }
-  #hobbies p { text-shadow: 0 1px 10px rgba(10,26,77,0.7); }
-
-  footer {
-    margin-top: 40px;
-    padding: 34px;
-    background: linear-gradient(180deg, transparent, rgba(6, 16, 60, 0.85));
-    border-top: 1px solid rgba(255, 255, 255, 0.2);
-    color: rgba(255, 255, 255, 0.9);
-    font-family: var(--mono);
-    text-shadow: 0 0 10px rgba(142,197,255, 0.4);
-  }
-
-  @media (max-width: 700px) {
-    header { margin: 10px 12px 0; padding: 12px 18px; }
-    section .inner { padding: 36px 28px; }
-    section:nth-of-type(odd), section:nth-of-type(even) { translate: 0 0; }
-  }
+  @keyframes swirl { to { transform: rotate(360deg); } }
+  /* intro */
+  .flash { position: absolute; inset: 0; background: #fff; opacity: 0; }
+  .flash.go { animation: flash 900ms ease-out forwards; }
+  @keyframes flash { 0% { opacity: 1; } 100% { opacity: 0; } }
+  .reveal { transition: opacity 1.2s ease-out; }
   @media (prefers-reduced-motion: reduce) {
-    *, *::before, *::after { animation: none !important; }
-  }
-  /* --- magnetic levitation décor --- */
-  @keyframes leviHover {
-    0%, 100% { transform: translateY(0) rotate(-2deg); }
-    50% { transform: translateY(-22px) rotate(2deg); }
-  }
-  @keyframes leviShadow {
-    0%, 100% { transform: translateX(-50%) scale(1); opacity: 0.55; }
-    50% { transform: translateX(-50%) scale(0.72); opacity: 0.3; }
-  }
-  @keyframes globeSpin { to { background-position: -300px 0, 0 0; } }
-  @keyframes fieldPulse {
-    0% { transform: translateX(-50%) scale(0.5); opacity: 0.9; }
-    100% { transform: translateX(-50%) scale(1.35); opacity: 0; }
-  }
-  @keyframes bulbGlow {
-    0%, 100% { box-shadow: 0 0 30px 8px rgba(142,197,255,0.7), 0 0 80px 24px rgba(47,111,224,0.4); }
-    50% { box-shadow: 0 0 44px 14px rgba(255,235,170,0.95), 0 0 110px 36px rgba(47,111,224,0.55); }
-  }
-
-  .levi {
-    position: fixed;
-    bottom: 108px;
-    width: 150px;
-    height: 230px;
-    z-index: 0;
-    pointer-events: none;
-  }
-  .levi-globe { left: 5%; }
-  .levi-lamp { right: 6%; }
-
-  .levi-orb {
-    position: absolute;
-    top: 0;
-    left: 50%;
-    margin-left: -55px;
-    width: 110px;
-    height: 110px;
-    border-radius: 50%;
-    animation: leviHover 7s ease-in-out infinite;
-  }
-  .levi-lamp .levi-orb { animation-duration: 8.5s; animation-delay: -3s; }
-
-  /* globe: a slowly turning world */
-  .levi-globe .levi-orb {
-    background:
-      radial-gradient(ellipse 34px 18px at 40px 36px, #bcd8ff 0 60%, transparent 62%) 0 0 / 300px 110px repeat-x,
-      radial-gradient(ellipse 26px 30px at 130px 62px, #a9c9ff 0 60%, transparent 62%) 0 0 / 300px 110px repeat-x,
-      radial-gradient(ellipse 40px 16px at 220px 40px, #d6e6ff 0 60%, transparent 62%) 0 0 / 300px 110px repeat-x,
-      radial-gradient(ellipse 22px 14px at 270px 82px, #bcd8ff 0 60%, transparent 62%) 0 0 / 300px 110px repeat-x,
-      linear-gradient(180deg, #3b7bff, #1a3fb0);
-    background-size: 300px 110px, 300px 110px, 300px 110px, 300px 110px, 100% 100%;
-    animation: leviHover 7s ease-in-out infinite, globeSpin 18s linear infinite;
-    box-shadow: 0 0 40px rgba(159,212,255,0.6), 0 0 90px rgba(79,141,255,0.35);
-  }
-  .levi-globe .levi-orb::after,
-  .levi-lamp .levi-orb::after {
-    content: "";
-    position: absolute;
-    inset: 0;
-    border-radius: 50%;
-    background:
-      radial-gradient(circle at 30% 24%, rgba(255,255,255,0.85) 0 5%, rgba(255,255,255,0) 22%),
-      radial-gradient(circle at 50% 50%, rgba(255,255,255,0) 55%, rgba(5,15,70,0.55) 100%);
-  }
-
-  /* lamp: a glowing bulb hovering in the air */
-  .levi-lamp .levi-orb {
-    width: 96px;
-    height: 96px;
-    margin-left: -48px;
-    background: radial-gradient(circle at 50% 55%, #fffbe8 0 30%, #9fcbff 62%, #2f6fe0 100%);
-    animation: leviHover 8.5s ease-in-out infinite -3s, bulbGlow 4s ease-in-out infinite;
-  }
-
-  /* hidden electromagnetic base */
-  .levi-base {
-    position: absolute;
-    bottom: 0;
-    left: 50%;
-    width: 96px;
-    height: 20px;
-    margin-left: -48px;
-    border-radius: 50%;
-    background: linear-gradient(180deg, #2a4fb8, #0a1a4d);
-    border: 1px solid rgba(255,255,255,0.35);
-    box-shadow: 0 0 18px rgba(159,212,255,0.7);
-  }
-  .levi-base::before,
-  .levi-base::after {
-    content: "";
-    position: absolute;
-    left: 50%;
-    top: 50%;
-    width: 150px;
-    height: 34px;
-    margin-top: -17px;
-    border-radius: 50%;
-    border: 2px solid rgba(159,212,255,0.7);
-    transform: translateX(-50%) scale(0.5);
-    animation: fieldPulse 3.6s ease-out infinite;
-  }
-  .levi-base::after { animation-delay: -1.8s; }
-
-  /* soft shadow that shrinks as the object rises */
-  .levi-shadow {
-    position: absolute;
-    bottom: 14px;
-    left: 50%;
-    width: 90px;
-    height: 16px;
-    border-radius: 50%;
-    background: radial-gradient(ellipse, rgba(5,15,70,0.7), transparent 70%);
-    animation: leviShadow 7s ease-in-out infinite;
-  }
-  .levi-lamp .levi-shadow { animation-duration: 8.5s; animation-delay: -3s; }
-
-  @media (max-width: 900px) { .levi { display: none; } }
-  /* --- infinity mirror clock / portal --- */
-  @keyframes tunnelRush {
-    0%   { transform: scale(1.05) rotate(0deg); opacity: 0; }
-    12%  { opacity: 1; }
-    100% { transform: scale(0.02) rotate(120deg); opacity: 0.15; }
-  }
-  @keyframes portalHum {
-    0%, 100% { box-shadow: 0 0 40px 6px rgba(159,212,255,0.35), 0 20px 60px rgba(10,26,77,0.5); }
-    50% { box-shadow: 0 0 70px 16px rgba(120,200,255,0.65), 0 20px 60px rgba(10,26,77,0.5); }
-  }
-  @keyframes sheenSweep {
-    0%, 100% { background-position: 0% 0%; }
-    50% { background-position: 100% 100%; }
-  }
-
-  .portal-wrap {
-    position: relative;
-    z-index: 1;
-    display: flex;
-    justify-content: center;
-    padding: 20px 0 130px;
-  }
-  .portal {
-    position: relative;
-    width: 300px;
-    height: 300px;
-    padding: 0;
-    margin: 0;
-    border: none;
-    border-radius: 50%;
-    background: none;
-    cursor: pointer;
-    animation: none;
-    box-shadow: none;
-    transition: transform 0.4s ease;
-  }
-  .portal:hover { transform: scale(1.04); box-shadow: none; }
-  .portal:focus-visible { outline: 3px solid var(--gold); outline-offset: 8px; }
-
-  .portal-frame {
-    position: absolute;
-    inset: 0;
-    border-radius: 50%;
-    background: conic-gradient(from 30deg, #e9f2ff, #7b94c8, #f6fbff, #5c78b8, #dce9ff, #8aa4d6, #e9f2ff);
-    box-shadow: 0 0 30px rgba(159,212,255,0.3), 0 20px 60px rgba(10,26,77,0.5);
-    transition: box-shadow 0.6s ease;
-  }
-  .portal.on .portal-frame { animation: portalHum 3.5s ease-in-out infinite; }
-
-  .portal-glass {
-    position: absolute;
-    inset: 16px;
-    border-radius: 50%;
-    overflow: hidden;
-    background: linear-gradient(135deg, #cfe3ff 0%, #8fb2f0 38%, #dbe9ff 52%, #6f94dc 100%);
-    box-shadow: inset 0 0 24px rgba(10,26,77,0.55);
-  }
-  /* the mirror's sheen, visible while it is off */
-  .portal-glass::after {
-    content: "";
-    position: absolute;
-    inset: 0;
-    background: linear-gradient(120deg, transparent 30%, rgba(255,255,255,0.65) 45%, transparent 60%) 0 0 / 250% 250%;
-    animation: sheenSweep 9s ease-in-out infinite;
-    transition: opacity 0.6s ease;
-  }
-  .portal.on .portal-glass::after { opacity: 0.25; }
-
-  .portal-tunnel {
-    position: absolute;
-    inset: 0;
-    background: radial-gradient(circle, #ffffff 0 4%, #1a3fb0 18%, #050f3a 70%);
-    opacity: 0;
-    transition: opacity 0.8s ease;
-  }
-  .portal.on .portal-tunnel { opacity: 1; }
-  .portal-tunnel i {
-    position: absolute;
-    inset: 0;
-    border-radius: 38%;
-    border: 4px solid hsl(calc(185 + var(--i) * 16), 100%, 68%);
-    box-shadow: 0 0 14px hsl(calc(185 + var(--i) * 16), 100%, 62%), inset 0 0 14px hsl(calc(185 + var(--i) * 16), 100%, 62%);
-    opacity: 0;
-    animation: tunnelRush 5s linear infinite;
-    animation-delay: calc(var(--i) * -0.5s);
-    animation-play-state: paused;
-  }
-  .portal.on .portal-tunnel i { animation-play-state: running; }
-
-  /* clock face on top of the glass */
-  .portal-clock { position: absolute; inset: 16px; border-radius: 50%; pointer-events: none; }
-  .portal-clock .tick {
-    position: absolute;
-    left: 50%;
-    top: 0;
-    width: 3px;
-    height: 12px;
-    margin-left: -1.5px;
-    border-radius: 2px;
-    background: rgba(10,26,77,0.7);
-    transform-origin: 50% 134px;
-    transform: rotate(calc(var(--t) * 30deg));
-    transition: background 0.6s ease, box-shadow 0.6s ease;
-  }
-  .portal.on .tick { background: #fff; box-shadow: 0 0 8px #fff; }
-  .portal-clock .hand {
-    position: absolute;
-    left: 50%;
-    bottom: 50%;
-    width: 4px;
-    margin-left: -2px;
-    border-radius: 3px;
-    background: #0a1a4d;
-    transform-origin: 50% 100%;
-    transition: background 0.6s ease, box-shadow 0.6s ease;
-  }
-  .portal-clock .hand.h { height: 62px; width: 6px; margin-left: -3px; }
-  .portal-clock .hand.m { height: 92px; }
-  .portal-clock .hand.s { height: 104px; width: 2px; margin-left: -1px; background: #4f8dff; }
-  .portal.on .hand.h, .portal.on .hand.m { background: #fff; box-shadow: 0 0 10px #fff, 0 0 20px #7fd0ff; }
-  .portal.on .hand.s { box-shadow: 0 0 10px #4f8dff; }
-  .portal-clock .pin {
-    position: absolute;
-    left: 50%;
-    top: 50%;
-    width: 14px;
-    height: 14px;
-    margin: -7px 0 0 -7px;
-    border-radius: 50%;
-    background: #4f8dff;
-    box-shadow: 0 0 10px rgba(255,138,92,0.8);
-  }
-
-  @media (max-width: 600px) {
-    .portal { width: 240px; height: 240px; }
-    .portal-clock .tick { transform-origin: 50% 104px; }
-    .portal-clock .hand.h { height: 48px; }
-    .portal-clock .hand.m { height: 72px; }
-    .portal-clock .hand.s { height: 82px; }
-  }
-  /* --- melting eye progress orb --- */
-  @keyframes eyeBlinkLid {
-    0%, 93%, 100% { transform: scaleY(1); }
-    96% { transform: scaleY(0.04); }
-  }
-  @keyframes eyeMeltStretch {
-    0%   { transform: scaleY(0.2); opacity: 0; }
-    35%  { opacity: 0.9; }
-    70%  { transform: scaleY(1); opacity: 0.9; }
-    100% { transform: scaleY(1.15); opacity: 0; }
-  }
-  @keyframes eyeDrop {
-    0%, 55% { transform: translateY(0) scale(0.2); opacity: 0; }
-    65%  { transform: translateY(2px) scale(1); opacity: 0.95; }
-    100% { transform: translateY(46px) scale(0.8); opacity: 0; }
-  }
-  @keyframes eyeHalo {
-    0%, 100% { opacity: 0.55; transform: translateX(-50%) scale(1); }
-    50% { opacity: 0.9; transform: translateX(-50%) scale(1.08); }
-  }
-
-  #eye-orb {
-    position: fixed;
-    left: 50%;
-    bottom: 6px;
-    width: 320px;
-    max-width: 78vw;
-    transform: translateX(-50%);
-    z-index: 100;
-    pointer-events: none;
-  }
-  #eye-orb::before {
-    content: "";
-    position: absolute;
-    left: 50%;
-    top: 40%;
-    width: 130%;
-    height: 90%;
-    margin-top: -10%;
-    border-radius: 50%;
-    background: radial-gradient(ellipse, rgba(159,212,255,0.55), rgba(79,141,255,0.2) 45%, transparent 70%);
-    transform: translateX(-50%);
-    z-index: -1;
-    animation: eyeHalo 6s ease-in-out infinite;
-  }
-  #eye-orb svg { display: block; width: 100%; height: auto; overflow: visible; filter: drop-shadow(0 8px 18px rgba(10,26,77,0.55)); }
-  #eye-blink { transform-box: view-box; transform-origin: 150px 80px; animation: eyeBlinkLid 7s ease-in-out infinite; }
-  #eye-melt { transform-box: fill-box; transform-origin: 50% 0%; animation: eyeMeltStretch 6s ease-in-out infinite; }
-  #eye-drop { transform-box: fill-box; transform-origin: 50% 50%; animation: eyeDrop 6s ease-in infinite; }
-  /* --- liquid glass sidebar (Three.js blob + shape links) --- */
-  .orb-nav {
-    display: none;
-    position: fixed;
-    top: 16px;
-    right: 16px;
-    bottom: 16px;
-    width: 240px;
-    z-index: 60;
-    border-radius: 40px;
-    overflow: hidden;
-    background: linear-gradient(160deg, rgba(255,255,255,0.22), rgba(79,141,255,0.14) 50%, rgba(18,48,127,0.3));
-    backdrop-filter: blur(22px) saturate(150%);
-    -webkit-backdrop-filter: blur(22px) saturate(150%);
-    border: 1px solid rgba(255,255,255,0.4);
-    box-shadow: 0 18px 60px rgba(10,26,77,0.45), 0 0 50px rgba(159,212,255,0.25), inset 0 0 40px rgba(255,255,255,0.1);
-  }
-  #orb-canvas { position: absolute; inset: 0; width: 100%; height: 100%; display: block; pointer-events: none; }
-  .orb-nav nav { position: absolute; inset: 0; }
-
-  .orb-link {
-    font-family: var(--sans);
-    font-variant: small-caps;
-    font-weight: 700;
-    font-size: 0.95rem;
-    letter-spacing: 1.5px;
-    text-transform: lowercase;
-    text-decoration: none;
-    color: #fff;
-    text-shadow: 0 1px 8px rgba(10,26,77,0.95), 0 0 3px rgba(10,26,77,0.9);
-  }
-  .orb-link:focus-visible { outline: 3px solid var(--gold); outline-offset: 2px; }
-  .orb-link.active { color: var(--gold); }
-
-  /* before WebGL starts (or if it fails) the links are plain glass pills */
-  .orb-nav:not(.live) nav {
-    display: flex;
-    flex-direction: column;
-    justify-content: center;
-    gap: 16px;
-    padding: 24px;
-  }
-  .orb-nav:not(.live) .orb-link {
-    text-align: center;
-    padding: 14px 10px;
-    border-radius: 30px;
-    background: rgba(255,255,255,0.18);
-    border: 1px solid rgba(255,255,255,0.4);
-  }
-  .orb-nav.live .orb-link {
-    position: absolute;
-    left: 0;
-    top: 0;
-    width: 104px;
-    height: 104px;
-    border-radius: 50%;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    will-change: transform;
-    cursor: pointer;
-  }
-
-  /* the portal that swallows the screen when a shape is clicked */
-  #portal-fx {
-    position: fixed;
-    inset: 0;
-    z-index: 200;
-    pointer-events: none;
-    clip-path: circle(0px at var(--x, 50%) var(--y, 50%));
-    background:
-      repeating-radial-gradient(circle at var(--x, 50%) var(--y, 50%), rgba(255,255,255,0.28) 0 2px, transparent 2px 46px),
-      radial-gradient(circle at var(--x, 50%) var(--y, 50%), #ffffff 0, #cfe6ff 6%, #4f8dff 28%, #1d47b8 55%, #0a1a4d 100%);
-    transition: clip-path 0.7s cubic-bezier(0.6, 0, 0.2, 1), opacity 0.7s ease;
-  }
-  #portal-fx.open { clip-path: circle(150vmax at var(--x, 50%) var(--y, 50%)); pointer-events: auto; }
-  #portal-fx.fade { opacity: 0; }
-
-  @media (min-width: 1101px) and (min-height: 521px) {
-    .orb-nav { display: block; }
-    header nav { display: none; }
-    body { padding-right: 272px; }
+    .swirl-a, .swirl-b { animation: none; }
+    .glow-card::before, .eye-ring { animation: none; }
+    .warp, html { transition: none; scroll-behavior: auto; }
   }
 </style>
 </head>
-<body>
-  <canvas id="bg-canvas"></canvas>
+<body class="bg-space text-white font-body antialiased overflow-x-hidden">
+<div id="root"></div>
 
-  <header>
-    <div class="logo">Porsche</div>
-    <nav>
-      <ul>
-        <li><a href="#about">About</a></li>
-        <li><a href="#hobbies">Hobbies</a></li>
-        <li><a href="#contact">Contact</a></li>
-      </ul>
-    </nav>
-  </header>
+<script crossorigin src="https://cdnjs.cloudflare.com/ajax/libs/react/18.3.1/umd/react.production.min.js"></script>
+<script crossorigin src="https://cdnjs.cloudflare.com/ajax/libs/react-dom/18.3.1/umd/react-dom.production.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/babel-standalone/7.24.7/babel.min.js"></script>
+<script type="text/babel">
+const { useEffect, useRef, useState } = React;
 
-  <div class="hero" id="hero">
-    <div class="content">
-      <h1>Porsche's Site</h1>
-      <p>My favorite hobby is editing — bringing photos and videos to life with color, cuts, and effects.</p>
-      <button onclick="document.getElementById('greeting').textContent = 'Welcome, PAWN! To my website!.'">Hello</button>
-      <p id="greeting"></p>
-    </div>
-  </div>
-
-  <div class="portal-wrap">
-    <button class="portal" id="portal" type="button" aria-pressed="false" aria-label="Toggle infinity mirror clock">
-      <span class="portal-frame"></span>
-      <span class="portal-glass"><span class="portal-tunnel"><i style="--i:0"></i><i style="--i:1"></i><i style="--i:2"></i><i style="--i:3"></i><i style="--i:4"></i><i style="--i:5"></i><i style="--i:6"></i><i style="--i:7"></i><i style="--i:8"></i><i style="--i:9"></i></span></span>
-      <span class="portal-clock"><i class="tick" style="--t:0"></i><i class="tick" style="--t:1"></i><i class="tick" style="--t:2"></i><i class="tick" style="--t:3"></i><i class="tick" style="--t:4"></i><i class="tick" style="--t:5"></i><i class="tick" style="--t:6"></i><i class="tick" style="--t:7"></i><i class="tick" style="--t:8"></i><i class="tick" style="--t:9"></i><i class="tick" style="--t:10"></i><i class="tick" style="--t:11"></i><span class="hand h" id="hand-h"></span><span class="hand m" id="hand-m"></span><span class="hand s" id="hand-s"></span><span class="pin"></span></span>
-    </button>
-  </div>
-
-  <section id="about">
-    <div class="inner">
-      <h2>About Me</h2>
-      <p>I'm Porsche, someone who loves creating and building things online. I enjoy learning new skills and finding creative ways to bring ideas to life.</p>
-    </div>
-  </section>
-
-  <section id="hobbies">
-    <div class="inner">
-      <h2>My Hobbies</h2>
-      <p>Editing is my favorite way to be creative, turning raw photos and videos into something people enjoy watching. I love experimenting with color grading, smooth cuts, transitions, and visual effects. Every project teaches me something new, and I'm always looking for fresh techniques to improve my craft.</p>
-    </div>
-  </section>
-
-  <section id="contact">
-    <div class="inner">
-      <h2>Contact</h2>
-      <p>Want to get in touch? Feel free to reach out with any questions or just to say hello. I'm always happy to connect with new people.</p>
-    </div>
-  </section>
-
-  <footer>
-    Made by Porsche
-  </footer>
-
-  <div class="levi levi-globe" aria-hidden="true">
-    <div class="levi-shadow"></div>
-    <div class="levi-orb"></div>
-    <div class="levi-base"></div>
-  </div>
-  <div class="levi levi-lamp" aria-hidden="true">
-    <div class="levi-shadow"></div>
-    <div class="levi-orb"></div>
-    <div class="levi-base"></div>
-  </div>
-
-  <aside class="orb-nav" id="orb-nav" aria-label="Site navigation">
-    <canvas id="orb-canvas" aria-hidden="true"></canvas>
-    <nav>
-      <a class="orb-link" href="#hero">Intro</a>
-      <a class="orb-link" href="#about">About</a>
-      <a class="orb-link" href="#hobbies">Hobbies</a>
-      <a class="orb-link" href="#contact">Contact</a>
-    </nav>
-  </aside>
-  <div id="portal-fx" aria-hidden="true"></div>
-
-  <div id="eye-orb" role="progressbar" aria-label="Scroll progress" aria-valuemin="0" aria-valuemax="100" aria-valuenow="0">
-    <svg viewBox="0 0 300 175" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
-      <defs>
-        <clipPath id="eye-clip">
-          <path d="M12 80 C70 8 230 8 288 80 C230 152 70 152 12 80 Z"/>
-        </clipPath>
-        <radialGradient id="eye-sclera" cx="50%" cy="50%" r="60%">
-          <stop offset="0" stop-color="#fffefb"/>
-          <stop offset="0.6" stop-color="#fbf1ea"/>
-          <stop offset="0.88" stop-color="#efcfc6"/>
-          <stop offset="1" stop-color="#d99a97"/>
-        </radialGradient>
-        <radialGradient id="eye-iris" cx="50%" cy="50%" r="50%">
-          <stop offset="0" stop-color="#e6a94a"/>
-          <stop offset="0.32" stop-color="#d79a3c"/>
-          <stop offset="0.45" stop-color="#7cc4e8"/>
-          <stop offset="0.72" stop-color="#2f78d6"/>
-          <stop offset="0.93" stop-color="#143a96"/>
-          <stop offset="1" stop-color="#071a52"/>
-        </radialGradient>
-        <radialGradient id="eye-sphere" cx="50%" cy="46%" r="55%">
-          <stop offset="0.55" stop-color="#2a0f2a" stop-opacity="0"/>
-          <stop offset="1" stop-color="#2a0f2a" stop-opacity="0.5"/>
-        </radialGradient>
-        <linearGradient id="eye-lidshade" x1="0" y1="0" x2="0" y2="1">
-          <stop offset="0" stop-color="#1a0c2e" stop-opacity="0.75"/>
-          <stop offset="0.38" stop-color="#1a0c2e" stop-opacity="0"/>
-          <stop offset="0.8" stop-color="#1a0c2e" stop-opacity="0"/>
-          <stop offset="1" stop-color="#1a0c2e" stop-opacity="0.22"/>
-        </linearGradient>
-        <radialGradient id="eye-caruncle" cx="50%" cy="50%" r="50%">
-          <stop offset="0" stop-color="#ff9aa0"/>
-          <stop offset="1" stop-color="#d9757e" stop-opacity="0"/>
-        </radialGradient>
-        <radialGradient id="eye-pupilglow" cx="50%" cy="50%" r="50%">
-          <stop offset="0.7" stop-color="#000" stop-opacity="1"/>
-          <stop offset="1" stop-color="#000" stop-opacity="0"/>
-        </radialGradient>
-      </defs>
-
-      <g id="eye-blink">
-        <g clip-path="url(#eye-clip)">
-          <rect x="0" y="0" width="300" height="175" fill="url(#eye-sclera)"/>
-          <!-- blood vessels -->
-          <g fill="none" stroke="#d85a63" stroke-linecap="round" opacity="0.5">
-            <path d="M14 80 Q40 74 62 70 M40 75 Q52 86 66 90 M24 79 Q34 68 52 62" stroke-width="0.9"/>
-            <path d="M286 80 Q262 76 244 72 M262 77 Q252 90 238 92 M276 79 Q266 70 250 64" stroke-width="0.9"/>
-            <path d="M52 62 Q60 56 70 54 M66 90 Q74 96 84 98 M244 72 Q236 62 226 58" stroke-width="0.6"/>
-          </g>
-          <ellipse cx="24" cy="82" rx="16" ry="12" fill="url(#eye-caruncle)"/>
-
-          <!-- iris, pupil -->
-          <g id="eye-iris-group" transform="translate(150 80)">
-            <circle r="49" fill="url(#eye-iris)"/>
-            <g id="eye-fibers"></g>
-            <circle r="49" fill="none" stroke="#050f3a" stroke-width="5" opacity="0.85"/>
-            <circle r="23" fill="none" stroke="#f2b45a" stroke-width="1.4" stroke-dasharray="2 3" opacity="0.55"/>
-            <circle id="eye-pupil" r="18" fill="#02030a"/>
-            <circle id="eye-pupil-edge" r="18" fill="none" stroke="#02030a" stroke-width="4" opacity="0.8"/>
-          </g>
-
-          <rect x="0" y="0" width="300" height="175" fill="url(#eye-sphere)"/>
-          <rect x="0" y="0" width="300" height="175" fill="url(#eye-lidshade)"/>
-
-          <!-- wet glints that slide less than the iris -->
-          <g id="eye-glint">
-            <ellipse cx="124" cy="58" rx="9" ry="5.5" fill="#fff" opacity="0.88" transform="rotate(-24 124 58)"/>
-            <circle cx="172" cy="104" r="4.5" fill="#fff" opacity="0.7"/>
-            <path d="M104 92 Q112 108 132 114" stroke="#fff" stroke-width="2" fill="none" opacity="0.25" stroke-linecap="round"/>
-          </g>
-        </g>
-
-        <!-- lids and lashes -->
-        <path d="M12 80 C70 8 230 8 288 80" fill="none" stroke="#1b1033" stroke-width="6" stroke-linecap="round"/>
-        <path d="M12 80 C70 152 230 152 288 80" fill="none" stroke="#c98a93" stroke-width="2.5" stroke-linecap="round" opacity="0.8"/>
-        <path d="M24 66 C80 -10 220 -10 276 66" fill="none" stroke="#fff" stroke-width="1.6" opacity="0.35" stroke-linecap="round"/>
-        <g id="eye-lashes" fill="none" stroke="#1b1033" stroke-linecap="round"></g>
-
-        <!-- melting drip from the lower lid -->
-        <path id="eye-melt" d="M196 131 Q206 134 216 131 Q211 150 206 158 Q201 150 196 131 Z" fill="rgba(180,220,255,0.8)" stroke="rgba(255,255,255,0.7)" stroke-width="0.8"/>
-        <circle id="eye-drop" cx="206" cy="162" r="5" fill="rgba(180,220,255,0.9)" stroke="rgba(255,255,255,0.8)" stroke-width="0.8"/>
-      </g>
-    </svg>
-  </div>
-
-  <script>
-    const canvas = document.getElementById('bg-canvas');
-    const ctx = canvas.getContext('2d');
-    let width, height, nodes;
-
-    function getThemeColors() {
-      const styles = getComputedStyle(document.documentElement);
-      return [
-        styles.getPropertyValue('--c1').trim(),
-        styles.getPropertyValue('--c2').trim(),
-        styles.getPropertyValue('--c3').trim()
-      ];
-    }
-
-    let colors = getThemeColors();
-
-    function resize() {
-      width = canvas.width = window.innerWidth;
-      height = canvas.height = window.innerHeight;
-    }
-
-    function createNodes() {
-      const count = Math.max(40, Math.floor((width * height) / 22000));
-      nodes = Array.from({ length: count }, () => ({
-        x: Math.random() * width,
-        y: Math.random() * height,
-        vx: (Math.random() - 0.5) * 0.4,
-        vy: (Math.random() - 0.5) * 0.4,
-        r: Math.random() * 1.8 + 0.8,
-        color: colors[Math.floor(Math.random() * colors.length)]
+function Starfield() {
+  const ref = useRef(null);
+  useEffect(() => {
+    const c = ref.current, ctx = c.getContext('2d');
+    let w, h, stars, raf;
+    const reduce = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+    const init = () => {
+      w = c.width = innerWidth; h = c.height = innerHeight;
+      stars = Array.from({ length: Math.min(420, Math.floor(w * h / 4500)) }, () => ({
+        x: (Math.random() - .5) * w, y: (Math.random() - .5) * h,
+        z: Math.random() * w, hue: Math.random() < .25 ? '0,229,255' : '255,255,255',
       }));
-    }
-
-    function step() {
-      ctx.clearRect(0, 0, width, height);
-
-      for (const n of nodes) {
-        n.x += n.vx;
-        n.y += n.vy;
-        if (n.x < 0 || n.x > width) n.vx *= -1;
-        if (n.y < 0 || n.y > height) n.vy *= -1;
+    };
+    const draw = () => {
+      ctx.clearRect(0, 0, w, h);
+      for (const s of stars) {
+        if (!reduce) s.z -= 1.2;
+        if (s.z < 1) s.z = w;
+        const k = 128 / s.z * 4;
+        const x = s.x * k + w / 2, y = s.y * k + h / 2;
+        if (x < 0 || x > w || y < 0 || y > h) { s.z = w; continue; }
+        const r = Math.max(.2, (1 - s.z / w) * 2.2);
+        ctx.fillStyle = `rgba(${s.hue},${0.3 + (1 - s.z / w) * .7})`;
+        ctx.beginPath(); ctx.arc(x, y, r, 0, 6.283); ctx.fill();
       }
+      raf = requestAnimationFrame(draw);
+    };
+    init(); draw();
+    addEventListener('resize', init);
+    return () => { cancelAnimationFrame(raf); removeEventListener('resize', init); };
+  }, []);
+  return <canvas ref={ref} className="fixed inset-0 z-0 pointer-events-none" aria-hidden="true" />;
+}
 
-      const linkDist = 130;
-      const c1rgb = getComputedStyle(document.documentElement).getPropertyValue('--c1-rgb').trim();
-      for (let i = 0; i < nodes.length; i++) {
-        for (let j = i + 1; j < nodes.length; j++) {
-          const a = nodes[i], b = nodes[j];
-          const dx = a.x - b.x, dy = a.y - b.y;
-          const dist = Math.sqrt(dx * dx + dy * dy);
-          if (dist < linkDist) {
-            ctx.strokeStyle = `rgba(${c1rgb}, ${0.18 * (1 - dist / linkDist)})`;
-            ctx.lineWidth = 1;
-            ctx.beginPath();
-            ctx.moveTo(a.x, a.y);
-            ctx.lineTo(b.x, b.y);
-            ctx.stroke();
+// Cyan particles that drift across the screen forever
+function Drift() {
+  const ref = useRef(null);
+  useEffect(() => {
+    const c = ref.current, ctx = c.getContext('2d');
+    let w, h, ps, raf;
+    const init = () => {
+      w = c.width = innerWidth; h = c.height = innerHeight;
+      ps = Array.from({ length: Math.floor(w * h / 14000) }, () => ({
+        x: Math.random() * w, y: Math.random() * h, r: .6 + Math.random() * 1.8,
+        vx: .08 + Math.random() * .35, vy: (Math.random() - .5) * .18, ph: Math.random() * 6.28,
+      }));
+    };
+    const draw = (t) => {
+      ctx.clearRect(0, 0, w, h);
+      for (const p of ps) {
+        p.x += p.vx; p.y += p.vy + Math.sin(t / 2000 + p.ph) * .12;
+        if (p.x > w + 10) p.x = -10;
+        if (p.y > h + 10) p.y = -10;
+        if (p.y < -10) p.y = h + 10;
+        const a = .35 + .45 * Math.sin(t / 900 + p.ph);
+        ctx.shadowColor = '#00E5FF'; ctx.shadowBlur = 10;
+        ctx.fillStyle = `rgba(0,229,255,${Math.max(.1, a)})`;
+        ctx.beginPath(); ctx.arc(p.x, p.y, p.r, 0, 6.283); ctx.fill();
+      }
+      raf = requestAnimationFrame(draw);
+    };
+    init(); raf = requestAnimationFrame(draw);
+    addEventListener('resize', init);
+    return () => { cancelAnimationFrame(raf); removeEventListener('resize', init); };
+  }, []);
+  return <canvas ref={ref} className="fixed inset-0 z-0 pointer-events-none" aria-hidden="true" />;
+}
+
+// Domain Expansion intro: black -> flash -> ripple -> information overload -> fade out
+const T = { flash: 700, overload: 1000, fade: 3800, end: 4800 };
+function Intro({ onReveal, onDone }) {
+  const cv = useRef(null);
+  const [go, setGo] = useState(false);
+  const [fading, setFading] = useState(false);
+  useEffect(() => {
+    const c = cv.current, ctx = c.getContext('2d');
+    const w = c.width = innerWidth, h = c.height = innerHeight, cx = w / 2, cy = h / 2;
+    const reach = Math.hypot(cx, cy) * 1.2;
+    const glyphs = 'ア イ ウ エ オ カ キ ク ケ コ サ シ ス セ ソ 無 量 空 処 領 域 展 開 呪 術 廻 戦 0 1 ∞ ∑ ∆ Ω ◇ ◆ ⌬ ⍟'.split(' ');
+    const rg = () => glyphs[Math.random() * glyphs.length | 0];
+    const fs = 18, cols = Math.ceil(w / fs), drops = Array.from({ length: cols }, () => Math.random() * -50);
+    const floaters = Array.from({ length: 60 }, () => ({
+      x: Math.random() * w, y: Math.random() * h, g: rg(),
+      s: 18 + Math.random() * 60, v: .5 + Math.random() * 3, ph: Math.random() * 6.28,
+    }));
+    const start = performance.now();
+    let raf, flashed = false, fadeSet = false;
+    const draw = (now) => {
+      const t = now - start;
+      if (t >= T.flash && !flashed) { flashed = true; setGo(true); }
+      if (t >= T.fade && !fadeSet) { fadeSet = true; setFading(true); onReveal(); }
+      if (t >= T.end) return onDone();
+      ctx.fillStyle = 'rgba(0,0,0,' + (t < T.overload ? 1 : .22) + ')';
+      ctx.fillRect(0, 0, w, h);
+      // explosive ripples from the centre
+      if (t >= T.flash) {
+        for (let i = 0; i < 5; i++) {
+          const r = (t - T.flash - i * 130) * 1.7;
+          if (r > 0 && r < reach) {
+            ctx.strokeStyle = `rgba(${i % 2 ? '0,229,255' : '255,255,255'},${1 - r / reach})`;
+            ctx.lineWidth = 6 - i; ctx.beginPath(); ctx.arc(cx, cy, r, 0, 6.283); ctx.stroke();
           }
         }
       }
-
-      for (const n of nodes) {
-        ctx.beginPath();
-        ctx.arc(n.x, n.y, n.r, 0, Math.PI * 2);
-        ctx.fillStyle = n.color;
-        ctx.shadowColor = n.color;
-        ctx.shadowBlur = 8;
-        ctx.fill();
-        ctx.shadowBlur = 0;
-      }
-
-      requestAnimationFrame(step);
-    }
-
-    window.addEventListener('resize', () => {
-      resize();
-      createNodes();
-    });
-
-    resize();
-    createNodes();
-    step();
-
-    // --- melting eye progress orb ---
-    const eyeOrb = document.getElementById('eye-orb');
-    const irisGroup = document.getElementById('eye-iris-group');
-    const pupil = document.getElementById('eye-pupil');
-    const pupilEdge = document.getElementById('eye-pupil-edge');
-    const glint = document.getElementById('eye-glint');
-    const svgNS = 'http://www.w3.org/2000/svg';
-
-    (function buildEye() {
-      const fibers = document.getElementById('eye-fibers');
-      const N = 150;
-      for (let i = 0; i < N; i++) {
-        const a = (i / N) * Math.PI * 2 + (Math.random() - 0.5) * 0.04;
-        const r1 = 15 + Math.random() * 8;
-        const r2 = 38 + Math.random() * 10;
-        const l = document.createElementNS(svgNS, 'line');
-        l.setAttribute('x1', (Math.cos(a) * r1).toFixed(2));
-        l.setAttribute('y1', (Math.sin(a) * r1).toFixed(2));
-        l.setAttribute('x2', (Math.cos(a) * r2).toFixed(2));
-        l.setAttribute('y2', (Math.sin(a) * r2).toFixed(2));
-        const light = i % 3 === 0;
-        l.setAttribute('stroke', light ? '#d8f0ff' : '#0a2a78');
-        l.setAttribute('stroke-width', (0.5 + Math.random() * 1.1).toFixed(2));
-        l.setAttribute('opacity', (light ? 0.18 + Math.random() * 0.3 : 0.25 + Math.random() * 0.4).toFixed(2));
-        fibers.appendChild(l);
-      }
-      const lashes = document.getElementById('eye-lashes');
-      const P = [[12, 80], [70, 8], [230, 8], [288, 80]];
-      const bez = (t, k) => {
-        const u = 1 - t;
-        return u*u*u*P[0][k] + 3*u*u*t*P[1][k] + 3*u*t*t*P[2][k] + t*t*t*P[3][k];
-      };
-      const dbez = (t, k) => {
-        const u = 1 - t;
-        return 3*u*u*(P[1][k]-P[0][k]) + 6*u*t*(P[2][k]-P[1][k]) + 3*t*t*(P[3][k]-P[2][k]);
-      };
-      for (let i = 0; i < 34; i++) {
-        const t = 0.04 + (i / 33) * 0.92;
-        const x = bez(t, 0), y = bez(t, 1);
-        let dx = dbez(t, 0), dy = dbez(t, 1);
-        const m = Math.hypot(dx, dy);
-        dx /= m; dy /= m;
-        let nx = dy, ny = -dx;            // outward (upward) normal
-        if (ny > 0) { nx = -nx; ny = -ny; }
-        const len = 9 + Math.sin(t * Math.PI) * 9 + Math.random() * 3;
-        const lean = (t - 0.5) * 7;       // splay outward toward the corners
-        const ex = x + nx * len + lean, ey = y + ny * len;
-        const p = document.createElementNS(svgNS, 'path');
-        p.setAttribute('d', 'M' + x.toFixed(1) + ' ' + y.toFixed(1) +
-          ' Q' + (x + nx * len * 0.5 + lean * 0.2).toFixed(1) + ' ' + (y + ny * len * 0.55).toFixed(1) +
-          ' ' + ex.toFixed(1) + ' ' + ey.toFixed(1));
-        p.setAttribute('stroke-width', (1.6 - Math.abs(t - 0.5) * 0.9).toFixed(2));
-        lashes.appendChild(p);
-      }
-    })();
-
-    let eyeP = 0, eyeCur = 0;
-
-    function scrollProgress() {
-      const root = document.documentElement;
-      const maxX = root.scrollWidth - root.clientWidth;
-      const maxY = root.scrollHeight - window.innerHeight;
-      if (maxX > 2) return Math.min(1, Math.max(0, window.scrollX / maxX));
-      return maxY > 0 ? Math.min(1, Math.max(0, window.scrollY / maxY)) : 0;
-    }
-
-    function eyeFrame(now) {
-      eyeP = scrollProgress();
-      eyeCur += (eyeP - eyeCur) * 0.07;           // ease toward the target
-      const ang = (eyeCur - 0.5) * Math.PI * 0.62; // eyeball rotates left -> right
-      const off = Math.sin(ang) * 60 + Math.sin(now / 900) * 1.2;
-      const sx = Math.max(0.78, Math.cos(ang));
-      irisGroup.setAttribute('transform', 'translate(' + (150 + off).toFixed(2) + ' 80) scale(' + sx.toFixed(3) + ' 1)');
-      glint.setAttribute('transform', 'translate(' + (off * 0.35).toFixed(2) + ' 0)');
-      const r = 11 + eyeCur * 21 + Math.sin(now / 700) * 0.7; // pupil dilates with progress
-      pupil.setAttribute('r', r.toFixed(2));
-      pupilEdge.setAttribute('r', r.toFixed(2));
-      eyeOrb.setAttribute('aria-valuenow', Math.round(eyeCur * 100));
-      requestAnimationFrame(eyeFrame);
-    }
-    requestAnimationFrame(eyeFrame);
-
-    const portal = document.getElementById('portal');
-    portal.addEventListener('click', () => {
-      const on = portal.classList.toggle('on');
-      portal.setAttribute('aria-pressed', on ? 'true' : 'false');
-    });
-    const handH = document.getElementById('hand-h');
-    const handM = document.getElementById('hand-m');
-    const handS = document.getElementById('hand-s');
-    function tickClock() {
-      const t = new Date();
-      const sec = t.getSeconds() + t.getMilliseconds() / 1000;
-      const min = t.getMinutes() + sec / 60;
-      const hr = (t.getHours() % 12) + min / 60;
-      handS.style.transform = 'rotate(' + sec * 6 + 'deg)';
-      handM.style.transform = 'rotate(' + min * 6 + 'deg)';
-      handH.style.transform = 'rotate(' + hr * 30 + 'deg)';
-      requestAnimationFrame(tickClock);
-    }
-    tickClock();
-  </script>
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
-  <script>
-  (function () {
-    const nav = document.getElementById('orb-nav');
-    if (!nav || !window.THREE) return;
-    const canvas = document.getElementById('orb-canvas');
-    const links = Array.from(nav.querySelectorAll('.orb-link'));
-    const fx = document.getElementById('portal-fx');
-    const reduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
-
-    let renderer;
-    try {
-      renderer = new THREE.WebGLRenderer({ canvas, alpha: true, antialias: true });
-    } catch (e) { return; }
-    nav.classList.add('live');
-    renderer.setPixelRatio(Math.min(window.devicePixelRatio || 1, 2));
-    renderer.setClearColor(0x000000, 0);
-
-    const scene = new THREE.Scene();
-    const camera = new THREE.PerspectiveCamera(40, 1, 0.1, 50);
-    camera.position.z = 7;
-    const WORLD_H = 2 * Math.tan((40 / 2) * Math.PI / 180) * camera.position.z;
-
-    const ENV = `
-      vec3 envMap(vec3 r) {
-        float h = r.y * 0.5 + 0.5;
-        vec3 bot = vec3(0.03, 0.10, 0.42);
-        vec3 mid = vec3(0.42, 0.70, 1.0);
-        vec3 top = vec3(1.0, 0.84, 0.70);
-        vec3 c = mix(bot, mid, smoothstep(0.0, 0.55, h));
-        c = mix(c, top, smoothstep(0.55, 0.95, h));
-        c += vec3(1.0) * smoothstep(0.05, 0.0, abs(r.y + 0.04)) * 0.7;
-        c += pow(max(dot(r, normalize(vec3(-0.4, 0.6, 0.7))), 0.0), 36.0) * 1.3;
-        c += pow(max(dot(r, normalize(vec3(0.6, -0.2, 0.6))), 0.0), 18.0) * 0.35;
-        return c;
-      }`;
-
-    const NOISE = `
-      vec3 mod289(vec3 x){return x-floor(x*(1.0/289.0))*289.0;}
-      vec4 mod289(vec4 x){return x-floor(x*(1.0/289.0))*289.0;}
-      vec4 permute(vec4 x){return mod289(((x*34.0)+1.0)*x);}
-      vec4 taylorInvSqrt(vec4 r){return 1.79284291400159-0.85373472095314*r;}
-      float snoise(vec3 v){
-        const vec2 C=vec2(1.0/6.0,1.0/3.0); const vec4 D=vec4(0.0,0.5,1.0,2.0);
-        vec3 i=floor(v+dot(v,C.yyy)); vec3 x0=v-i+dot(i,C.xxx);
-        vec3 g=step(x0.yzx,x0.xyz); vec3 l=1.0-g; vec3 i1=min(g.xyz,l.zxy); vec3 i2=max(g.xyz,l.zxy);
-        vec3 x1=x0-i1+C.xxx; vec3 x2=x0-i2+C.yyy; vec3 x3=x0-D.yyy;
-        i=mod289(i);
-        vec4 p=permute(permute(permute(i.z+vec4(0.0,i1.z,i2.z,1.0))+i.y+vec4(0.0,i1.y,i2.y,1.0))+i.x+vec4(0.0,i1.x,i2.x,1.0));
-        float n_=0.142857142857; vec3 ns=n_*D.wyz-D.xzx;
-        vec4 j=p-49.0*floor(p*ns.z*ns.z); vec4 x_=floor(j*ns.z); vec4 y_=floor(j-7.0*x_);
-        vec4 x=x_*ns.x+ns.yyyy; vec4 y=y_*ns.x+ns.yyyy; vec4 h=1.0-abs(x)-abs(y);
-        vec4 b0=vec4(x.xy,y.xy); vec4 b1=vec4(x.zw,y.zw);
-        vec4 s0=floor(b0)*2.0+1.0; vec4 s1=floor(b1)*2.0+1.0; vec4 sh=-step(h,vec4(0.0));
-        vec4 a0=b0.xzyw+s0.xzyw*sh.xxyy; vec4 a1=b1.xzyw+s1.xzyw*sh.zzww;
-        vec3 p0=vec3(a0.xy,h.x); vec3 p1=vec3(a0.zw,h.y); vec3 p2=vec3(a1.xy,h.z); vec3 p3=vec3(a1.zw,h.w);
-        vec4 norm=taylorInvSqrt(vec4(dot(p0,p0),dot(p1,p1),dot(p2,p2),dot(p3,p3)));
-        p0*=norm.x; p1*=norm.y; p2*=norm.z; p3*=norm.w;
-        vec4 m=max(0.6-vec4(dot(x0,x0),dot(x1,x1),dot(x2,x2),dot(x3,x3)),0.0); m=m*m;
-        return 42.0*dot(m*m,vec4(dot(p0,x0),dot(p1,x1),dot(p2,x2),dot(p3,x3)));
-      }`;
-
-    // ---- the liquid blob ----
-    const blobMat = new THREE.ShaderMaterial({
-      transparent: true,
-      depthWrite: false,
-      uniforms: {
-        uTime: { value: 0 },
-        uMouse: { value: new THREE.Vector3(0, 0, 0) },
-        uForce: { value: 0 },
-        uScale: { value: new THREE.Vector3(0.62, 2.15, 0.62) }
-      },
-      vertexShader: NOISE + `
-        uniform float uTime; uniform vec3 uMouse; uniform float uForce; uniform vec3 uScale;
-        varying vec3 vN; varying vec3 vW;
-        vec3 disp(vec3 p) {
-          float n = snoise(p * 1.1 + vec3(0.0, uTime * 0.30, uTime * 0.2));
-          float n2 = snoise(p * 2.2 - vec3(uTime * 0.35));
-          vec3 q = p * (1.0 + 0.15 * n + 0.012 * n2);
-          q *= uScale;
-          vec3 d = uMouse - q;
-          float dist = length(d.xy * vec2(1.0, 0.7));
-          float pull = exp(-dist * dist * 1.1) * uForce;
-          q += d * pull * 0.6;
-          return q;
+      if (t >= T.overload && t < T.fade + 400) {
+        const k = Math.min(1, (t - T.overload) / 600); // overload ramps up
+        const zoom = ((t - T.overload) / 700) % 1;
+        // zooming geometric grid
+        ctx.lineWidth = 1.2;
+        for (let i = 0; i < 9; i++) {
+          const s = Math.pow((i + zoom) / 9, 2.2), ww = s * w * 1.6, hh = s * h * 1.6;
+          ctx.strokeStyle = `rgba(0,229,255,${.12 + s * .55 * k})`;
+          ctx.strokeRect(cx - ww / 2, cy - hh / 2, ww, hh);
+          ctx.beginPath();
+          ctx.moveTo(cx, cy); ctx.lineTo(cx - ww / 2, cy - hh / 2);
+          ctx.moveTo(cx, cy); ctx.lineTo(cx + ww / 2, cy + hh / 2);
+          ctx.moveTo(cx, cy); ctx.lineTo(cx + ww / 2, cy - hh / 2);
+          ctx.moveTo(cx, cy); ctx.lineTo(cx - ww / 2, cy + hh / 2);
+          ctx.stroke();
         }
-        void main() {
-          vec3 p = normalize(position);
-          vec3 up = abs(p.y) > 0.99 ? vec3(1.0, 0.0, 0.0) : vec3(0.0, 1.0, 0.0);
-          vec3 t1 = normalize(cross(p, up));
-          vec3 t2 = cross(p, t1);
-          float e = 0.02;
-          vec3 p0 = disp(p);
-          vec3 p1 = disp(normalize(p + t1 * e));
-          vec3 p2 = disp(normalize(p + t2 * e));
-          vec3 n = normalize(cross(p1 - p0, p2 - p0));
-          if (dot(n, p0) < 0.0) n = -n;
-          vN = n; vW = p0;
-          gl_Position = projectionMatrix * viewMatrix * vec4(p0, 1.0);
-        }`,
-      fragmentShader: ENV + `
-        varying vec3 vN; varying vec3 vW;
-        void main() {
-          vec3 N = normalize(vN);
-          vec3 V = normalize(cameraPosition - vW);
-          vec3 r = reflect(-V, N);
-          float fres = pow(1.0 - max(dot(N, V), 0.0), 2.4);
-          vec3 col = envMap(r) * 0.82 + fres * vec3(0.45, 0.9, 1.0) * 0.55;
-          gl_FragColor = vec4(col, mix(0.8, 1.0, fres));
-        }`
-    });
-    const blob = new THREE.Mesh(new THREE.IcosahedronGeometry(1, 6), blobMat);
-    blob.renderOrder = 0;
-    blob.frustumCulled = false;
-    scene.add(blob);
-
-    // ---- link shapes drifting inside the liquid ----
-    function shapeMaterial(tint) {
-      return new THREE.ShaderMaterial({
-        transparent: true,
-        uniforms: { uAlpha: { value: 1 }, uTint: { value: new THREE.Color(tint) } },
-        vertexShader: `
-          varying vec3 vN; varying vec3 vW;
-          void main() {
-            vN = normalize(mat3(modelMatrix) * normal);
-            vec4 w = modelMatrix * vec4(position, 1.0);
-            vW = w.xyz;
-            gl_Position = projectionMatrix * viewMatrix * w;
-          }`,
-        fragmentShader: ENV + `
-          uniform float uAlpha; uniform vec3 uTint;
-          varying vec3 vN; varying vec3 vW;
-          void main() {
-            vec3 N = normalize(vN);
-            vec3 V = normalize(cameraPosition - vW);
-            float fres = pow(1.0 - max(dot(N, V), 0.0), 2.0);
-            vec3 refl = envMap(reflect(-V, N));
-            vec3 refr = envMap(refract(-V, N, 0.82));
-            vec3 col = mix(refr, refl, 0.35 + fres * 0.5) * uTint;
-            col += fres * 0.25;
-            gl_FragColor = vec4(col, uAlpha * (0.78 + fres * 0.22));
-          }`
-      });
-    }
-    const R = 0.38;
-    const defs = [
-      { geo: new THREE.SphereGeometry(R, 32, 24),   tint: 0xffe6b8 },
-      { geo: new THREE.TetrahedronGeometry(R * 1.35), tint: 0xbfe0ff },
-      { geo: new THREE.OctahedronGeometry(R * 1.2),   tint: 0xffd0b0 },
-      { geo: new THREE.IcosahedronGeometry(R * 1.1),  tint: 0xcfe6ff }
-    ];
-    const n = Math.min(defs.length, links.length);
-    const shapes = [];
-    for (let i = 0; i < n; i++) {
-      const mat = shapeMaterial(defs[i].tint);
-      const mesh = new THREE.Mesh(defs[i].geo, mat);
-      mesh.renderOrder = 1;
-      const edges = new THREE.LineSegments(
-        new THREE.EdgesGeometry(defs[i].geo),
-        new THREE.LineBasicMaterial({ color: 0xffffff, transparent: true, opacity: 0.55 })
-      );
-      edges.renderOrder = 2;
-      const g = new THREE.Group();
-      if (i !== 0) g.add(edges);
-      g.add(mesh);
-      scene.add(g);
-      shapes.push({
-        g, mat, edges, link: links[i],
-        base: new THREE.Vector3(0, ((n - 1) / 2 - i) * 1.12, 0.4),
-        hover: 0, hoverTarget: 0, pop: 0, popStart: 0, active: false
-      });
-    }
-
-    function resize() {
-      const w = nav.clientWidth, h = nav.clientHeight;
-      if (!w || !h) return;
-      renderer.setSize(w, h, false);
-      camera.aspect = w / h;
-      camera.updateProjectionMatrix();
-    }
-    resize();
-    if (window.ResizeObserver) new ResizeObserver(resize).observe(nav);
-    window.addEventListener('resize', resize);
-
-    // ---- cursor ----
-    const mouse = { x: 0, y: 0, force: 0, tx: 0, ty: 0, tf: 0 };
-    window.addEventListener('pointermove', (e) => {
-      const r = canvas.getBoundingClientRect();
-      if (!r.width) return;
-      const nx = ((e.clientX - r.left) / r.width) * 2 - 1;
-      const ny = -(((e.clientY - r.top) / r.height) * 2 - 1);
-      mouse.tx = nx * camera.aspect * WORLD_H / 2;
-      mouse.ty = ny * WORLD_H / 2;
-      const dx = Math.max(0, r.left - e.clientX, e.clientX - r.right);
-      const dy = Math.max(0, r.top - e.clientY, e.clientY - r.bottom);
-      mouse.tf = Math.max(0, 1 - Math.hypot(dx, dy) / 280);
-    });
-    document.addEventListener('pointerleave', () => { mouse.tf = 0; });
-
-    // ---- links: hover, active section, portal click ----
-    shapes.forEach((s) => {
-      s.link.addEventListener('pointerenter', () => { s.hoverTarget = 1; });
-      s.link.addEventListener('pointerleave', () => { s.hoverTarget = 0; });
-      s.link.addEventListener('focus', () => { s.hoverTarget = 1; });
-      s.link.addEventListener('blur', () => { s.hoverTarget = 0; });
-    });
-
-    function updateActive() {
-      const probe = window.scrollY + window.innerHeight * 0.4;
-      let cur = 0;
-      shapes.forEach((s, i) => {
-        const t = document.querySelector(s.link.getAttribute('href'));
-        if (t && t.offsetTop <= probe) cur = i;
-      });
-      shapes.forEach((s, i) => {
-        s.active = i === cur;
-        s.link.classList.toggle('active', i === cur);
-        if (i === cur) s.link.setAttribute('aria-current', 'true'); else s.link.removeAttribute('aria-current');
-      });
-    }
-    window.addEventListener('scroll', updateActive, { passive: true });
-    updateActive();
-
-    let busy = false;
-    function jumpTo(target) {
-      const root = document.documentElement;
-      const prev = root.style.scrollBehavior;
-      root.style.scrollBehavior = 'auto';
-      target.scrollIntoView({ block: 'start' });
-      root.style.scrollBehavior = prev;
-      updateActive();
-    }
-    shapes.forEach((s) => {
-      s.link.addEventListener('click', (e) => {
-        e.preventDefault();
-        if (busy) return;
-        const target = document.querySelector(s.link.getAttribute('href'));
-        if (!target) return;
-        if (reduceMotion) { jumpTo(target); return; }
-        busy = true;
-        const r = s.link.getBoundingClientRect();
-        fx.style.setProperty('--x', (r.left + r.width / 2) + 'px');
-        fx.style.setProperty('--y', (r.top + r.height / 2) + 'px');
-        s.popStart = performance.now();
-        s.pop = 0.001;                       // the shape pops open
-        requestAnimationFrame(() => fx.classList.add('open'));
-        setTimeout(() => {
-          jumpTo(target);                     // swap sections behind the portal
-          fx.classList.add('fade');
-          setTimeout(() => {
-            fx.style.transition = 'none';
-            fx.classList.remove('open', 'fade');
-            void fx.offsetWidth;
-            fx.style.transition = '';
-            s.pop = 0;
-            busy = false;
-          }, 720);
-        }, 720);
-      });
-    });
-
-    // ---- loop ----
-    const clock = new THREE.Clock();
-    const tmp = new THREE.Vector3();
-    function frame() {
-      requestAnimationFrame(frame);
-      if (document.hidden || !nav.clientWidth) return;
-      const dt = Math.min(clock.getDelta(), 0.05);
-      const t = clock.elapsedTime;
-      const now = performance.now();
-
-      mouse.x += (mouse.tx - mouse.x) * 0.12;
-      mouse.y += (mouse.ty - mouse.y) * 0.12;
-      mouse.force += (mouse.tf - mouse.force) * 0.08;
-      blobMat.uniforms.uTime.value = t;
-      blobMat.uniforms.uMouse.value.set(mouse.x, mouse.y, 0);
-      blobMat.uniforms.uForce.value = mouse.force;
-
-      const w = nav.clientWidth, h = nav.clientHeight;
-      shapes.forEach((s, i) => {
-        s.hover += (s.hoverTarget - s.hover) * 0.12;
-        const g = s.g;
-        g.position.set(
-          s.base.x + Math.sin(t * 0.6 + i * 1.7) * 0.2,
-          s.base.y + Math.cos(t * 0.5 + i * 2.3) * 0.16,
-          s.base.z + Math.sin(t * 0.4 + i) * 0.12
-        );
-        g.position.x += (mouse.x - g.position.x) * 0.1 * mouse.force;
-        g.position.y += (mouse.y - g.position.y) * 0.05 * mouse.force;
-        g.rotation.x += dt * (0.4 + i * 0.08);
-        g.rotation.y += dt * (0.55 - i * 0.07);
-
-        let scale = 1 + 0.35 * s.hover + (s.active ? 0.12 : 0);
-        let alpha = 1;
-        if (s.pop > 0) {
-          const p = Math.min(1, (now - s.popStart) / 480);
-          s.pop = Math.max(p, 0.001);
-          scale *= 1 + p * 2.6;
-          alpha = 1 - p;
+        // fast matrix code
+        ctx.font = fs + 'px monospace';
+        for (let i = 0; i < cols; i++) {
+          const y = drops[i] * fs;
+          ctx.fillStyle = '#fff'; ctx.fillText(rg(), i * fs, y);
+          ctx.fillStyle = `rgba(0,229,255,${.8 * k})`; ctx.fillText(rg(), i * fs, y - fs);
+          drops[i] += 1.6 + (i % 5) * .5;
+          if (y > h && Math.random() > .96) drops[i] = Math.random() * -20;
         }
-        g.scale.setScalar(scale);
-        s.mat.uniforms.uAlpha.value = alpha;
-        s.edges.material.opacity = 0.55 * alpha;
+        // floating glyphs
+        for (const f of floaters) {
+          f.y -= f.v; f.x += Math.sin(now / 400 + f.ph) * 1.2;
+          if (f.y < -80) f.y = h + 80;
+          ctx.font = f.s + 'px monospace';
+          ctx.fillStyle = `rgba(${f.s > 50 ? '160,110,255' : '255,255,255'},${.25 + .5 * k})`;
+          ctx.fillText(f.g, f.x, f.y);
+        }
+      }
+      raf = requestAnimationFrame(draw);
+    };
+    ctx.fillStyle = '#000'; ctx.fillRect(0, 0, w, h);
+    raf = requestAnimationFrame(draw);
+    return () => cancelAnimationFrame(raf);
+  }, []);
+  return (
+    <div onClick={() => { onReveal(); onDone(); }} className="fixed inset-0 z-50 bg-black cursor-pointer" style={{ opacity: fading ? 0 : 1, transition: 'opacity 1000ms ease-in', pointerEvents: fading ? 'none' : 'auto' }} role="presentation" aria-hidden="true">
+      <canvas ref={cv} className="absolute inset-0" />
+      <div className={'flash ' + (go ? 'go' : '')} />
+    </div>
+  );
+}
 
-        // keep the real <a> centered over its shape
-        tmp.copy(g.position).project(camera);
-        const x = (tmp.x * 0.5 + 0.5) * w;
-        const y = (-tmp.y * 0.5 + 0.5) * h;
-        s.link.style.transform = 'translate(' + (x - 52).toFixed(1) + 'px,' + (y - 52).toFixed(1) + 'px)';
-      });
+function Header() {
+  const links = ['about', 'hobbies', 'contact'];
+  return (
+    <header className="sticky top-0 z-20 flex items-center justify-between px-6 md:px-12 py-4 backdrop-blur-md bg-void/60 border-b border-cyan-neon/30 shadow-[0_0_30px_rgba(0,229,255,.2)]">
+      <div className="font-display font-bold tracking-[.3em] text-cyan-neon bloom-text">PORSCHE</div>
+      <nav>
+        <ul className="flex gap-6 md:gap-10 font-display text-xs md:text-sm tracking-widest uppercase">
+          {links.map(l => (
+            <li key={l}><a href={'#' + l} className="text-white/80 hover:text-cyan-neon transition-colors duration-150 hover:[text-shadow:0_0_14px_#00E5FF]">{l}</a></li>
+          ))}
+        </ul>
+      </nav>
+    </header>
+  );
+}
 
-      renderer.render(scene, camera);
-    }
-    frame();
-  })();
-  </script>
+function Hero() {
+  const [msg, setMsg] = useState('');
+  return (
+    <section id="hero" className="relative z-10 min-h-[88vh] flex flex-col items-center justify-center text-center px-6 py-24">
+      <div className="absolute w-[560px] h-[560px] max-w-[95vw] max-h-[95vw] rounded-full eye-ring opacity-60 blur-[2px] -z-10" aria-hidden="true" />
+      <p className="font-display text-xs md:text-sm tracking-[.5em] text-azure uppercase mb-6">Domain Expansion · Infinite Void</p>
+      <h1 className="font-display font-black text-5xl md:text-8xl leading-tight text-white bloom-text">Porsche's Site</h1>
+      <p className="mt-8 max-w-2xl text-lg md:text-xl text-white/85 leading-relaxed">
+        My favorite hobby is editing — bringing photos and videos to life with color, cuts, and effects.
+      </p>
+      <button
+        onClick={() => setMsg('Welcome, PAWN! To my website!.')}
+        className="warp mt-10 px-10 py-3 font-display font-bold tracking-[.25em] uppercase text-void bg-cyan-neon rounded-md shadow-[0_0_30px_rgba(0,229,255,.7)]"
+      >Hello</button>
+      <p className="mt-6 h-7 font-display text-cyan-neon bloom-text" aria-live="polite">{msg}</p>
+    </section>
+  );
+}
+
+function Card({ id, title, children }) {
+  return (
+    <section id={id} className="relative z-10 px-6 py-12 scroll-mt-24">
+      <div className="glow-card warp max-w-3xl mx-auto p-8 md:p-12 text-left">
+        <h2 className="font-display font-bold text-2xl md:text-3xl tracking-widest uppercase text-cyan-neon bloom-text mb-5">{title}</h2>
+        <p className="text-lg md:text-xl leading-relaxed text-white/90">{children}</p>
+      </div>
+    </section>
+  );
+}
+
+function App() {
+  const skip = matchMedia('(prefers-reduced-motion: reduce)').matches;
+  const [intro, setIntro] = useState(!skip);
+  const [shown, setShown] = useState(skip);
+  return (
+    <>
+      <div className="swirl swirl-a" aria-hidden="true" />
+      <div className="swirl swirl-b" aria-hidden="true" />
+      <div className="void-grid" aria-hidden="true" />
+      <Starfield />
+      <Drift />
+      {intro && <Intro onReveal={() => setShown(true)} onDone={() => setIntro(false)} />}
+      <div className="reveal" style={{ opacity: shown ? 1 : 0 }}>
+      <Header />
+      <main>
+        <Hero />
+        <Card id="about" title="About Me">
+          I'm Porsche, someone who loves creating and building things online. I enjoy learning new skills and finding creative ways to bring ideas to life.
+        </Card>
+        <Card id="hobbies" title="My Hobbies">
+          Editing is my favorite way to be creative, turning raw photos and videos into something people enjoy watching. I love experimenting with color grading, smooth cuts, transitions, and visual effects. Every project teaches me something new, and I'm always looking for fresh techniques to improve my craft.
+        </Card>
+        <Card id="contact" title="Contact">
+          Want to get in touch? Feel free to reach out with any questions or just to say hello. I'm always happy to connect with new people.
+        </Card>
+      </main>
+      <footer className="relative z-10 text-center py-12 font-display text-xs tracking-[.4em] uppercase text-white/60">Made by Porsche</footer>
+      </div>
+    </>
+  );
+}
+
+ReactDOM.createRoot(document.getElementById('root')).render(<App />);
+</script>
 </body>
 </html>
