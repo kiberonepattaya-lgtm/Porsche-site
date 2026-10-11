@@ -41,14 +41,13 @@
       #000;
   }
   /* slow swirl of violet / indigo behind the grid */
-  .swirl { position: fixed; inset: -20%; z-index: 0; pointer-events: none; }
+  .swirl { position: fixed; inset: 0; z-index: 0; pointer-events: none; }
   .swirl-a {
     background: conic-gradient(from 0deg at 50% 50%, rgba(60,20,160,.55), rgba(0,0,0,0) 22%, rgba(20,20,120,.5) 45%, rgba(0,0,0,0) 68%, rgba(100,40,200,.35) 86%, rgba(60,20,160,.55));
-    will-change: transform; animation: swirl 120s linear infinite;
+    
   }
   .swirl-b {
     background: conic-gradient(from 120deg at 45% 55%, rgba(0,229,255,.10), rgba(0,0,0,0) 30%, rgba(80,30,190,.4) 60%, rgba(0,0,0,0) 85%, rgba(0,229,255,.10));
-    will-change: transform; animation: swirl 180s linear infinite reverse;
   }
   @keyframes swirl { to { transform: rotate(360deg); } }
   /* vignette: the void presses in from the edges */
@@ -58,8 +57,8 @@
   .glow-card::before {
     content: ''; position: absolute; inset: -60%; z-index: -2;
     background: conic-gradient(from 0deg, transparent 0 55%, #00E5FF 72%, #fff 80%, #2f7bff 88%, transparent 100%);
-    will-change: transform; animation: swirl 6s linear infinite;
   }
+  .glow-wrap:hover .glow-card::before { animation: swirl 3s linear infinite; }
   .glow-card::after {
     content: ''; position: absolute; inset: 1.5px; z-index: -1;
     clip-path: inherit;
@@ -151,7 +150,7 @@ function Intro({ onReveal, onDone }) {
       return { pts, w: .6 + Math.random() * 2, col: Math.random() < .6 ? '#00E5FF' : '#ffffff', at: 0 };
     };
     // shatter shards (2 triangles per cell)
-    const COLS = 16, ROWS = 10, shards = [];
+    const COLS = 10, ROWS = 6, shards = [];
     const cw = w / COLS, ch = h / ROWS;
     for (let i = 0; i < COLS; i++) for (let j = 0; j < ROWS; j++) {
       const x0 = i * cw, y0 = j * ch;
@@ -283,13 +282,14 @@ function Intro({ onReveal, onDone }) {
 }
 
 /* ───────────────── The Void: inverted cosmic tunnel ───────────────── */
-function VoidBackground() {
+function VoidBackground({ paused }) {
   const ref = useRef(null);
   useEffect(() => {
-    const c = ref.current, ctx = c.getContext('2d');
+    if (paused) return;
+    const S = .5, c = ref.current, ctx = c.getContext('2d');
     let w, h, cx, cy, raf, eqs, parts;
     const init = () => {
-      w = c.width = innerWidth; h = c.height = innerHeight; cx = w / 2; cy = h / 2;
+      w = innerWidth; h = innerHeight; c.width = w * S; c.height = h * S; ctx.setTransform(S, 0, 0, S, 0, 0); cx = w / 2; cy = h / 2;
       eqs = Array.from({ length: 9 }, () => spawnEq(true));
       parts = Array.from({ length: Math.min(130, Math.floor(w * h / 14000)) }, () => spawnPart(true));
     };
@@ -350,8 +350,8 @@ function VoidBackground() {
     init(); raf = requestAnimationFrame(draw);
     addEventListener('resize', init);
     return () => { cancelAnimationFrame(raf); removeEventListener('resize', init); };
-  }, []);
-  return <canvas ref={ref} className="fixed inset-0 z-0 pointer-events-none" aria-hidden="true" />;
+  }, [paused]);
+  return <canvas ref={ref} className="fixed inset-0 z-0 w-full h-full pointer-events-none" aria-hidden="true" />;
 }
 
 /* ───────────────────────── Six Eyes graphic ───────────────────────── */
@@ -392,9 +392,11 @@ function TechViz({ kind }) {
   const ref = useRef(null);
   useEffect(() => {
     const c = ref.current, ctx = c.getContext('2d'), W = c.width = 420, H = c.height = 260, cx = W / 2, cy = H / 2;
-    let raf, tt = 0;
-    const ps = Array.from({ length: 70 }, () => ({ a: Math.random() * 6.283, r: 20 + Math.random() * 110, ph: Math.random() }));
+    let raf, tt = 0, vis = true;
+    const io = new IntersectionObserver(([en]) => { vis = en.isIntersecting; }, { threshold: 0 }); io.observe(c);
+    const ps = Array.from({ length: 50 }, () => ({ a: Math.random() * 6.283, r: 20 + Math.random() * 110, ph: Math.random() }));
     const draw = () => {
+      if (!vis) { raf = requestAnimationFrame(draw); return; }
       tt += REDUCED ? 0 : 1;
       ctx.fillStyle = 'rgba(2,2,14,.28)'; ctx.fillRect(0, 0, W, H);
       const L = (tt % 360) / 360;
@@ -435,7 +437,7 @@ function TechViz({ kind }) {
     };
     ctx.fillStyle = '#02020e'; ctx.fillRect(0, 0, W, H);
     raf = requestAnimationFrame(draw);
-    return () => cancelAnimationFrame(raf);
+    return () => { cancelAnimationFrame(raf); io.disconnect(); };
   }, [kind]);
   return <canvas ref={ref} className="w-full rounded border border-white/10 bg-[#02020e]" aria-hidden="true" />;
 }
@@ -642,7 +644,7 @@ function DomainSection() {
 const ORB = 88, ORB_TOP = 96, ORB_EDGE = 16;
 
 function Orb({ kind, offset, dragging, handlers }) {
-  const blue = kind === 'blue', n = 14;
+  const blue = kind === 'blue', n = 8;
   return (
     <div {...handlers} role="button" tabIndex={-1}
       aria-label={blue ? 'Cursed Technique Lapse: Blue. Drag it into the red orb.' : 'Cursed Technique Reversal: Red. Drag it into the blue orb.'}
@@ -701,7 +703,7 @@ const ease = (k) => k * k * (3 - 2 * k);
 function HollowSequence({ at, onArena, onEnd }) {
   const [e, setE] = useState(0);
   const fired = useRef({ a: false, e: false });
-  const shards = useMemo(() => Array.from({ length: 44 }, () => {
+  const shards = useMemo(() => Array.from({ length: 24 }, () => {
     const x = Math.random() * 110 - 5, ang = Math.random() * 6.283, d = 300 + Math.random() * 800;
     return { x, y: Math.random() * 100, sz: 70 + Math.random() * 190, dx: Math.cos(ang) * d, dy: Math.sin(ang) * d, rot: (Math.random() - .5) * 900,
       poly: `polygon(${Math.random() * 30}% 0, 100% ${Math.random() * 40}%, ${60 + Math.random() * 40}% 100%, 0 ${60 + Math.random() * 40}%)`,
@@ -820,7 +822,7 @@ function DomainVoid() {
     const c = ref.current, ctx = c.getContext('2d');
     const w = c.width = innerWidth, h = c.height = innerHeight, hz = Math.round(h * .66);
     const sc = document.createElement('canvas'); sc.width = w; sc.height = hz; const s = sc.getContext('2d');
-    const lw = Math.ceil(w / 6), lh = Math.ceil(hz / 6);
+    const lw = Math.ceil(w / 9), lh = Math.ceil(hz / 9);
     const low = document.createElement('canvas'); low.width = lw; low.height = lh;
     const lx = low.getContext('2d'), img = lx.createImageData(lw, lh), px = img.data;
     const cx = w / 2, cy = hz * .5, reach = Math.hypot(cx, hz);
@@ -842,8 +844,10 @@ function DomainVoid() {
       ctx.restore();
     };
 
+    let skip = false;
     const frame = (now) => {
-      const t = now - t0, dt = Math.min(50, now - last); last = now;
+      skip = !skip; if (skip) { raf = requestAnimationFrame(frame); return; } // ~30fps
+      const t = now - t0, dt = Math.min(80, now - last); last = now;
       if (t < 200) { raf = requestAnimationFrame(frame); return; } // 0.2s of negative flash first
       const k = Math.min(1, Math.max(0, (t - 1900) / 1200));       // stasis lock ramps in
       vt += dt * (1 - k);
@@ -898,7 +902,6 @@ function DomainVoid() {
       ctx.fillStyle = 'rgba(255,255,255,.05)'; for (let y = hz + 14, g = 10; y < h; y += g, g *= 1.35) ctx.fillRect(0, y, w, 1); // gloss
 
       if (k >= 1) { lockGeometry(); c.style.filter = 'blur(3.5px)'; return; } // stasis lock: freeze + heavy blur, loop stops
-      c.style.filter = k > 0 ? `blur(${(k * 3.5).toFixed(2)}px)` : 'none';
       raf = requestAnimationFrame(frame);
     };
     raf = requestAnimationFrame(frame);
@@ -955,7 +958,7 @@ function Arena({ onExit }) {
 
   const frozen = s.fx === 'domain';
   const disabled = s.stage !== 'menu' || s.lock > 0;
-  const stageAnim = { tp: 'shakeScreen .16s linear 5', blue: 'pullStage 2.2s ease-in-out', red: 'repelStage 1.2s ease-out', domain: 'doubleVision 1.6s ease-in-out .35s infinite' }[s.fx];
+  const stageAnim = { tp: 'shakeScreen .16s linear 5', blue: 'pullStage 2.2s ease-in-out', red: 'repelStage 1.2s ease-out', domain: 'doubleVision 1s steps(1, end) .35s infinite' }[s.fx];
   const pct = Math.max(0, hp / PMAX * 100);
   const actions = [['Attack', 'Strike with everything physical'], ['Cursed Energy Burst', 'Release raw cursed energy'], ['Domain Counter', 'Raise a Simple Domain to blunt the next hit']];
 
@@ -1033,7 +1036,7 @@ function Arena({ onExit }) {
       </>}
       {s.fx === 'domain' && <>
         <NegativeFlash />
-        <div className="absolute inset-x-0 top-[38%] z-[48] text-center pointer-events-none mix-blend-difference" style={{ animation: 'doubleVision 1.6s ease-in-out .35s infinite' }}>
+        <div className="absolute inset-x-0 top-[38%] z-[48] text-center pointer-events-none mix-blend-difference" style={{ animation: 'doubleVision 1s steps(1, end) .35s infinite' }}>
           <div className="font-display text-xs tracking-[.6em] text-white">INFINITE VOID · 無量空処</div>
           <div className="font-display font-black text-6xl md:text-8xl text-white tabular-nums">{((s.count ?? 200) / 1000).toFixed(3)}s</div>
         </div>
@@ -1066,8 +1069,7 @@ function App() {
     <>
       <div className="bg-fixed" aria-hidden="true" />
       <div className="swirl swirl-a" aria-hidden="true" />
-      <div className="swirl swirl-b" aria-hidden="true" />
-      <VoidBackground />
+      <VoidBackground paused={arenaUp || event === 'hollow'} />
       <div className="vignette" aria-hidden="true" />
       <div id="page" className="reveal relative z-10" style={{ opacity: shown ? 1 : 0, display: arenaUp ? 'none' : undefined }}>
         <Header />
