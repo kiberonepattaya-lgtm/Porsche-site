@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Gojo Codex — Infinite Void</title>
+<title>Porsche's Gojo Codex</title>
 <script src="https://cdn.tailwindcss.com/3.4.1"></script>
 <script>
   tailwind.config = {
@@ -31,51 +31,71 @@
 <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@500;700;900&family=Rajdhani:wght@400;500;600&family=Noto+Sans+JP:wght@500;700&display=swap" rel="stylesheet">
 <style>
   html { scroll-behavior: smooth; }
-  body {
+  body { background: #000; }
+  .bg-fixed {
+    position: fixed; inset: 0; z-index: 0; pointer-events: none;
     background:
       radial-gradient(ellipse at 50% 50%, rgba(26,11,74,.55), transparent 60%),
       radial-gradient(ellipse at 10% 0%, rgba(47,20,130,.45), transparent 55%),
       radial-gradient(ellipse at 90% 100%, rgba(7,4,28,.9), transparent 60%),
       #000;
-    background-attachment: fixed;
   }
   /* slow swirl of violet / indigo behind the grid */
-  .swirl { position: fixed; inset: -35%; z-index: 0; pointer-events: none; }
+  .swirl { position: fixed; inset: -20%; z-index: 0; pointer-events: none; }
   .swirl-a {
     background: conic-gradient(from 0deg at 50% 50%, rgba(60,20,160,.55), rgba(0,0,0,0) 22%, rgba(20,20,120,.5) 45%, rgba(0,0,0,0) 68%, rgba(100,40,200,.35) 86%, rgba(60,20,160,.55));
-    filter: blur(80px); animation: swirl 120s linear infinite;
+    will-change: transform; animation: swirl 120s linear infinite;
   }
   .swirl-b {
     background: conic-gradient(from 120deg at 45% 55%, rgba(0,229,255,.10), rgba(0,0,0,0) 30%, rgba(80,30,190,.4) 60%, rgba(0,0,0,0) 85%, rgba(0,229,255,.10));
-    filter: blur(100px); animation: swirl 180s linear infinite reverse;
+    will-change: transform; animation: swirl 180s linear infinite reverse;
   }
   @keyframes swirl { to { transform: rotate(360deg); } }
   /* vignette: the void presses in from the edges */
   .vignette { position: fixed; inset: 0; z-index: 1; pointer-events: none; background: radial-gradient(ellipse at center, transparent 35%, rgba(0,0,0,.75) 100%); }
 
-  @property --a { syntax: '<angle>'; initial-value: 0deg; inherits: false; }
-  @keyframes spin-a { to { --a: 360deg; } }
   .glow-card { position: relative; border-radius: 6px; isolation: isolate; clip-path: polygon(0 0, calc(100% - 18px) 0, 100% 18px, 100% 100%, 18px 100%, 0 calc(100% - 18px)); }
   .glow-card::before {
-    content: ''; position: absolute; inset: 0; z-index: -2;
-    background: conic-gradient(from var(--a), transparent 0 55%, #00E5FF 72%, #fff 80%, #2f7bff 88%, transparent 100%);
-    animation: spin-a 6s linear infinite;
+    content: ''; position: absolute; inset: -60%; z-index: -2;
+    background: conic-gradient(from 0deg, transparent 0 55%, #00E5FF 72%, #fff 80%, #2f7bff 88%, transparent 100%);
+    will-change: transform; animation: swirl 6s linear infinite;
   }
   .glow-card::after {
     content: ''; position: absolute; inset: 1.5px; z-index: -1;
     clip-path: inherit;
     background: linear-gradient(160deg, rgba(4,2,16,.94), rgba(14,7,46,.92));
   }
-  .glow-wrap { filter: drop-shadow(0 0 18px rgba(0,229,255,.22)) drop-shadow(0 0 60px rgba(47,123,255,.15)); transition: filter .25s, transform .25s cubic-bezier(.2,.9,.1,1); }
-  .glow-wrap:hover { transform: perspective(800px) scale(1.02) skewX(-1deg); filter: drop-shadow(-2px 0 0 rgba(0,229,255,.7)) drop-shadow(2px 0 0 rgba(150,80,255,.7)) drop-shadow(0 0 40px rgba(0,229,255,.45)); }
+  .glow-wrap { box-shadow: 0 0 24px rgba(0,229,255,.16); transition: transform .25s cubic-bezier(.2,.9,.1,1), box-shadow .25s; }
+  .glow-wrap:hover { transform: scale(1.02); box-shadow: 0 0 48px rgba(0,229,255,.45); }
   .bloom-text { text-shadow: 0 0 10px rgba(0,229,255,.9), 0 0 36px rgba(0,229,255,.5), 0 0 80px rgba(47,123,255,.45); }
   .tab-on { background: rgba(0,229,255,.14); box-shadow: inset 0 0 0 1px currentColor, 0 0 24px currentColor; }
   .reveal { transition: opacity 1.4s ease-out; }
   .meter { transition: width 1.6s cubic-bezier(.2,.8,.2,1); }
-  .scan::after { content: ''; position: absolute; left: 0; right: 0; height: 2px; background: rgba(0,229,255,.7); box-shadow: 0 0 12px #00E5FF; animation: scan 3.5s linear infinite; }
-  @keyframes scan { 0% { top: 0; } 100% { top: 100%; } }
+  .scan::after { content: ''; position: absolute; left: 0; right: 0; top: 0; height: 2px; background: rgba(0,229,255,.7); box-shadow: 0 0 12px #00E5FF; will-change: transform; animation: scan 3.5s linear infinite; }
+  @keyframes scan { 0% { transform: translateY(0); } 100% { transform: translateY(320px); } }
   .iris-spin { animation: swirl 40s linear infinite; transform-origin: center; }
+  /* ── hidden event: Hollow Purple + boss fight ── */
+  .shred {
+    --p: -50;
+    -webkit-mask-image: linear-gradient(90deg, transparent calc(var(--p) * 1%), #000 calc(var(--p) * 1% + 4%));
+    mask-image: linear-gradient(90deg, transparent calc(var(--p) * 1%), #000 calc(var(--p) * 1% + 4%));
+  }
+  .shaking { animation: shakeScreen .12s linear infinite; }
+  @keyframes shakeScreen { 0%{transform:translate(0,0)} 25%{transform:translate(-7px,4px)} 50%{transform:translate(6px,-6px)} 75%{transform:translate(-5px,-3px)} 100%{transform:translate(0,0)} }
+  @keyframes orbIn { from{transform:rotate(var(--a)) translateX(56px) scale(1);opacity:0} 25%{opacity:1} to{transform:rotate(var(--a)) translateX(0) scale(.2);opacity:0} }
+  @keyframes orbOut { from{transform:rotate(var(--a)) translateX(6px) scale(.4);opacity:1} to{transform:rotate(var(--a)) translateX(60px) scale(1.1);opacity:0} }
+  @keyframes shardFly { 0%{opacity:0;transform:translate(0,0) rotate(0)} 8%{opacity:1} 100%{opacity:0;transform:translate(var(--dx),var(--dy)) rotate(var(--rot))} }
+  @keyframes tpStrike { 0%{transform:translate(0,0) scale(1);opacity:1} 15%{opacity:0} 30%{transform:translate(0,230px) scale(1.5);opacity:1} 60%{transform:translate(0,230px) scale(1.5);opacity:1} 72%{opacity:0} 100%{transform:translate(0,0) scale(1);opacity:1} }
+  @keyframes pullStage { 0%{transform:none} 35%{transform:scale(.82,1.15) skew(9deg,4deg)} 65%{transform:scale(.7,1.3) skew(-6deg,-3deg)} 100%{transform:none} }
+  @keyframes vortexMenu { 0%{transform:none;opacity:1} 40%,65%{transform:translateY(-340px) scale(.25) rotate(540deg);opacity:.4} 100%{transform:none;opacity:1} }
+  @keyframes repelStage { 0%{transform:none} 14%{transform:scale(1.1) translateX(70px) skewX(-6deg)} 100%{transform:none} }
+  @keyframes floatUp { 0%{opacity:0;transform:translate(-50%,0)} 15%{opacity:1} 100%{opacity:0;transform:translate(-50%,-90px)} }
+  @keyframes flashOut { 0%{opacity:1} 100%{opacity:0} }
+  @keyframes beam { 0%{transform:scaleX(0);opacity:1} 40%{transform:scaleX(1);opacity:1} 100%{transform:scaleX(1);opacity:0} }
+  @keyframes frostIn { from{opacity:0} to{opacity:1} }
+  .frost { background: linear-gradient(135deg, rgba(255,255,255,.35), rgba(190,230,255,.18) 40%, rgba(255,255,255,.4)), repeating-linear-gradient(60deg, rgba(255,255,255,.12) 0 2px, transparent 2px 18px), repeating-linear-gradient(-30deg, rgba(255,255,255,.1) 0 1px, transparent 1px 26px);  }
   @media (prefers-reduced-motion: reduce) {
+    .shaking { animation: none; }
     .swirl-a, .swirl-b, .glow-card::before, .iris-spin, .scan::after { animation: none; }
     .glow-wrap, html { transition: none; scroll-behavior: auto; }
   }
@@ -88,7 +108,7 @@
 <script crossorigin src="https://cdnjs.cloudflare.com/ajax/libs/react-dom/18.3.1/umd/react-dom.production.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/babel-standalone/7.24.7/babel.min.js"></script>
 <script type="text/babel">
-const { useEffect, useRef, useState } = React;
+const { useEffect, useRef, useState, useMemo } = React;
 const REDUCED = matchMedia('(prefers-reduced-motion: reduce)').matches;
 
 /* ───────────────────────── shared lexicon ───────────────────────── */
@@ -110,7 +130,7 @@ function Intro({ onReveal, onDone }) {
     const sctx = snap.getContext('2d');
 
     // overlapping chaotic strings
-    const strings = Array.from({ length: 110 }, () => ({
+    const strings = Array.from({ length: 70 }, () => ({
       x: Math.random() * w, y: Math.random() * h, s: 10 + Math.pow(Math.random(), 2.2) * 110,
       rot: (Math.random() - .5) * 1.2, txt: pick(LEX), life: 0,
       col: pick(['#ffffff', '#ffffff', '#00E5FF', '#2f7bff', '#b58cff']), born: 1500 + Math.random() * 1400,
@@ -135,7 +155,7 @@ function Intro({ onReveal, onDone }) {
         const mx = (tri[0][0] + tri[1][0] + tri[2][0]) / 3, my = (tri[0][1] + tri[1][1] + tri[2][1]) / 3;
         const dx = mx - cx, dy = my - cy, d = Math.hypot(dx, dy) || 1;
         const sp = .6 + Math.random() * 1.4;
-        shards.push({ tri, mx, my, vx: dx / d * sp * 9 + (Math.random() - .5) * 4, vy: dy / d * sp * 9 + (Math.random() - .5) * 4,
+        shards.push({ tri, mx, my, bx: x0, by: y0, vx: dx / d * sp * 9 + (Math.random() - .5) * 4, vy: dy / d * sp * 9 + (Math.random() - .5) * 4,
           vr: (Math.random() - .5) * .12, vz: .004 + Math.random() * .01, delay: d / maxR * 180 });
       });
     }
@@ -172,7 +192,7 @@ function Intro({ onReveal, onDone }) {
       if (cracks.length < 70 && Math.random() < .6 + k) cracks.push(makeCrack());
       for (const cr of cracks) {
         cr.at = Math.min(cr.pts.length - 1, cr.at + .45);
-        ctx.strokeStyle = cr.col; ctx.lineWidth = cr.w; ctx.shadowColor = '#00E5FF'; ctx.shadowBlur = 8;
+        ctx.strokeStyle = cr.col; ctx.lineWidth = cr.w;
         ctx.beginPath(); ctx.moveTo(cr.pts[0][0], cr.pts[0][1]);
         for (let i = 1; i <= cr.at; i++) ctx.lineTo(cr.pts[i | 0][0], cr.pts[i | 0][1]);
         ctx.stroke();
@@ -230,7 +250,7 @@ function Intro({ onReveal, onDone }) {
         for (const s of shards) {
           const te = Math.max(0, e - s.delay);
           if (te === 0) {
-            ctx.save(); ctx.beginPath(); s.tri.forEach((p, i) => i ? ctx.lineTo(p[0], p[1]) : ctx.moveTo(p[0], p[1])); ctx.closePath(); ctx.clip(); ctx.drawImage(snap, 0, 0); ctx.restore(); continue;
+            ctx.save(); ctx.beginPath(); s.tri.forEach((p, i) => i ? ctx.lineTo(p[0], p[1]) : ctx.moveTo(p[0], p[1])); ctx.closePath(); ctx.clip(); ctx.drawImage(snap, s.bx, s.by, cw, ch, s.bx, s.by, cw, ch); ctx.restore(); continue;
           }
           const f = te / 16; // frames elapsed
           const a = Math.max(0, 1 - te / 800);
@@ -239,7 +259,7 @@ function Intro({ onReveal, onDone }) {
           ctx.save(); ctx.globalAlpha = a;
           ctx.translate(s.mx + dx, s.my + dy); ctx.rotate(s.vr * f); ctx.scale(1 + s.vz * f, 1 + s.vz * f); ctx.translate(-s.mx, -s.my);
           ctx.beginPath(); s.tri.forEach((p, i) => i ? ctx.lineTo(p[0], p[1]) : ctx.moveTo(p[0], p[1])); ctx.closePath();
-          ctx.clip(); ctx.drawImage(snap, 0, 0);
+          ctx.clip(); ctx.drawImage(snap, s.bx, s.by, cw, ch, s.bx, s.by, cw, ch);
           ctx.strokeStyle = 'rgba(0,229,255,.9)'; ctx.lineWidth = 2; ctx.stroke();
           ctx.restore();
         }
@@ -266,8 +286,8 @@ function VoidBackground() {
     let w, h, cx, cy, raf, eqs, parts;
     const init = () => {
       w = c.width = innerWidth; h = c.height = innerHeight; cx = w / 2; cy = h / 2;
-      eqs = Array.from({ length: 16 }, () => spawnEq(true));
-      parts = Array.from({ length: Math.min(260, Math.floor(w * h / 7000)) }, () => spawnPart(true));
+      eqs = Array.from({ length: 9 }, () => spawnEq(true));
+      parts = Array.from({ length: Math.min(130, Math.floor(w * h / 14000)) }, () => spawnPart(true));
     };
     function spawnEq(rand) {
       const a = Math.random() * 6.283, rad = .25 + Math.random() * 1.1;
@@ -277,7 +297,10 @@ function VoidBackground() {
       const a = Math.random() * 6.283, rad = .05 + Math.random() * 1.3;
       return { x: Math.cos(a) * rad, y: Math.sin(a) * rad, z: rand ? Math.random() : 1, sp: .002 + Math.random() * .004 };
     }
+    let skip = false;
     const draw = (t) => {
+      raf = requestAnimationFrame(draw);
+      skip = !skip; if (skip) return; // run at ~30fps
       ctx.clearRect(0, 0, w, h);
       const R = Math.max(w, h);
       // thin neon-cyan geometric grid: receding frames + radial rays toward the vanishing point
@@ -315,11 +338,10 @@ function VoidBackground() {
         if (x < -200 || x > w + 200 || y < -100 || y > h + 100) { Object.assign(e, spawnEq(false)); continue; }
         const size = Math.min(70, 8 + k * 14), a = Math.min(.55, (1 - e.z) * .9) * Math.min(1, e.z * 6);
         ctx.font = `${size}px Orbitron, "Noto Sans JP", monospace`;
-        ctx.shadowColor = `rgb(${e.col})`; ctx.shadowBlur = 14;
+        ctx.shadowColor = `rgb(${e.col})`; ctx.shadowBlur = 6;
         ctx.fillStyle = `rgba(${e.col},${a})`; ctx.fillText(e.txt, x, y);
       }
       ctx.shadowBlur = 0;
-      raf = requestAnimationFrame(draw);
     };
     init(); raf = requestAnimationFrame(draw);
     addEventListener('resize', init);
@@ -460,7 +482,7 @@ function Card({ children, className = '' }) {
 function Header() {
   const links = [['eyes', 'Six Eyes'], ['limitless', 'Limitless'], ['domain', 'Domain']];
   return (
-    <header className="sticky top-0 z-30 flex items-center justify-between px-5 md:px-10 py-3 backdrop-blur-md bg-black/60 border-b border-cyan-neon/30 shadow-[0_0_30px_rgba(0,229,255,.18)]">
+    <header className="sticky top-0 z-30 flex items-center justify-between px-5 md:px-10 py-3 bg-black/85 border-b border-cyan-neon/30 shadow-[0_0_30px_rgba(0,229,255,.18)]">
       <a href="#top" className="font-display font-bold tracking-[.3em] text-cyan-neon bloom-text text-sm md:text-base">GOJO · CODEX</a>
       <nav><ul className="flex gap-5 md:gap-9 font-display text-[11px] md:text-xs tracking-widest uppercase">
         {links.map(([id, l]) => <li key={id}><a href={'#' + id} className="text-white/80 hover:text-cyan-neon transition-colors hover:[text-shadow:0_0_14px_#00E5FF]">{l}</a></li>)}
@@ -483,7 +505,13 @@ function Hero() {
           {facts.map(([k, v]) => <div key={k} className="border-l-2 border-cyan-neon/60 pl-3"><dt className="font-display text-[10px] tracking-[.3em] text-white/50 uppercase">{k}</dt><dd className="text-lg text-white">{v}</dd></div>)}
         </dl>
       </div>
-      <div><SixEyes /></div>
+      <div className="glow-wrap max-w-[420px] mx-auto w-full">
+        <div className="glow-card relative aspect-square overflow-hidden !p-0">
+          <img src="gojo.jpg" alt="Satoru Gojo" className="absolute inset-[2px] w-[calc(100%-4px)] h-[calc(100%-4px)] object-cover" style={{ objectPosition: '50% 28%' }} />
+          <div className="absolute inset-[2px] pointer-events-none bg-gradient-to-t from-black/70 via-transparent to-transparent" />
+          <div className="absolute bottom-3 left-4 font-display text-[11px] tracking-[.4em] uppercase text-cyan-neon bloom-text">五条悟 · The Strongest</div>
+        </div>
+      </div>
     </section>
   );
 }
@@ -606,20 +634,362 @@ function DomainSection() {
   );
 }
 
+/* ═══════════════ HIDDEN EVENT · Phase 1: Singularity (drag Blue into Red) ═══════════════ */
+const ORB = 88, ORB_TOP = 96, ORB_EDGE = 16;
+
+function Orb({ kind, offset, dragging, handlers }) {
+  const blue = kind === 'blue', n = 14;
+  return (
+    <div {...handlers} role="button" tabIndex={-1}
+      aria-label={blue ? 'Cursed Technique Lapse: Blue. Drag it into the red orb.' : 'Cursed Technique Reversal: Red. Drag it into the blue orb.'}
+      title={blue ? 'Lapse: Blue' : 'Reversal: Red'}
+      className={'fixed w-[88px] h-[88px] rounded-full select-none cursor-grab active:cursor-grabbing ' + (blue ? 'left-4 ' : 'right-4 ') + (dragging ? '' : 'transition-transform duration-500 ease-out')}
+      style={{ top: ORB_TOP, transform: `translate(${offset.x}px,${offset.y}px)`, touchAction: 'none', zIndex: dragging ? 55 : 40 }}>
+      <div className={'absolute inset-2 rounded-full border ' + (blue
+        ? 'bg-cyan-500/20 shadow-[0_0_30px_rgba(6,182,212,0.8)] border-cyan-300/70'
+        : 'bg-rose-600/20 shadow-[0_0_30px_rgba(225,29,72,0.8)] border-rose-400/70 animate-pulse')} />
+      <div className={'absolute left-1/2 top-1/2 -ml-3 -mt-3 w-6 h-6 rounded-full ' + (blue ? 'bg-cyan-200 shadow-[0_0_20px_#22d3ee]' : 'bg-rose-300 shadow-[0_0_20px_#fb7185]')} />
+      {Array.from({ length: n }, (_, i) => (
+        <i key={i} className={'absolute left-1/2 top-1/2 -ml-[3px] -mt-[3px] w-[6px] h-[6px] rounded-full ' + (blue ? 'bg-cyan-300' : 'bg-rose-400')}
+          style={{ '--a': (i * 360 / n) + 'deg', animation: `${blue ? 'orbIn 1.2s' : 'orbOut .9s'} linear ${i * .08}s infinite` }} />
+      ))}
+    </div>
+  );
+}
+
+function HiddenOrbs({ onCollide }) {
+  const Z = { x: 0, y: 0 };
+  const [off, setOff] = useState({ blue: Z, red: Z });
+  const [drag, setDrag] = useState(null);
+  const st = useRef(null);
+  const centers = (o) => ({
+    blue: { x: ORB_EDGE + ORB / 2 + o.blue.x, y: ORB_TOP + ORB / 2 + o.blue.y },
+    red: { x: innerWidth - ORB_EDGE - ORB / 2 + o.red.x, y: ORB_TOP + ORB / 2 + o.red.y },
+  });
+  const handlers = (kind) => ({
+    onPointerDown: (e) => { e.currentTarget.setPointerCapture(e.pointerId); st.current = { kind, sx: e.clientX, sy: e.clientY, ox: off[kind].x, oy: off[kind].y }; setDrag(kind); },
+    onPointerMove: (e) => {
+      const s = st.current; if (!s || s.kind !== kind) return;
+      const next = { ...off, [kind]: { x: s.ox + e.clientX - s.sx, y: s.oy + e.clientY - s.sy } };
+      setOff(next);
+      const c = centers(next);
+      if (Math.hypot(c.blue.x - c.red.x, c.blue.y - c.red.y) < ORB * .85) {
+        st.current = null; setDrag(null);
+        onCollide({ x: (c.blue.x + c.red.x) / 2, y: (c.blue.y + c.red.y) / 2 });
+      }
+    },
+    onPointerUp: () => { st.current = null; setDrag(null); setOff(o => ({ ...o, [kind]: Z })); },
+    onPointerCancel: () => { st.current = null; setDrag(null); setOff(o => ({ ...o, [kind]: Z })); },
+  });
+  return (
+    <>
+      <Orb kind="blue" offset={off.blue} dragging={drag === 'blue'} handlers={handlers('blue')} />
+      <Orb kind="red" offset={off.red} dragging={drag === 'red'} handlers={handlers('red')} />
+    </>
+  );
+}
+
+/* Hollow Purple: flash + colour merge → purple sphere tears the layout away → boss arena */
+const H = { glide: 700, sweep: 1500, arena: 4300, end: 5200 };
+const lerp = (a, b, k) => a + (b - a) * Math.min(1, Math.max(0, k));
+const ease = (k) => k * k * (3 - 2 * k);
+
+function HollowSequence({ at, onArena, onEnd }) {
+  const [e, setE] = useState(0);
+  const fired = useRef({ a: false, e: false });
+  const shards = useMemo(() => Array.from({ length: 44 }, () => {
+    const x = Math.random() * 110 - 5, ang = Math.random() * 6.283, d = 300 + Math.random() * 800;
+    return { x, y: Math.random() * 100, sz: 70 + Math.random() * 190, dx: Math.cos(ang) * d, dy: Math.sin(ang) * d, rot: (Math.random() - .5) * 900,
+      poly: `polygon(${Math.random() * 30}% 0, 100% ${Math.random() * 40}%, ${60 + Math.random() * 40}% 100%, 0 ${60 + Math.random() * 40}%)`,
+      delay: (x + 10) / 125 * (H.arena - H.sweep) };
+  }), []);
+  useEffect(() => {
+    const t0 = performance.now(); let raf;
+    const f = (n) => {
+      const el = n - t0; setE(el);
+      if (el >= H.arena && !fired.current.a) { fired.current.a = true; onArena(); }
+      if (el >= H.end) { if (!fired.current.e) { fired.current.e = true; onEnd(); } return; }
+      raf = requestAnimationFrame(f);
+    };
+    raf = requestAnimationFrame(f);
+    return () => cancelAnimationFrame(raf);
+  }, []);
+
+  const W = innerWidth, Hh = innerHeight, D = Math.min(W, Hh) * .75;
+  let x = at.x, y = at.y, sc = 1;
+  if (e < H.glide) { sc = lerp(.15, 1, ease(e / H.glide)); }
+  else if (e < H.sweep) { const k = ease((e - H.glide) / (H.sweep - H.glide)); x = lerp(at.x, -.18 * W, k); y = lerp(at.y, Hh * .5, k); }
+  else { const k = (e - H.sweep) / (H.arena - H.sweep); x = lerp(-.18 * W, 1.25 * W, k); y = Hh * .5 + Math.sin(k * 14) * Hh * .1; sc = 1 + Math.sin(k * 30) * .04; }
+  const sweeping = e >= H.sweep && e < H.arena + 400;
+
+  // layout destruction: erase page behind the sphere
+  useEffect(() => {
+    const page = document.getElementById('page'), root = document.getElementById('root');
+    if (!page) return;
+    if (e >= H.sweep) { page.classList.add('shred'); page.style.setProperty('--p', String((x + D * .38) / W * 100)); }
+    root.classList.toggle('shaking', e > 400 && e < H.arena);
+  }, [e]);
+  useEffect(() => () => {
+    const page = document.getElementById('page'); const root = document.getElementById('root');
+    if (page) { page.classList.remove('shred'); page.style.removeProperty('--p'); }
+    root.classList.remove('shaking');
+  }, []);
+
+  const mergeK = Math.min(1, e / 350);
+  const violet = e < 500 ? .7 : e < H.sweep ? .42 : e < H.arena ? .12 : Math.max(0, .55 * (1 - (e - H.arena) / (H.end - H.arena)));
+  const white = e < 450 ? 1 - e / 450 : (e >= H.arena && e < H.arena + 400) ? .9 * (1 - (e - H.arena) / 400) : 0;
+  return (
+    <div className="fixed inset-0 z-[60] overflow-hidden" style={{ cursor: 'wait' }}>
+      <div className="absolute inset-0" style={{ background: `rgba(88,28,200,${violet})` }} />
+      {e < 500 && <div className="absolute inset-0" style={{ background:
+        `radial-gradient(circle at ${at.x - 110 * (1 - mergeK)}px ${at.y}px, rgba(6,182,212,.9), transparent 300px), radial-gradient(circle at ${at.x + 110 * (1 - mergeK)}px ${at.y}px, rgba(225,29,72,.9), transparent 300px)` }} />}
+      <div className="absolute inset-0 bg-purple-600/0" style={{ background: `radial-gradient(circle at ${at.x}px ${at.y}px, rgba(147,51,234,${e < H.sweep ? .6 : 0}), transparent 55%)` }} />
+      {e < H.arena + 400 && (
+        <div className="absolute left-0 top-0 rounded-full bg-purple-600 shadow-[0_0_50px_rgba(147,51,234,1)]"
+          style={{ width: D, height: D, transform: `translate(${x - D / 2}px,${y - D / 2}px) scale(${sc})`,
+            backgroundImage: 'radial-gradient(circle, rgba(255,255,255,.95) 0, rgba(233,213,255,.6) 22%, rgba(147,51,234,0) 62%)',
+            boxShadow: '0 0 50px rgba(147,51,234,1), 0 0 180px rgba(147,51,234,.85), inset 0 0 90px rgba(255,255,255,.5)' }} />
+      )}
+      {sweeping && shards.map((s, i) => (
+        <div key={i} className="absolute" style={{ left: s.x + 'vw', top: s.y + 'vh', width: s.sz, height: s.sz, clipPath: s.poly,
+          background: 'linear-gradient(135deg, rgba(255,255,255,.35), rgba(147,51,234,.5))', '--dx': s.dx + 'px', '--dy': s.dy + 'px', '--rot': s.rot + 'deg',
+          animation: `shardFly 1.3s ease-in ${s.delay}ms both` }} />
+      ))}
+      <div className="absolute inset-0 bg-white" style={{ opacity: white }} />
+    </div>
+  );
+}
+
+/* ═══════════════ Phase 2: Satoru Gojo boss fight (scripted state machine) ═══════════════ */
+const PMAX = 200;
+const FX_BY_TURN = (n) => n <= 2 ? 'tp' : n === 3 ? 'blue' : n === 4 ? 'red' : 'domain';
+const FIGHT0 = { stage: 'menu', turn: 1, hp: PMAX, lock: 0, guard: false, fx: '', floats: [], log: 'Satoru Gojo has not moved. He does not need to.', count: null, dotPhase: false };
+let floatId = 0;
+const addFloat = (s, text, side, tone) => [...s.floats, { id: ++floatId, text, side, tone }];
+
+function fightReducer(s, a) {
+  switch (a.type) {
+    case 'act': {
+      const dc = a.name === 'Domain Counter';
+      return { ...s, stage: 'player', guard: dc, log: `You use ${a.name}.`,
+        floats: addFloat(s, dc ? '[Simple Domain raised]' : '[0 Damage - Blocked by Infinity]', 'boss', dc ? 'white' : 'cyan') };
+    }
+    case 'skip': return { ...s, stage: 'player', lock: s.lock - 1, guard: false, log: '[Spacial Disorientation] — you cannot act.', floats: addFloat(s, '[ACTIONS LOCKED]', 'player', 'violet') };
+    case 'enemyStart': return { ...s, stage: 'enemy', fx: FX_BY_TURN(s.turn) };
+    case 'log': return { ...s, log: a.text };
+    case 'hit': return { ...s, hp: Math.max(0, s.hp - a.n), floats: addFloat(s, '-' + a.n, 'player', 'red') };
+    case 'lock': return { ...s, lock: 1, floats: addFloat(s, '[Spacial Disorientation]', 'player', 'violet') };
+    case 'count': return { ...s, count: a.ms };
+    case 'dot': return { ...s, dotPhase: true, hp: Math.max(0, s.hp - a.n) };
+    case 'enemyEnd': return s.hp <= 0 ? { ...s, stage: 'lost', fx: '' } : { ...s, stage: 'menu', turn: s.turn + 1, fx: '', guard: false };
+    case 'lost': return { ...s, stage: 'lost' };
+    case 'rm': return { ...s, floats: s.floats.filter(f => f.id !== a.id) };
+    case 'reset': return { ...FIGHT0 };
+    default: return s;
+  }
+}
+
+function useTween(v) {
+  const [d, setD] = useState(v); const r = useRef(v);
+  useEffect(() => {
+    let raf;
+    const step = () => { r.current += (v - r.current) * .16; if (Math.abs(v - r.current) < .5) r.current = v; setD(r.current); if (r.current !== v) raf = requestAnimationFrame(step); };
+    raf = requestAnimationFrame(step); return () => cancelAnimationFrame(raf);
+  }, [v]);
+  return d;
+}
+
+// Infinite Void brain overload: overlapping information streams
+function Overload() {
+  const ref = useRef(null);
+  useEffect(() => {
+    const c = ref.current, ctx = c.getContext('2d'); let raf;
+    const w = c.width = innerWidth, h = c.height = innerHeight;
+    const draw = () => {
+      ctx.fillStyle = 'rgba(0,0,0,.18)'; ctx.fillRect(0, 0, w, h);
+      for (let i = 0; i < 12; i++) {
+        const s = 10 + Math.pow(Math.random(), 2.5) * 90;
+        ctx.font = `${s}px "Noto Sans JP", Orbitron, monospace`;
+        ctx.fillStyle = pick(['#fff', '#00E5FF', '#2f7bff', '#b58cff']); ctx.globalAlpha = .25 + Math.random() * .6;
+        ctx.save(); ctx.translate(Math.random() * w, Math.random() * h); ctx.rotate((Math.random() - .5) * .8); ctx.fillText(pick(LEX), 0, 0); ctx.restore();
+      }
+      ctx.globalAlpha = 1; raf = requestAnimationFrame(draw);
+    };
+    draw(); return () => cancelAnimationFrame(raf);
+  }, []);
+  return <canvas ref={ref} className="fixed inset-0 z-[47] pointer-events-none opacity-80" aria-hidden="true" />;
+}
+
+const TONES = { cyan: 'text-cyan-neon', white: 'text-white', red: 'text-rose-500', violet: 'text-hollow' };
+
+function Arena({ onExit }) {
+  const [s, d] = React.useReducer(fightReducer, FIGHT0);
+  const hp = useTween(s.hp);
+
+  useEffect(() => {
+    const ts = [], is = [];
+    const T = (f, ms) => ts.push(setTimeout(f, ms));
+    const n = s.turn;
+    if (s.stage === 'menu' && s.lock > 0) T(() => d({ type: 'skip' }), 1500);
+    if (s.stage === 'player') T(() => d({ type: 'enemyStart' }), 1100);
+    if (s.stage === 'enemy') {
+      if (n <= 2) { // The Neutral Play — Teleportation Strike, flat 25% of player HP
+        d({ type: 'log', text: 'Gojo vanishes — Teleportation Strike!' });
+        T(() => d({ type: 'hit', n: s.guard ? Math.round(PMAX * .125) : PMAX * .25 }), 550);
+        T(() => d({ type: 'enemyEnd' }), 1700);
+      } else if (n === 3) { // Amplified Pull — Lapse: Blue
+        d({ type: 'log', text: 'Lapse: Blue — space collapses toward a single point.' });
+        T(() => { d({ type: 'lock' }); d({ type: 'log', text: '[Spacial Disorientation] — your actions are locked for 1 turn.' }); }, 1100);
+        T(() => d({ type: 'enemyEnd' }), 2300);
+      } else if (n === 4) { // Violent Reversal — Reversal: Red
+        d({ type: 'log', text: 'Reversal: Red — everything is thrown away from him.' });
+        T(() => d({ type: 'hit', n: s.guard ? Math.round(PMAX * .175) : PMAX * .35 }), 650);
+        T(() => d({ type: 'enemyEnd' }), 2000);
+      } else { // The Ultimate Condition — 0.2s Infinite Void
+        d({ type: 'log', text: 'Domain Expansion: Infinite Void — Muryōkūsho.' });
+        d({ type: 'count', ms: 200 });
+        T(() => {
+          const t0 = performance.now();
+          is.push(setInterval(() => d({ type: 'count', ms: Math.max(0, Math.round(200 - (performance.now() - t0) / 1700 * 200)) }), 30));
+        }, 500);
+        T(() => {
+          d({ type: 'count', ms: 0 });
+          d({ type: 'log', text: 'You can see everything. You can feel everything. You cannot do anything.' });
+          is.push(setInterval(() => d({ type: 'dot', n: 5 }), 100));
+        }, 2300);
+      }
+    }
+    return () => { ts.forEach(clearTimeout); is.forEach(clearInterval); };
+  }, [s.stage, s.turn, s.lock]);
+
+  const dead = s.dotPhase && s.hp <= 0;
+  useEffect(() => { if (dead) { const t = setTimeout(() => d({ type: 'lost' }), 1000); return () => clearTimeout(t); } }, [dead]);
+  useEffect(() => { document.body.style.overflow = 'hidden'; return () => { document.body.style.overflow = ''; }; }, []);
+
+  const frozen = s.fx === 'domain';
+  const disabled = s.stage !== 'menu' || s.lock > 0;
+  const stageAnim = { tp: 'shakeScreen .16s linear 5', blue: 'pullStage 2.2s ease-in-out', red: 'repelStage 1.2s ease-out' }[s.fx];
+  const pct = Math.max(0, hp / PMAX * 100);
+  const actions = [['Attack', 'Strike with everything physical'], ['Cursed Energy Burst', 'Release raw cursed energy'], ['Domain Counter', 'Raise a Simple Domain to blunt the next hit']];
+
+  return (
+    <div className="fixed inset-0 z-40 overflow-hidden bg-black/70">
+      <div className="absolute inset-0 overflow-y-auto" style={{ animation: stageAnim, transformOrigin: '50% 40%' }}>
+        <div className="max-w-5xl mx-auto px-5 py-6 min-h-full flex flex-col">
+          <div className="flex justify-between font-display text-[11px] tracking-[.4em] uppercase text-white/60">
+            <span>Boss encounter · Special Grade</span><span>Turn {Math.min(s.turn, 5)}</span>
+          </div>
+
+          {/* Gojo */}
+          <div className="relative text-center mt-4">
+            <div style={{ animation: s.fx === 'tp' ? 'tpStrike 1.5s ease-in-out' : undefined }} className="relative inline-block">
+              <div className="relative h-[34vh] max-h-[330px] min-h-[200px] aspect-[2/3] mx-auto overflow-hidden rounded-[50%/42%] shadow-[0_0_50px_rgba(0,229,255,.55),inset_0_0_40px_rgba(47,123,255,.5)]"
+                style={{ background: 'radial-gradient(ellipse at 50% 40%, #ffffff 0%, #cfeaff 55%, #5aa8ff 100%)' }}>
+                <img src="gojo full body.jpg" alt="Satoru Gojo, full body" className="absolute inset-0 w-full h-full object-contain mix-blend-multiply" />
+              </div>
+              <div className="absolute inset-[-8%] rounded-[50%/42%] border border-dashed border-cyan-neon/60 pointer-events-none" aria-hidden="true" />
+            </div>
+            <h2 className="font-display font-black text-2xl md:text-3xl tracking-widest text-white bloom-text">SATORU GOJO</h2>
+            <div className="mt-3 max-w-md mx-auto">
+              <div className="flex justify-between font-display text-xs tracking-widest"><span className="text-white/60">HP</span><span className="text-cyan-neon">???,???</span></div>
+              <div className="h-3 bg-white/10 overflow-hidden rounded-sm"><div className="h-full w-full bg-gradient-to-r from-azure via-cyan-neon to-white animate-pulse shadow-[0_0_16px_#00E5FF]" /></div>
+              <div className="mt-1 font-display text-[11px] tracking-[.3em] text-cyan-neon">[Passive Active: Infinity]</div>
+            </div>
+            {s.floats.filter(f => f.side === 'boss').map(f => (
+              <div key={f.id} onAnimationEnd={() => d({ type: 'rm', id: f.id })} className={'absolute left-1/2 top-1/3 font-display font-bold text-lg md:text-xl whitespace-nowrap pointer-events-none ' + TONES[f.tone]}
+                style={{ animation: 'floatUp 1.4s ease-out forwards', textShadow: '0 0 14px currentColor' }}>{f.text}</div>
+            ))}
+          </div>
+
+          <div className="flex-1" />
+          <p className="text-center text-lg md:text-xl text-white/90 min-h-[3.5rem] my-4" aria-live="polite">{s.log}</p>
+
+          {/* Player */}
+          <div className="relative max-w-xl w-full mx-auto">
+            <div className="flex justify-between items-end font-display text-xs tracking-widest">
+              <span className="text-white">YOU {s.lock > 0 && <span className="ml-2 text-hollow">[Spacial Disorientation]</span>}</span>
+              <span className="text-white text-base tabular-nums">{Math.ceil(hp)} / {PMAX}</span>
+            </div>
+            <div className="h-3 bg-white/10 overflow-hidden rounded-sm"><div className="h-full bg-gradient-to-r from-emerald-500 to-lime-300" style={{ width: pct + '%', transition: 'width .2s' }} /></div>
+            {s.floats.filter(f => f.side === 'player').map(f => (
+              <div key={f.id} onAnimationEnd={() => d({ type: 'rm', id: f.id })} className={'absolute left-1/2 -top-2 font-display font-bold text-2xl whitespace-nowrap pointer-events-none ' + TONES[f.tone]}
+                style={{ animation: 'floatUp 1.4s ease-out forwards', textShadow: '0 0 14px currentColor' }}>{f.text}</div>
+            ))}
+            <div className="relative mt-4" style={{ animation: s.fx === 'blue' ? 'vortexMenu 2.2s ease-in-out' : undefined }}>
+              <div className="grid sm:grid-cols-3 gap-3">
+                {actions.map(([name, hint]) => (
+                  <button key={name} disabled={disabled || frozen} onClick={() => d({ type: 'act', name })}
+                    className="text-left px-4 py-3 border border-cyan-neon/50 bg-black/60 hover:bg-cyan-neon/15 hover:shadow-[0_0_24px_rgba(0,229,255,.5)] transition-all disabled:opacity-40 disabled:cursor-not-allowed">
+                    <div className="font-display font-bold tracking-widest uppercase text-sm text-cyan-neon">{name}</div>
+                    <div className="text-sm text-white/70">{hint}</div>
+                  </button>
+                ))}
+              </div>
+              {s.lock > 0 && s.stage === 'menu' && <div className="absolute inset-0 grid place-items-center bg-black/60 font-display tracking-[.4em] text-hollow text-sm">LOCKED</div>}
+              {frozen && (
+                <div className="frost absolute -inset-1 grid place-items-center border border-white/60 shadow-[0_0_40px_rgba(200,235,255,.6)]" style={{ animation: 'frostIn .4s ease-out both' }}>
+                  <span className="font-display tracking-[.5em] text-white text-sm drop-shadow">FROZEN</span>
+                </div>
+              )}
+            </div>
+          </div>
+          <div className="h-6" />
+        </div>
+      </div>
+
+      {/* effects */}
+      {s.fx === 'blue' && <div className="absolute left-1/2 top-1/2 w-72 h-72 -ml-36 -mt-36 rounded-full pointer-events-none" style={{ background: 'conic-gradient(from 0deg, rgba(6,182,212,0), rgba(47,123,255,.9), rgba(6,182,212,0), rgba(47,123,255,.9), rgba(6,182,212,0))', filter: 'blur(14px)', animation: 'swirl 1s linear infinite' }} />}
+      {s.fx === 'red' && <>
+        <div className="absolute inset-0 bg-rose-600/60 pointer-events-none" style={{ animation: 'flashOut 1.4s ease-out both' }} />
+        <div className="absolute left-0 right-0 top-[28%] h-8 pointer-events-none bg-gradient-to-r from-transparent via-rose-500 to-white shadow-[0_0_60px_#e11d48]" style={{ transformOrigin: 'left', animation: 'beam 1s ease-out both' }} />
+      </>}
+      {s.fx === 'domain' && <>
+        <div className="absolute inset-0 bg-white pointer-events-none z-[46]" style={{ animation: 'flashOut 1.8s ease-out both' }} />
+        <Overload />
+        <div className="absolute inset-x-0 top-[38%] z-[48] text-center pointer-events-none">
+          <div className="font-display text-xs tracking-[.6em] text-cyan-neon">INFINITE VOID · BRAIN OVERLOAD</div>
+          <div className="font-display font-black text-6xl md:text-8xl text-white tabular-nums" style={{ textShadow: '0 0 30px #00E5FF, 0 0 80px #2f7bff' }}>{((s.count ?? 200) / 1000).toFixed(3)}s</div>
+        </div>
+      </>}
+      {s.stage === 'lost' && (
+        <div className="absolute inset-0 z-[49] grid place-items-center bg-black/85 text-center px-6" style={{ animation: 'frostIn .8s both' }}>
+          <div>
+            <p className="font-display text-xs tracking-[.5em] text-azure uppercase">Muryōkūsho</p>
+            <h2 className="mt-4 font-display font-black text-3xl md:text-5xl text-white bloom-text">YOU CAN SEE EVERYTHING.<br />YOU CANNOT DO ANYTHING.</h2>
+            <p className="mt-4 text-white/60">Infinity cannot be broken here — this fight is built to be lost.</p>
+            <div className="mt-8 flex flex-wrap gap-4 justify-center">
+              <button onClick={() => d({ type: 'reset' })} className="px-8 py-3 font-display font-bold tracking-[.3em] uppercase text-black bg-cyan-neon shadow-[0_0_30px_rgba(0,229,255,.7)] hover:scale-105 transition-transform">Retry</button>
+              <button onClick={onExit} className="px-8 py-3 font-display font-bold tracking-[.3em] uppercase text-white border border-white/50 hover:bg-white/10 transition-colors">Return to Codex</button>
+            </div>
+          </div>
+        </div>
+      )}
+    </div>
+  );
+}
+
 function App() {
   const [intro, setIntro] = useState(!REDUCED);
   const [shown, setShown] = useState(REDUCED);
+  const [event, setEvent] = useState('idle'); // idle → hollow → arena
+  const [arenaUp, setArenaUp] = useState(false);
+  const [at, setAt] = useState({ x: 0, y: 0 });
+  const exitArena = () => { setArenaUp(false); setEvent('idle'); };
   return (
     <>
+      <div className="bg-fixed" aria-hidden="true" />
       <div className="swirl swirl-a" aria-hidden="true" />
       <div className="swirl swirl-b" aria-hidden="true" />
       <VoidBackground />
       <div className="vignette" aria-hidden="true" />
-      <div className="reveal relative z-10" style={{ opacity: shown ? 1 : 0 }}>
+      <div id="page" className="reveal relative z-10" style={{ opacity: shown ? 1 : 0, display: arenaUp ? 'none' : undefined }}>
         <Header />
         <main><Hero /><EyesSection /><LimitlessSection /><DomainSection /></main>
         <footer className="text-center py-12 font-display text-[11px] tracking-[.4em] uppercase text-white/50">Gojo Codex · Fan-made · Throughout heaven and earth, I alone am the honored one</footer>
       </div>
+      {shown && event === 'idle' && <HiddenOrbs onCollide={(pt) => { setAt(pt); setEvent('hollow'); }} />}
+      {arenaUp && <Arena onExit={exitArena} />}
+      {event === 'hollow' && <HollowSequence at={at} onArena={() => setArenaUp(true)} onEnd={() => setEvent('arena')} />}
       {intro && <Intro onReveal={() => setShown(true)} onDone={() => setIntro(false)} />}
     </>
   );
