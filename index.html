@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Porsche's Site — Infinite Void</title>
+<title>Gojo Codex — Infinite Void</title>
 <script src="https://cdn.tailwindcss.com/3.4.1"></script>
 <script>
   tailwind.config = {
@@ -11,14 +11,16 @@
       extend: {
         colors: {
           void: '#000000',
-          space: '#050510',
-          royal: '#2a0f6b',
+          indigo9: '#07041c',
+          violet9: '#1a0b4a',
           cyan: { neon: '#00E5FF' },
           azure: '#2f7bff',
+          crimson: '#ff3b5c',
+          hollow: '#b58cff',
         },
         fontFamily: {
           display: ['"Orbitron"', '"Segoe UI"', 'sans-serif'],
-          body: ['"Rajdhani"', '"Segoe UI"', 'sans-serif'],
+          body: ['"Rajdhani"', '"Noto Sans JP"', '"Segoe UI"', 'sans-serif'],
         },
       },
     },
@@ -26,78 +28,60 @@
 </script>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@500;700;900&family=Rajdhani:wght@400;500;600&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@500;700;900&family=Rajdhani:wght@400;500;600&family=Noto+Sans+JP:wght@500;700&display=swap" rel="stylesheet">
 <style>
   html { scroll-behavior: smooth; }
   body {
     background:
-      radial-gradient(ellipse at 15% 10%, rgba(42,15,107,.55), transparent 55%),
-      radial-gradient(ellipse at 85% 30%, rgba(47,123,255,.18), transparent 55%),
-      radial-gradient(ellipse at 50% 100%, rgba(0,229,255,.12), transparent 60%),
-      #050510;
+      radial-gradient(ellipse at 50% 50%, rgba(26,11,74,.55), transparent 60%),
+      radial-gradient(ellipse at 10% 0%, rgba(47,20,130,.45), transparent 55%),
+      radial-gradient(ellipse at 90% 100%, rgba(7,4,28,.9), transparent 60%),
+      #000;
     background-attachment: fixed;
   }
-  /* abstract grid receding into the void */
-  .void-grid {
-    position: fixed; inset: 0; z-index: 0; pointer-events: none;
-    background-image:
-      linear-gradient(rgba(0,229,255,.07) 1px, transparent 1px),
-      linear-gradient(90deg, rgba(0,229,255,.07) 1px, transparent 1px);
-    background-size: 56px 56px;
-    mask-image: radial-gradient(ellipse at center, #000 20%, transparent 75%);
-    -webkit-mask-image: radial-gradient(ellipse at center, #000 20%, transparent 75%);
-  }
-  /* rotating geometric glowing border */
-  @property --a { syntax: '<angle>'; initial-value: 0deg; inherits: false; }
-  @keyframes spin-a { to { --a: 360deg; } }
-  .glow-card { position: relative; border-radius: 14px; isolation: isolate; }
-  .glow-card::before {
-    content: ''; position: absolute; inset: -1.5px; border-radius: inherit; z-index: -2;
-    background: conic-gradient(from var(--a), transparent 0 55%, #00E5FF 72%, #fff 80%, #2f7bff 88%, transparent 100%);
-    animation: spin-a 5s linear infinite;
-  }
-  .glow-card::after {
-    content: ''; position: absolute; inset: 0; border-radius: inherit; z-index: -1;
-    background: linear-gradient(160deg, rgba(5,5,16,.96), rgba(12,6,40,.94));
-  }
-  .glow-card { box-shadow: 0 0 30px rgba(0,229,255,.18), 0 0 90px rgba(47,123,255,.12); }
-  /* instantaneous space-warp on hover */
-  .warp { transition: transform .28s cubic-bezier(.2,.9,.1,1), filter .28s, box-shadow .28s; }
-  .warp:hover {
-    transform: perspective(700px) scale(1.04) skewX(-2deg) rotateX(3deg);
-    filter: drop-shadow(-3px 0 0 rgba(0,229,255,.7)) drop-shadow(3px 0 0 rgba(120,60,255,.7));
-    box-shadow: 0 0 50px rgba(0,229,255,.55), 0 0 140px rgba(47,123,255,.4);
-  }
-  .bloom-text { text-shadow: 0 0 12px rgba(0,229,255,.9), 0 0 40px rgba(0,229,255,.55), 0 0 90px rgba(47,123,255,.5); }
-  .eye-ring {
-    background: radial-gradient(circle, #fff 0 6%, #00E5FF 12% 22%, #2f7bff 30%, rgba(42,15,107,.6) 55%, transparent 70%);
-    animation: pulse 4s ease-in-out infinite;
-  }
-  @keyframes pulse { 0%,100% { transform: scale(1); opacity: .9; } 50% { transform: scale(1.12); opacity: 1; } }
-  /* living void: slowly swirling cosmic blues and purples */
-  .swirl { position: fixed; inset: -30%; z-index: 0; pointer-events: none; opacity: .85; }
+  /* slow swirl of violet / indigo behind the grid */
+  .swirl { position: fixed; inset: -35%; z-index: 0; pointer-events: none; }
   .swirl-a {
-    background: conic-gradient(from 0deg at 40% 45%, rgba(42,15,107,.75), rgba(5,5,16,0) 25%, rgba(47,123,255,.4) 45%, rgba(5,5,16,0) 65%, rgba(0,229,255,.22) 85%, rgba(42,15,107,.75));
-    filter: blur(70px); animation: swirl 70s linear infinite;
+    background: conic-gradient(from 0deg at 50% 50%, rgba(60,20,160,.55), rgba(0,0,0,0) 22%, rgba(20,20,120,.5) 45%, rgba(0,0,0,0) 68%, rgba(100,40,200,.35) 86%, rgba(60,20,160,.55));
+    filter: blur(80px); animation: swirl 120s linear infinite;
   }
   .swirl-b {
-    background: conic-gradient(from 90deg at 62% 58%, rgba(0,229,255,.18), rgba(5,5,16,0) 30%, rgba(90,40,200,.5) 55%, rgba(5,5,16,0) 80%, rgba(0,229,255,.18));
-    filter: blur(90px); animation: swirl 110s linear infinite reverse;
+    background: conic-gradient(from 120deg at 45% 55%, rgba(0,229,255,.10), rgba(0,0,0,0) 30%, rgba(80,30,190,.4) 60%, rgba(0,0,0,0) 85%, rgba(0,229,255,.10));
+    filter: blur(100px); animation: swirl 180s linear infinite reverse;
   }
   @keyframes swirl { to { transform: rotate(360deg); } }
-  /* intro */
-  .flash { position: absolute; inset: 0; background: #fff; opacity: 0; }
-  .flash.go { animation: flash 900ms ease-out forwards; }
-  @keyframes flash { 0% { opacity: 1; } 100% { opacity: 0; } }
-  .reveal { transition: opacity 1.2s ease-out; }
+  /* vignette: the void presses in from the edges */
+  .vignette { position: fixed; inset: 0; z-index: 1; pointer-events: none; background: radial-gradient(ellipse at center, transparent 35%, rgba(0,0,0,.75) 100%); }
+
+  @property --a { syntax: '<angle>'; initial-value: 0deg; inherits: false; }
+  @keyframes spin-a { to { --a: 360deg; } }
+  .glow-card { position: relative; border-radius: 6px; isolation: isolate; clip-path: polygon(0 0, calc(100% - 18px) 0, 100% 18px, 100% 100%, 18px 100%, 0 calc(100% - 18px)); }
+  .glow-card::before {
+    content: ''; position: absolute; inset: 0; z-index: -2;
+    background: conic-gradient(from var(--a), transparent 0 55%, #00E5FF 72%, #fff 80%, #2f7bff 88%, transparent 100%);
+    animation: spin-a 6s linear infinite;
+  }
+  .glow-card::after {
+    content: ''; position: absolute; inset: 1.5px; z-index: -1;
+    clip-path: inherit;
+    background: linear-gradient(160deg, rgba(4,2,16,.94), rgba(14,7,46,.92));
+  }
+  .glow-wrap { filter: drop-shadow(0 0 18px rgba(0,229,255,.22)) drop-shadow(0 0 60px rgba(47,123,255,.15)); transition: filter .25s, transform .25s cubic-bezier(.2,.9,.1,1); }
+  .glow-wrap:hover { transform: perspective(800px) scale(1.02) skewX(-1deg); filter: drop-shadow(-2px 0 0 rgba(0,229,255,.7)) drop-shadow(2px 0 0 rgba(150,80,255,.7)) drop-shadow(0 0 40px rgba(0,229,255,.45)); }
+  .bloom-text { text-shadow: 0 0 10px rgba(0,229,255,.9), 0 0 36px rgba(0,229,255,.5), 0 0 80px rgba(47,123,255,.45); }
+  .tab-on { background: rgba(0,229,255,.14); box-shadow: inset 0 0 0 1px currentColor, 0 0 24px currentColor; }
+  .reveal { transition: opacity 1.4s ease-out; }
+  .meter { transition: width 1.6s cubic-bezier(.2,.8,.2,1); }
+  .scan::after { content: ''; position: absolute; left: 0; right: 0; height: 2px; background: rgba(0,229,255,.7); box-shadow: 0 0 12px #00E5FF; animation: scan 3.5s linear infinite; }
+  @keyframes scan { 0% { top: 0; } 100% { top: 100%; } }
+  .iris-spin { animation: swirl 40s linear infinite; transform-origin: center; }
   @media (prefers-reduced-motion: reduce) {
-    .swirl-a, .swirl-b { animation: none; }
-    .glow-card::before, .eye-ring { animation: none; }
-    .warp, html { transition: none; scroll-behavior: auto; }
+    .swirl-a, .swirl-b, .glow-card::before, .iris-spin, .scan::after { animation: none; }
+    .glow-wrap, html { transition: none; scroll-behavior: auto; }
   }
 </style>
 </head>
-<body class="bg-space text-white font-body antialiased overflow-x-hidden">
+<body class="bg-void text-white font-body antialiased overflow-x-hidden">
 <div id="root"></div>
 
 <script crossorigin src="https://cdnjs.cloudflare.com/ajax/libs/react/18.3.1/umd/react.production.min.js"></script>
@@ -105,66 +89,236 @@
 <script src="https://cdnjs.cloudflare.com/ajax/libs/babel-standalone/7.24.7/babel.min.js"></script>
 <script type="text/babel">
 const { useEffect, useRef, useState } = React;
+const REDUCED = matchMedia('(prefers-reduced-motion: reduce)').matches;
 
-function Starfield() {
-  const ref = useRef(null);
+/* ───────────────────────── shared lexicon ───────────────────────── */
+const EQS = ['∞', 'lim x→∞', '∇·B = 0', 'Σ 1/n² = π²/6', '∫ e^{-x²}dx', 'e^{iπ}+1=0', 'dx/dt → 0', '1/2 + 1/4 + 1/8 …', 'Δx → 0', 'ψ(r,t)', 'F = −∇U', 'ℵ₀', '∮ E·dA', 'lim n→∞ (1−2⁻ⁿ)', 'det(A−λI)=0', 'ħ ∂ψ/∂t'];
+const LEX = ['無量空処', '領域展開', '六眼', '無下限呪術', '蒼', '赫', '茈', '五条悟', 'MUKAGEN', 'LAPSE', 'REVERSAL', 'HOLLOW', 'SIX EYES', 'LIMITLESS', 'INFINITE VOID', 'MURYŌKŪSHO', 'SEE EVERYTHING', 'CANNOT MOVE', 'INPUT ∞', 'STIMULUS FLOOD', 'THOUGHT COPY ×∞', 'CURSED ENERGY', 'PERCEPTION OVERLOAD', ...EQS, '0110 1110', '0xFF00AA', 'ERROR', 'SATORU', 'THE STRONGEST'];
+const pick = (a) => a[Math.random() * a.length | 0];
+
+/* ───────────────────── Domain Expansion intro ───────────────────── */
+// black → white flash → blue concentric "eye" → fracturing space + chaotic text → freeze → shatter
+const T = { flash: 600, eye: 700, chaos: 1500, freeze: 3700, shatter: 4200, end: 5300 };
+
+function Intro({ onReveal, onDone }) {
+  const cv = useRef(null);
   useEffect(() => {
-    const c = ref.current, ctx = c.getContext('2d');
-    let w, h, stars, raf;
-    const reduce = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
-    const init = () => {
-      w = c.width = innerWidth; h = c.height = innerHeight;
-      stars = Array.from({ length: Math.min(420, Math.floor(w * h / 4500)) }, () => ({
-        x: (Math.random() - .5) * w, y: (Math.random() - .5) * h,
-        z: Math.random() * w, hue: Math.random() < .25 ? '0,229,255' : '255,255,255',
-      }));
-    };
-    const draw = () => {
-      ctx.clearRect(0, 0, w, h);
-      for (const s of stars) {
-        if (!reduce) s.z -= 1.2;
-        if (s.z < 1) s.z = w;
-        const k = 128 / s.z * 4;
-        const x = s.x * k + w / 2, y = s.y * k + h / 2;
-        if (x < 0 || x > w || y < 0 || y > h) { s.z = w; continue; }
-        const r = Math.max(.2, (1 - s.z / w) * 2.2);
-        ctx.fillStyle = `rgba(${s.hue},${0.3 + (1 - s.z / w) * .7})`;
-        ctx.beginPath(); ctx.arc(x, y, r, 0, 6.283); ctx.fill();
+    const c = cv.current, ctx = c.getContext('2d');
+    const w = c.width = innerWidth, h = c.height = innerHeight, cx = w / 2, cy = h / 2;
+    const maxR = Math.hypot(cx, cy);
+    const snap = document.createElement('canvas'); snap.width = w; snap.height = h;
+    const sctx = snap.getContext('2d');
+
+    // overlapping chaotic strings
+    const strings = Array.from({ length: 110 }, () => ({
+      x: Math.random() * w, y: Math.random() * h, s: 10 + Math.pow(Math.random(), 2.2) * 110,
+      rot: (Math.random() - .5) * 1.2, txt: pick(LEX), life: 0,
+      col: pick(['#ffffff', '#ffffff', '#00E5FF', '#2f7bff', '#b58cff']), born: 1500 + Math.random() * 1400,
+    }));
+    // space fractures: persistent jagged cracks from the centre
+    const cracks = [];
+    const makeCrack = () => {
+      let a = Math.random() * 6.283, x = cx, y = cy, pts = [[x, y]];
+      const segs = 6 + (Math.random() * 10 | 0);
+      for (let i = 0; i < segs; i++) {
+        a += (Math.random() - .5) * 1.1; const l = 40 + Math.random() * maxR / 5;
+        x += Math.cos(a) * l; y += Math.sin(a) * l; pts.push([x, y]);
       }
-      raf = requestAnimationFrame(draw);
+      return { pts, w: .6 + Math.random() * 2, col: Math.random() < .6 ? '#00E5FF' : '#ffffff', at: 0 };
     };
-    init(); draw();
-    addEventListener('resize', init);
-    return () => { cancelAnimationFrame(raf); removeEventListener('resize', init); };
+    // shatter shards (2 triangles per cell)
+    const COLS = 16, ROWS = 10, shards = [];
+    const cw = w / COLS, ch = h / ROWS;
+    for (let i = 0; i < COLS; i++) for (let j = 0; j < ROWS; j++) {
+      const x0 = i * cw, y0 = j * ch;
+      [[[x0, y0], [x0 + cw, y0], [x0, y0 + ch]], [[x0 + cw, y0], [x0 + cw, y0 + ch], [x0, y0 + ch]]].forEach(tri => {
+        const mx = (tri[0][0] + tri[1][0] + tri[2][0]) / 3, my = (tri[0][1] + tri[1][1] + tri[2][1]) / 3;
+        const dx = mx - cx, dy = my - cy, d = Math.hypot(dx, dy) || 1;
+        const sp = .6 + Math.random() * 1.4;
+        shards.push({ tri, mx, my, vx: dx / d * sp * 9 + (Math.random() - .5) * 4, vy: dy / d * sp * 9 + (Math.random() - .5) * 4,
+          vr: (Math.random() - .5) * .12, vz: .004 + Math.random() * .01, delay: d / maxR * 180 });
+      });
+    }
+
+    const start = performance.now();
+    let raf, frozen = false, revealed = false, done = false;
+    const lastCrack = { n: 0 };
+
+    const drawEye = (t) => {
+      const e = t - T.eye;
+      // expanding blue concentric circles
+      for (let i = 0; i < 9; i++) {
+        const r = (e - i * 110) * 1.9;
+        if (r > 0 && r < maxR * 1.3) {
+          const f = 1 - r / (maxR * 1.3);
+          ctx.strokeStyle = i % 3 === 0 ? `rgba(255,255,255,${f})` : `rgba(${i % 2 ? '47,123,255' : '0,229,255'},${f})`;
+          ctx.lineWidth = 3 + 9 * f; ctx.beginPath(); ctx.arc(cx, cy, r, 0, 6.283); ctx.stroke();
+        }
+      }
+      // the Six Eyes iris + pupil, igniting at the centre
+      const ir = Math.min(1, Math.max(0, (e - 100) / 400)) * Math.min(w, h) * .13;
+      if (ir > 0) {
+        const g = ctx.createRadialGradient(cx, cy, ir * .15, cx, cy, ir);
+        g.addColorStop(0, '#000'); g.addColorStop(.25, '#0a1a5c'); g.addColorStop(.55, '#2f7bff'); g.addColorStop(.85, '#00E5FF'); g.addColorStop(1, 'rgba(255,255,255,0)');
+        ctx.fillStyle = g; ctx.beginPath(); ctx.arc(cx, cy, ir, 0, 6.283); ctx.fill();
+        ctx.strokeStyle = 'rgba(255,255,255,.85)'; ctx.lineWidth = 1.5;
+        for (let k = 0; k < 6; k++) { const a = k * 1.047 + e / 900; ctx.beginPath(); ctx.moveTo(cx + Math.cos(a) * ir * .3, cy + Math.sin(a) * ir * .3); ctx.lineTo(cx + Math.cos(a) * ir, cy + Math.sin(a) * ir); ctx.stroke(); }
+      }
+    };
+
+    const drawChaos = (t) => {
+      const k = Math.min(1, (t - T.chaos) / 900);
+      // fracturing space lines
+      if (cracks.length < 70 && Math.random() < .6 + k) cracks.push(makeCrack());
+      for (const cr of cracks) {
+        cr.at = Math.min(cr.pts.length - 1, cr.at + .45);
+        ctx.strokeStyle = cr.col; ctx.lineWidth = cr.w; ctx.shadowColor = '#00E5FF'; ctx.shadowBlur = 8;
+        ctx.beginPath(); ctx.moveTo(cr.pts[0][0], cr.pts[0][1]);
+        for (let i = 1; i <= cr.at; i++) ctx.lineTo(cr.pts[i | 0][0], cr.pts[i | 0][1]);
+        ctx.stroke();
+      }
+      ctx.shadowBlur = 0;
+      // overlapping text strings, flickering and swapping
+      for (const s of strings) {
+        if (t < s.born) continue;
+        s.life++;
+        if (Math.random() < .14) s.txt = pick(LEX);
+        if (Math.random() < .03) { s.x = Math.random() * w; s.y = Math.random() * h; }
+        ctx.save(); ctx.translate(s.x, s.y); ctx.rotate(s.rot + Math.sin(t / 300 + s.life) * .02);
+        ctx.font = `${Math.max(10, s.s * (.7 + k * .5))}px "Noto Sans JP", Orbitron, monospace`;
+        ctx.fillStyle = s.col; ctx.globalAlpha = (.25 + Math.random() * .6) * k + .1;
+        ctx.shadowColor = s.col; ctx.shadowBlur = s.s > 50 ? 20 : 0;
+        ctx.fillText(s.txt, 0, 0); ctx.restore();
+      }
+      ctx.globalAlpha = 1; ctx.shadowBlur = 0;
+    };
+
+    const frame = (now) => {
+      const t = now - start;
+      if (t >= T.end) { if (!done) { done = true; onDone(); } return; }
+
+      if (t < T.freeze) {
+        // translucent black keeps motion trails; opaque early on
+        ctx.fillStyle = t < T.chaos ? 'rgba(0,0,0,.35)' : 'rgba(0,0,0,.28)';
+        ctx.fillRect(0, 0, w, h);
+        if (t >= T.eye) drawEye(t);
+        if (t >= T.chaos) drawChaos(t);
+        // jittering zoom lines / info-flood scanlines
+        if (t >= T.chaos) {
+          ctx.strokeStyle = 'rgba(0,229,255,.5)'; ctx.lineWidth = 1;
+          for (let i = 0; i < 10; i++) { const y = Math.random() * h; ctx.beginPath(); ctx.moveTo(0, y); ctx.lineTo(w, y + (Math.random() - .5) * 8); ctx.stroke(); }
+        }
+        // white flash (blindfold off)
+        if (t >= T.flash) {
+          const f = 1 - (t - T.flash) / 900;
+          if (f > 0) { ctx.fillStyle = `rgba(255,255,255,${f})`; ctx.fillRect(0, 0, w, h); }
+        }
+      } else if (t < T.shatter) {
+        // everything freezes in place
+        if (!frozen) { frozen = true; sctx.drawImage(c, 0, 0); }
+        ctx.drawImage(snap, 0, 0);
+        // fine white fracture line crawling across the frozen frame just before it breaks
+        const p = (t - T.freeze) / (T.shatter - T.freeze);
+        ctx.strokeStyle = `rgba(255,255,255,${.4 + p * .6})`; ctx.lineWidth = 1 + p * 2;
+        ctx.beginPath(); ctx.moveTo(cx, cy);
+        for (let i = 0; i < 8; i++) ctx.lineTo(cx + Math.cos(i * .8) * p * maxR * (i / 8 + .3), cy + Math.sin(i * 1.3) * p * maxR * (i / 8 + .3));
+        ctx.stroke();
+      } else {
+        if (!revealed) { revealed = true; onReveal(); }
+        const e = t - T.shatter;
+        ctx.clearRect(0, 0, w, h);
+        for (const s of shards) {
+          const te = Math.max(0, e - s.delay);
+          if (te === 0) {
+            ctx.save(); ctx.beginPath(); s.tri.forEach((p, i) => i ? ctx.lineTo(p[0], p[1]) : ctx.moveTo(p[0], p[1])); ctx.closePath(); ctx.clip(); ctx.drawImage(snap, 0, 0); ctx.restore(); continue;
+          }
+          const f = te / 16; // frames elapsed
+          const a = Math.max(0, 1 - te / 800);
+          if (a <= 0) continue;
+          const dx = s.vx * f * (1 + f * .02), dy = s.vy * f * (1 + f * .02);
+          ctx.save(); ctx.globalAlpha = a;
+          ctx.translate(s.mx + dx, s.my + dy); ctx.rotate(s.vr * f); ctx.scale(1 + s.vz * f, 1 + s.vz * f); ctx.translate(-s.mx, -s.my);
+          ctx.beginPath(); s.tri.forEach((p, i) => i ? ctx.lineTo(p[0], p[1]) : ctx.moveTo(p[0], p[1])); ctx.closePath();
+          ctx.clip(); ctx.drawImage(snap, 0, 0);
+          ctx.strokeStyle = 'rgba(0,229,255,.9)'; ctx.lineWidth = 2; ctx.stroke();
+          ctx.restore();
+        }
+      }
+      raf = requestAnimationFrame(frame);
+    };
+    ctx.fillStyle = '#000'; ctx.fillRect(0, 0, w, h);
+    raf = requestAnimationFrame(frame);
+    return () => cancelAnimationFrame(raf);
   }, []);
-  return <canvas ref={ref} className="fixed inset-0 z-0 pointer-events-none" aria-hidden="true" />;
+  return (
+    <div onClick={() => { onReveal(); onDone(); }} className="fixed inset-0 z-50 cursor-pointer" role="presentation" aria-hidden="true">
+      <canvas ref={cv} className="absolute inset-0" />
+      <div className="absolute bottom-6 inset-x-0 text-center font-display text-[10px] tracking-[.5em] text-white/40 uppercase">click to skip</div>
+    </div>
+  );
 }
 
-// Cyan particles that drift across the screen forever
-function Drift() {
+/* ───────────────── The Void: inverted cosmic tunnel ───────────────── */
+function VoidBackground() {
   const ref = useRef(null);
   useEffect(() => {
     const c = ref.current, ctx = c.getContext('2d');
-    let w, h, ps, raf;
+    let w, h, cx, cy, raf, eqs, parts;
     const init = () => {
-      w = c.width = innerWidth; h = c.height = innerHeight;
-      ps = Array.from({ length: Math.floor(w * h / 14000) }, () => ({
-        x: Math.random() * w, y: Math.random() * h, r: .6 + Math.random() * 1.8,
-        vx: .08 + Math.random() * .35, vy: (Math.random() - .5) * .18, ph: Math.random() * 6.28,
-      }));
+      w = c.width = innerWidth; h = c.height = innerHeight; cx = w / 2; cy = h / 2;
+      eqs = Array.from({ length: 16 }, () => spawnEq(true));
+      parts = Array.from({ length: Math.min(260, Math.floor(w * h / 7000)) }, () => spawnPart(true));
     };
+    function spawnEq(rand) {
+      const a = Math.random() * 6.283, rad = .25 + Math.random() * 1.1;
+      return { txt: pick(EQS), x: Math.cos(a) * rad, y: Math.sin(a) * rad, z: rand ? .1 + Math.random() * .9 : 1, sp: .0012 + Math.random() * .0016, col: pick(['0,229,255', '255,255,255', '181,140,255']) };
+    }
+    function spawnPart(rand) {
+      const a = Math.random() * 6.283, rad = .05 + Math.random() * 1.3;
+      return { x: Math.cos(a) * rad, y: Math.sin(a) * rad, z: rand ? Math.random() : 1, sp: .002 + Math.random() * .004 };
+    }
     const draw = (t) => {
       ctx.clearRect(0, 0, w, h);
-      for (const p of ps) {
-        p.x += p.vx; p.y += p.vy + Math.sin(t / 2000 + p.ph) * .12;
-        if (p.x > w + 10) p.x = -10;
-        if (p.y > h + 10) p.y = -10;
-        if (p.y < -10) p.y = h + 10;
-        const a = .35 + .45 * Math.sin(t / 900 + p.ph);
-        ctx.shadowColor = '#00E5FF'; ctx.shadowBlur = 10;
-        ctx.fillStyle = `rgba(0,229,255,${Math.max(.1, a)})`;
-        ctx.beginPath(); ctx.arc(p.x, p.y, p.r, 0, 6.283); ctx.fill();
+      const R = Math.max(w, h);
+      // thin neon-cyan geometric grid: receding frames + radial rays toward the vanishing point
+      const off = REDUCED ? 0 : (t / 5200) % 1, N = 12;
+      ctx.lineWidth = 1;
+      for (let i = 0; i < N; i++) {
+        const s = Math.pow((i + off) / N, 2.4), ww = s * w * 1.7, hh = s * h * 1.7;
+        ctx.strokeStyle = `rgba(0,229,255,${.05 + s * .22})`;
+        ctx.strokeRect(cx - ww / 2, cy - hh / 2, ww, hh);
       }
+      ctx.strokeStyle = 'rgba(0,229,255,.10)';
+      ctx.beginPath();
+      for (let i = 0; i <= 14; i++) {
+        const x = (i / 14) * w * 1.4 - w * .2;
+        ctx.moveTo(cx, cy); ctx.lineTo(x, -h * .2); ctx.moveTo(cx, cy); ctx.lineTo(x, h * 1.2);
+      }
+      for (let j = 1; j < 9; j++) { const y = (j / 9) * h; ctx.moveTo(cx, cy); ctx.lineTo(-w * .2, y); ctx.moveTo(cx, cy); ctx.lineTo(w * 1.2, y); }
+      ctx.stroke();
+      // particle stream flying past (information flood, frozen-in-place observer)
+      for (const p of parts) {
+        const z0 = p.z; if (!REDUCED) p.z -= p.sp;
+        if (p.z <= .02) { Object.assign(p, spawnPart(false)); continue; }
+        const k = 1 / p.z * .18, k0 = 1 / (z0 + .03) * .18;
+        const x = cx + p.x * k * R * .5, y = cy + p.y * k * R * .5, x0 = cx + p.x * k0 * R * .5, y0 = cy + p.y * k0 * R * .5;
+        const a = Math.min(.9, (1 - p.z) * 1.2);
+        ctx.strokeStyle = `rgba(0,229,255,${a})`; ctx.lineWidth = Math.min(2.2, .4 + (1 - p.z) * 2);
+        ctx.beginPath(); ctx.moveTo(x0, y0); ctx.lineTo(x, y); ctx.stroke();
+      }
+      // glowing floating equations drifting past
+      ctx.textAlign = 'center';
+      for (const e of eqs) {
+        if (!REDUCED) e.z -= e.sp;
+        if (e.z <= .08) { Object.assign(e, spawnEq(false)); continue; }
+        const k = 1 / e.z * .2, x = cx + e.x * k * R * .5, y = cy + e.y * k * R * .5;
+        if (x < -200 || x > w + 200 || y < -100 || y > h + 100) { Object.assign(e, spawnEq(false)); continue; }
+        const size = Math.min(70, 8 + k * 14), a = Math.min(.55, (1 - e.z) * .9) * Math.min(1, e.z * 6);
+        ctx.font = `${size}px Orbitron, "Noto Sans JP", monospace`;
+        ctx.shadowColor = `rgb(${e.col})`; ctx.shadowBlur = 14;
+        ctx.fillStyle = `rgba(${e.col},${a})`; ctx.fillText(e.txt, x, y);
+      }
+      ctx.shadowBlur = 0;
       raf = requestAnimationFrame(draw);
     };
     init(); raf = requestAnimationFrame(draw);
@@ -174,168 +328,302 @@ function Drift() {
   return <canvas ref={ref} className="fixed inset-0 z-0 pointer-events-none" aria-hidden="true" />;
 }
 
-// Domain Expansion intro: black -> flash -> ripple -> information overload -> fade out
-const T = { flash: 700, overload: 1000, fade: 3800, end: 4800 };
-function Intro({ onReveal, onDone }) {
-  const cv = useRef(null);
-  const [go, setGo] = useState(false);
-  const [fading, setFading] = useState(false);
+/* ───────────────────────── Six Eyes graphic ───────────────────────── */
+function SixEyes() {
+  const [p, setP] = useState({ x: 0, y: 0 });
   useEffect(() => {
-    const c = cv.current, ctx = c.getContext('2d');
-    const w = c.width = innerWidth, h = c.height = innerHeight, cx = w / 2, cy = h / 2;
-    const reach = Math.hypot(cx, cy) * 1.2;
-    const glyphs = 'ア イ ウ エ オ カ キ ク ケ コ サ シ ス セ ソ 無 量 空 処 領 域 展 開 呪 術 廻 戦 0 1 ∞ ∑ ∆ Ω ◇ ◆ ⌬ ⍟'.split(' ');
-    const rg = () => glyphs[Math.random() * glyphs.length | 0];
-    const fs = 18, cols = Math.ceil(w / fs), drops = Array.from({ length: cols }, () => Math.random() * -50);
-    const floaters = Array.from({ length: 60 }, () => ({
-      x: Math.random() * w, y: Math.random() * h, g: rg(),
-      s: 18 + Math.random() * 60, v: .5 + Math.random() * 3, ph: Math.random() * 6.28,
-    }));
-    const start = performance.now();
-    let raf, flashed = false, fadeSet = false;
-    const draw = (now) => {
-      const t = now - start;
-      if (t >= T.flash && !flashed) { flashed = true; setGo(true); }
-      if (t >= T.fade && !fadeSet) { fadeSet = true; setFading(true); onReveal(); }
-      if (t >= T.end) return onDone();
-      ctx.fillStyle = 'rgba(0,0,0,' + (t < T.overload ? 1 : .22) + ')';
-      ctx.fillRect(0, 0, w, h);
-      // explosive ripples from the centre
-      if (t >= T.flash) {
+    const m = (e) => setP({ x: (e.clientX / innerWidth - .5) * 2, y: (e.clientY / innerHeight - .5) * 2 });
+    addEventListener('pointermove', m); return () => removeEventListener('pointermove', m);
+  }, []);
+  return (
+    <svg viewBox="0 0 400 400" className="w-full max-w-[420px] mx-auto" role="img" aria-label="Stylised Six Eyes iris">
+      <defs>
+        <radialGradient id="iris" cx="50%" cy="50%" r="50%">
+          <stop offset="0" stopColor="#000" /><stop offset=".22" stopColor="#030a38" />
+          <stop offset=".5" stopColor="#2f7bff" /><stop offset=".8" stopColor="#00E5FF" /><stop offset="1" stopColor="#ffffff" stopOpacity=".1" />
+        </radialGradient>
+        <filter id="bloom"><feGaussianBlur stdDeviation="6" result="b" /><feMerge><feMergeNode in="b" /><feMergeNode in="SourceGraphic" /></feMerge></filter>
+      </defs>
+      <g className="iris-spin" style={{ transformOrigin: '200px 200px' }} filter="url(#bloom)" fill="none" stroke="#00E5FF" strokeOpacity=".7">
+        <circle cx="200" cy="200" r="190" strokeDasharray="2 10" />
+        <circle cx="200" cy="200" r="168" />
+        {Array.from({ length: 6 }, (_, i) => <path key={i} d={`M200 200 L${200 + Math.cos(i * 1.047) * 190} ${200 + Math.sin(i * 1.047) * 190}`} strokeOpacity=".35" />)}
+        {Array.from({ length: 6 }, (_, i) => <circle key={'s' + i} cx={200 + Math.cos(i * 1.047) * 168} cy={200 + Math.sin(i * 1.047) * 168} r="6" fill="#00E5FF" />)}
+      </g>
+      <g transform={`translate(${p.x * 12} ${p.y * 10})`} filter="url(#bloom)">
+        <circle cx="200" cy="200" r="120" fill="url(#iris)" />
+        <circle cx="200" cy="200" r="120" fill="none" stroke="#fff" strokeOpacity=".8" strokeWidth="1.5" />
+        <circle cx="200" cy="200" r="44" fill="#000" />
+        <circle cx="200" cy="200" r="44" fill="none" stroke="#00E5FF" strokeWidth="2" />
+        <circle cx="178" cy="178" r="9" fill="#fff" opacity=".9" />
+      </g>
+    </svg>
+  );
+}
+
+/* ───────────────────── Limitless technique visualiser ───────────────────── */
+function TechViz({ kind }) {
+  const ref = useRef(null);
+  useEffect(() => {
+    const c = ref.current, ctx = c.getContext('2d'), W = c.width = 420, H = c.height = 260, cx = W / 2, cy = H / 2;
+    let raf, tt = 0;
+    const ps = Array.from({ length: 70 }, () => ({ a: Math.random() * 6.283, r: 20 + Math.random() * 110, ph: Math.random() }));
+    const draw = () => {
+      tt += REDUCED ? 0 : 1;
+      ctx.fillStyle = 'rgba(2,2,14,.28)'; ctx.fillRect(0, 0, W, H);
+      const L = (tt % 360) / 360;
+      if (kind === 'infinity') {
+        // Zeno: each step covers half the remaining distance — never arrives
+        ctx.strokeStyle = 'rgba(0,229,255,.8)'; ctx.lineWidth = 2; ctx.beginPath(); ctx.arc(cx, cy, 36, 0, 6.283); ctx.stroke();
+        ctx.fillStyle = '#fff'; ctx.shadowColor = '#00E5FF'; ctx.shadowBlur = 12; ctx.beginPath(); ctx.arc(cx, cy, 6, 0, 6.283); ctx.fill(); ctx.shadowBlur = 0;
         for (let i = 0; i < 5; i++) {
-          const r = (t - T.flash - i * 130) * 1.7;
-          if (r > 0 && r < reach) {
-            ctx.strokeStyle = `rgba(${i % 2 ? '0,229,255' : '255,255,255'},${1 - r / reach})`;
-            ctx.lineWidth = 6 - i; ctx.beginPath(); ctx.arc(cx, cy, r, 0, 6.283); ctx.stroke();
-          }
+          const ph = (L + i / 5) % 1, d = 36 + (190) * Math.pow(.5, ph * 7);
+          const a = i * 1.257 + .4; ctx.fillStyle = `rgba(0,229,255,${.9 - ph * .5})`;
+          ctx.beginPath(); ctx.arc(cx + Math.cos(a) * d, cy + Math.sin(a) * d, 4, 0, 6.283); ctx.fill();
         }
-      }
-      if (t >= T.overload && t < T.fade + 400) {
-        const k = Math.min(1, (t - T.overload) / 600); // overload ramps up
-        const zoom = ((t - T.overload) / 700) % 1;
-        // zooming geometric grid
-        ctx.lineWidth = 1.2;
-        for (let i = 0; i < 9; i++) {
-          const s = Math.pow((i + zoom) / 9, 2.2), ww = s * w * 1.6, hh = s * h * 1.6;
-          ctx.strokeStyle = `rgba(0,229,255,${.12 + s * .55 * k})`;
-          ctx.strokeRect(cx - ww / 2, cy - hh / 2, ww, hh);
-          ctx.beginPath();
-          ctx.moveTo(cx, cy); ctx.lineTo(cx - ww / 2, cy - hh / 2);
-          ctx.moveTo(cx, cy); ctx.lineTo(cx + ww / 2, cy + hh / 2);
-          ctx.moveTo(cx, cy); ctx.lineTo(cx + ww / 2, cy - hh / 2);
-          ctx.moveTo(cx, cy); ctx.lineTo(cx - ww / 2, cy + hh / 2);
-          ctx.stroke();
-        }
-        // fast matrix code
-        ctx.font = fs + 'px monospace';
-        for (let i = 0; i < cols; i++) {
-          const y = drops[i] * fs;
-          ctx.fillStyle = '#fff'; ctx.fillText(rg(), i * fs, y);
-          ctx.fillStyle = `rgba(0,229,255,${.8 * k})`; ctx.fillText(rg(), i * fs, y - fs);
-          drops[i] += 1.6 + (i % 5) * .5;
-          if (y > h && Math.random() > .96) drops[i] = Math.random() * -20;
-        }
-        // floating glyphs
-        for (const f of floaters) {
-          f.y -= f.v; f.x += Math.sin(now / 400 + f.ph) * 1.2;
-          if (f.y < -80) f.y = h + 80;
-          ctx.font = f.s + 'px monospace';
-          ctx.fillStyle = `rgba(${f.s > 50 ? '160,110,255' : '255,255,255'},${.25 + .5 * k})`;
-          ctx.fillText(f.g, f.x, f.y);
+      } else if (kind === 'blue') {
+        for (const p of ps) { const f = (p.ph + tt / 240) % 1, r = p.r * (1 - f); const a = p.a + f * 5;
+          ctx.fillStyle = `rgba(60,140,255,${.2 + f * .8})`; ctx.shadowColor = '#2f7bff'; ctx.shadowBlur = 10;
+          ctx.beginPath(); ctx.arc(cx + Math.cos(a) * r, cy + Math.sin(a) * r, 2.2, 0, 6.283); ctx.fill(); }
+        ctx.shadowBlur = 0; ctx.fillStyle = '#2f7bff'; ctx.beginPath(); ctx.arc(cx, cy, 9, 0, 6.283); ctx.fill();
+      } else if (kind === 'red') {
+        for (const p of ps) { const f = (p.ph + tt / 200) % 1, r = 8 + p.r * f * 1.5;
+          ctx.fillStyle = `rgba(255,59,92,${1 - f})`; ctx.shadowColor = '#ff3b5c'; ctx.shadowBlur = 10;
+          ctx.beginPath(); ctx.arc(cx + Math.cos(p.a) * r, cy + Math.sin(p.a) * r, 2.4, 0, 6.283); ctx.fill(); }
+        ctx.shadowBlur = 0; ctx.fillStyle = '#ff3b5c'; ctx.beginPath(); ctx.arc(cx, cy, 9, 0, 6.283); ctx.fill();
+      } else {
+        // Hollow Purple: Blue + Red converge, collide into imaginary mass, erase everything in line
+        const p = L < .5 ? L / .5 : 0;
+        if (L < .5) {
+          const d = 150 * (1 - p);
+          ctx.shadowBlur = 16; ctx.shadowColor = '#2f7bff'; ctx.fillStyle = '#2f7bff'; ctx.beginPath(); ctx.arc(cx - d, cy, 11, 0, 6.283); ctx.fill();
+          ctx.shadowColor = '#ff3b5c'; ctx.fillStyle = '#ff3b5c'; ctx.beginPath(); ctx.arc(cx + d, cy, 11, 0, 6.283); ctx.fill(); ctx.shadowBlur = 0;
+        } else {
+          const q = (L - .5) / .5, r = 14 + q * 20;
+          ctx.shadowBlur = 30; ctx.shadowColor = '#b58cff'; ctx.fillStyle = '#d9c2ff'; ctx.beginPath(); ctx.arc(cx, cy, r, 0, 6.283); ctx.fill(); ctx.shadowBlur = 0;
+          ctx.fillStyle = '#000'; const bw = q * W * 1.1; ctx.fillRect(cx - bw / 2 + r, cy - 5 - q * 4, bw / 2, 10 + q * 8);
+          ctx.fillStyle = `rgba(181,140,255,${1 - q})`; ctx.fillRect(cx + r, cy - 3, q * W * .55, 6);
         }
       }
       raf = requestAnimationFrame(draw);
     };
-    ctx.fillStyle = '#000'; ctx.fillRect(0, 0, w, h);
+    ctx.fillStyle = '#02020e'; ctx.fillRect(0, 0, W, H);
     raf = requestAnimationFrame(draw);
     return () => cancelAnimationFrame(raf);
-  }, []);
+  }, [kind]);
+  return <canvas ref={ref} className="w-full rounded border border-white/10 bg-[#02020e]" aria-hidden="true" />;
+}
+
+/* ─────────────────────────── page content ─────────────────────────── */
+const TECHS = [
+  { id: 'infinity', name: 'Infinity', jp: '無下限 · Mukagen', col: '#00E5FF', tag: 'Passive · Always On',
+    body: 'The foundation of Limitless. Space between Gojo and anything approaching him is divided without end — each step covers only half the remaining distance, so the distance never reaches zero. Attacks slow to a stop an instant from contact. His Six Eyes make the constant automatic calculation possible.',
+    facts: ['Zeno-style convergence: distance → 0, contact never occurs', 'Automatically sustained by the Six Eyes', 'Can be selectively lowered to touch or hold something'] },
+  { id: 'blue', name: 'Blue', jp: '蒼 · Cursed Technique Lapse', col: '#2f7bff', tag: 'Attraction · Convergence',
+    body: 'Lapse: Blue amplifies the convergence inherent to Limitless, generating a point that pulls everything toward it. Matter and cursed energy collapse inward. Used to drag targets, crush, and reposition the battlefield.',
+    facts: ['Attractive force from an amplified infinite-convergence point', 'Draws in targets and surrounding debris', 'Output can be scaled and positioned freely'] },
+  { id: 'red', name: 'Red', jp: '赫 · Cursed Technique Reversal', col: '#ff3b5c', tag: 'Repulsion · Reversed Output',
+    body: 'Reversal: Red applies reverse cursed energy to the Limitless, converting convergence into divergence. The result is a violent repulsive blast that scatters and destroys whatever it touches.',
+    facts: ['Requires reverse cursed technique (positive-energy output)', 'Repulsion — the mirror of Blue', 'High-impact, concentrated blast'] },
+  { id: 'purple', name: 'Purple', jp: '茈 · Hollow Technique', col: '#b58cff', tag: 'Annihilation · Imaginary Mass',
+    body: 'Hollow Purple fires Blue and Red together. Their opposing effects collide into a sphere of imaginary mass that erases everything along its path. It is the pinnacle of his technique, and the strongest attack in his arsenal.',
+    facts: ['Fusion of Blue (attract) and Red (repel)', 'Imaginary mass — erases matter along its trajectory', 'Peak offensive output of Limitless'] },
+];
+
+const EYES = [
+  { k: 'Cursed-energy resolution', v: 100, note: 'Perceives cursed energy at an atomic level — no residual detail is lost.' },
+  { k: 'Passive processing speed', v: 96, note: 'Continuous automatic computation of Infinity with almost no cursed-energy waste.' },
+  { k: 'Tracking', v: 98, note: 'Omnidirectional awareness; targets and incoming attacks are read before they land.' },
+  { k: 'Technique efficiency', v: 92, note: 'Reduces cursed-energy cost and brings fine control to extreme techniques.' },
+];
+
+const STEPS = [
+  { t: 0, label: 'Surge', text: 'Hands form the sign. Cursed energy surges outward.' },
+  { t: 50, label: 'Unfold', text: 'Innate Domain unfolds — the interior of the Limitless.' },
+  { t: 100, label: 'Flood', text: 'Infinite copies of information, thought and sensation begin to pour in.' },
+  { t: 200, label: 'Sure-hit', text: 'Effect locks onto the target. Seeing and feeling everything — unable to act.' },
+];
+
+function Section({ id, kicker, title, children }) {
   return (
-    <div onClick={() => { onReveal(); onDone(); }} className="fixed inset-0 z-50 bg-black cursor-pointer" style={{ opacity: fading ? 0 : 1, transition: 'opacity 1000ms ease-in', pointerEvents: fading ? 'none' : 'auto' }} role="presentation" aria-hidden="true">
-      <canvas ref={cv} className="absolute inset-0" />
-      <div className={'flash ' + (go ? 'go' : '')} />
-    </div>
+    <section id={id} className="relative z-10 px-5 md:px-10 py-14 scroll-mt-20 max-w-6xl mx-auto">
+      <p className="font-display text-[11px] tracking-[.5em] text-azure uppercase mb-2">{kicker}</p>
+      <h2 className="font-display font-bold text-2xl md:text-4xl tracking-widest uppercase text-white bloom-text mb-8">{title}</h2>
+      {children}
+    </section>
   );
+}
+function Card({ children, className = '' }) {
+  return <div className="glow-wrap"><div className={'glow-card p-6 md:p-8 ' + className}>{children}</div></div>;
 }
 
 function Header() {
-  const links = ['about', 'hobbies', 'contact'];
+  const links = [['eyes', 'Six Eyes'], ['limitless', 'Limitless'], ['domain', 'Domain']];
   return (
-    <header className="sticky top-0 z-20 flex items-center justify-between px-6 md:px-12 py-4 backdrop-blur-md bg-void/60 border-b border-cyan-neon/30 shadow-[0_0_30px_rgba(0,229,255,.2)]">
-      <div className="font-display font-bold tracking-[.3em] text-cyan-neon bloom-text">PORSCHE</div>
-      <nav>
-        <ul className="flex gap-6 md:gap-10 font-display text-xs md:text-sm tracking-widest uppercase">
-          {links.map(l => (
-            <li key={l}><a href={'#' + l} className="text-white/80 hover:text-cyan-neon transition-colors duration-150 hover:[text-shadow:0_0_14px_#00E5FF]">{l}</a></li>
-          ))}
-        </ul>
-      </nav>
+    <header className="sticky top-0 z-30 flex items-center justify-between px-5 md:px-10 py-3 backdrop-blur-md bg-black/60 border-b border-cyan-neon/30 shadow-[0_0_30px_rgba(0,229,255,.18)]">
+      <a href="#top" className="font-display font-bold tracking-[.3em] text-cyan-neon bloom-text text-sm md:text-base">GOJO · CODEX</a>
+      <nav><ul className="flex gap-5 md:gap-9 font-display text-[11px] md:text-xs tracking-widest uppercase">
+        {links.map(([id, l]) => <li key={id}><a href={'#' + id} className="text-white/80 hover:text-cyan-neon transition-colors hover:[text-shadow:0_0_14px_#00E5FF]">{l}</a></li>)}
+      </ul></nav>
     </header>
   );
 }
 
 function Hero() {
-  const [msg, setMsg] = useState('');
+  const facts = [['Title', 'The Strongest'], ['Grade', 'Special Grade'], ['Technique', 'Limitless'], ['Eyes', 'Six Eyes (Rikugan)'], ['Hair', 'Stark white'], ['Irises', 'Electric blue']];
   return (
-    <section id="hero" className="relative z-10 min-h-[88vh] flex flex-col items-center justify-center text-center px-6 py-24">
-      <div className="absolute w-[560px] h-[560px] max-w-[95vw] max-h-[95vw] rounded-full eye-ring opacity-60 blur-[2px] -z-10" aria-hidden="true" />
-      <p className="font-display text-xs md:text-sm tracking-[.5em] text-azure uppercase mb-6">Domain Expansion · Infinite Void</p>
-      <h1 className="font-display font-black text-5xl md:text-8xl leading-tight text-white bloom-text">Porsche's Site</h1>
-      <p className="mt-8 max-w-2xl text-lg md:text-xl text-white/85 leading-relaxed">
-        My favorite hobby is editing — bringing photos and videos to life with color, cuts, and effects.
-      </p>
-      <button
-        onClick={() => setMsg('Welcome, PAWN! To my website!.')}
-        className="warp mt-10 px-10 py-3 font-display font-bold tracking-[.25em] uppercase text-void bg-cyan-neon rounded-md shadow-[0_0_30px_rgba(0,229,255,.7)]"
-      >Hello</button>
-      <p className="mt-6 h-7 font-display text-cyan-neon bloom-text" aria-live="polite">{msg}</p>
+    <section id="top" className="relative z-10 min-h-[92vh] grid md:grid-cols-2 items-center gap-10 px-5 md:px-10 py-16 max-w-6xl mx-auto">
+      <div className="text-left">
+        <p className="font-display text-[11px] md:text-xs tracking-[.5em] text-azure uppercase mb-5">Digital Codex · File 五条悟</p>
+        <h1 className="font-display font-black text-5xl md:text-7xl leading-[1.05] text-white bloom-text">Satoru<br />Gojo</h1>
+        <p className="mt-6 text-xl md:text-2xl text-white/85 leading-relaxed max-w-xl">
+          The strongest jujutsu sorcerer. Absolute perception through the <span className="text-cyan-neon">Six Eyes</span>, god-like control of space through <span className="text-cyan-neon">Limitless</span>, and a domain that shows its victim everything — and lets them do nothing.
+        </p>
+        <dl className="mt-8 grid grid-cols-2 gap-x-6 gap-y-3 max-w-md">
+          {facts.map(([k, v]) => <div key={k} className="border-l-2 border-cyan-neon/60 pl-3"><dt className="font-display text-[10px] tracking-[.3em] text-white/50 uppercase">{k}</dt><dd className="text-lg text-white">{v}</dd></div>)}
+        </dl>
+      </div>
+      <div><SixEyes /></div>
     </section>
   );
 }
 
-function Card({ id, title, children }) {
+function EyesSection() {
+  const [on, setOn] = useState(false);
+  const ref = useRef(null);
+  useEffect(() => {
+    const io = new IntersectionObserver(([e]) => { if (e.isIntersecting) setOn(true); }, { threshold: .25 });
+    io.observe(ref.current); return () => io.disconnect();
+  }, []);
   return (
-    <section id={id} className="relative z-10 px-6 py-12 scroll-mt-24">
-      <div className="glow-card warp max-w-3xl mx-auto p-8 md:p-12 text-left">
-        <h2 className="font-display font-bold text-2xl md:text-3xl tracking-widest uppercase text-cyan-neon bloom-text mb-5">{title}</h2>
-        <p className="text-lg md:text-xl leading-relaxed text-white/90">{children}</p>
+    <Section id="eyes" kicker="Protocol 01 · Rikugan" title="The Six Eyes Protocol">
+      <div ref={ref} className="grid md:grid-cols-5 gap-6">
+        <div className="md:col-span-2"><Card className="h-full relative overflow-hidden scan">
+          <h3 className="font-display text-cyan-neon tracking-widest uppercase text-sm mb-3">Passive Perception</h3>
+          <p className="text-lg text-white/90 leading-relaxed">The Six Eyes let Gojo see cursed energy down to the atomic level. Nothing about an opponent's energy, technique or movement is hidden from him, and the readout never stops running — it is a constant, automatic state, not a skill he has to activate.</p>
+          <p className="mt-4 text-white/70">The same perception is what makes Infinity sustainable: the continuous calculation is handled without conscious effort.</p>
+        </Card></div>
+        <div className="md:col-span-3 grid gap-4">
+          {EYES.map((e, i) => (
+            <Card key={e.k} className="!p-5">
+              <div className="flex justify-between font-display text-xs tracking-widest uppercase"><span className="text-white">{e.k}</span><span className="text-cyan-neon">{e.v}%</span></div>
+              <div className="mt-2 h-2 bg-white/10 rounded-sm overflow-hidden"><div className="meter h-full bg-gradient-to-r from-azure to-cyan-neon shadow-[0_0_14px_#00E5FF]" style={{ width: on ? e.v + '%' : '0%', transitionDelay: i * 150 + 'ms' }} /></div>
+              <p className="mt-2 text-white/75">{e.note}</p>
+            </Card>
+          ))}
+        </div>
       </div>
-    </section>
+      <p className="mt-4 text-xs text-white/40 font-display tracking-widest uppercase">Meters are Codex readouts for illustration, not canon values.</p>
+    </Section>
+  );
+}
+
+function LimitlessSection() {
+  const [sel, setSel] = useState(0);
+  const t = TECHS[sel];
+  return (
+    <Section id="limitless" kicker="Protocol 02 · Muka-gen Jutsu" title="Limitless Paradox Matrix">
+      <div role="tablist" aria-label="Limitless techniques" className="grid grid-cols-2 md:grid-cols-4 gap-3 mb-6">
+        {TECHS.map((x, i) => (
+          <button key={x.id} role="tab" aria-selected={sel === i} onClick={() => setSel(i)} style={{ color: x.col }}
+            className={'text-left px-4 py-3 border border-white/15 transition-all duration-150 hover:scale-[1.03] ' + (sel === i ? 'tab-on' : 'bg-black/40')}>
+            <div className="font-display font-bold tracking-widest uppercase">{x.name}</div>
+            <div className="text-xs text-white/70">{x.jp}</div>
+          </button>
+        ))}
+      </div>
+      <Card>
+        <div className="grid md:grid-cols-2 gap-8 items-center" role="tabpanel">
+          <div className="text-left">
+            <p className="font-display text-[11px] tracking-[.4em] uppercase" style={{ color: t.col }}>{t.tag}</p>
+            <h3 className="font-display font-bold text-3xl mt-1 mb-4" style={{ color: t.col, textShadow: `0 0 24px ${t.col}` }}>{t.name}</h3>
+            <p className="text-lg text-white/90 leading-relaxed">{t.body}</p>
+            <ul className="mt-4 space-y-2">{t.facts.map(f => <li key={f} className="flex gap-3 text-white/80"><span style={{ color: t.col }}>◆</span>{f}</li>)}</ul>
+          </div>
+          <TechViz kind={t.id} />
+        </div>
+      </Card>
+      <div className="mt-5 flex flex-wrap items-center gap-3 font-display text-xs tracking-widest uppercase text-white/60">
+        <span className="text-[#2f7bff]">Blue (attract)</span> + <span className="text-[#ff3b5c]">Red (repel)</span> → <span className="text-hollow">Purple (erase)</span>
+      </div>
+    </Section>
+  );
+}
+
+function DomainSection() {
+  const [ms, setMs] = useState(null);
+  const [run, setRun] = useState(false);
+  const raf = useRef();
+  const fire = () => {
+    if (run) return; setRun(true); setMs(0);
+    const t0 = performance.now();
+    const tick = (n) => {
+      const e = (n - t0) / 3000 * 200; // 0.2 s shown over 3 s so it can be read
+      if (e >= 200) { setMs(200); setRun(false); return; }
+      setMs(Math.round(e)); raf.current = requestAnimationFrame(tick);
+    };
+    raf.current = requestAnimationFrame(tick);
+  };
+  useEffect(() => () => cancelAnimationFrame(raf.current), []);
+  const active = ms === null ? -1 : STEPS.reduce((a, s, i) => ms >= s.t ? i : a, -1);
+  const metrics = [['Activation', '0.2 s'], ['Hit rate', 'Sure-hit'], ['Input', '∞ copies'], ['Target', 'Paralysed']];
+  return (
+    <Section id="domain" kicker="Protocol 03 · Muryōkūsho" title="Domain Absolute State">
+      <div className="grid grid-cols-2 md:grid-cols-4 gap-4 mb-6">
+        {metrics.map(([k, v]) => <Card key={k} className="!p-4 text-center"><div className="font-display text-[10px] tracking-[.3em] text-white/50 uppercase">{k}</div><div className="font-display font-bold text-xl md:text-2xl text-cyan-neon bloom-text mt-1">{v}</div></Card>)}
+      </div>
+      <div className="grid md:grid-cols-2 gap-6">
+        <Card>
+          <h3 className="font-display text-cyan-neon tracking-widest uppercase text-sm mb-3">Infinite Void · 無量空処</h3>
+          <p className="text-lg text-white/90 leading-relaxed text-left">Domain Expansion renders the inside of the Limitless itself. Everything the target would otherwise be shielded from — every sight, sensation and thought — is forced into them endlessly and all at once, in infinite copies.</p>
+          <p className="text-lg text-white/90 leading-relaxed text-left mt-3">The mind is overwhelmed, so the victim <span className="text-white">can see and feel everything, but cannot do anything</span>. It is not violent — it is calm, total and inescapable.</p>
+          <ul className="mt-4 space-y-2 text-left">
+            {['Sure-hit effect — applied the instant the domain closes', 'Cognitive paralysis: no decision, no movement', 'Countered only by domain-level defences or a stronger domain'].map(f => <li key={f} className="flex gap-3 text-white/80"><span className="text-cyan-neon">◆</span>{f}</li>)}
+          </ul>
+        </Card>
+        <Card>
+          <div className="flex items-center justify-between mb-4">
+            <h3 className="font-display text-cyan-neon tracking-widest uppercase text-sm">Activation timeline</h3>
+            <div className="font-display text-2xl text-white tabular-nums bloom-text">{ms === null ? '0.000' : (ms / 1000).toFixed(3)} s</div>
+          </div>
+          <div className="h-2 bg-white/10 rounded-sm overflow-hidden mb-5"><div className="h-full bg-gradient-to-r from-azure via-cyan-neon to-white" style={{ width: ((ms || 0) / 200 * 100) + '%' }} /></div>
+          <ol className="space-y-3 text-left">
+            {STEPS.map((s, i) => (
+              <li key={s.label} className={'flex gap-4 transition-opacity duration-150 ' + (i <= active ? 'opacity-100' : 'opacity-30')}>
+                <span className="font-display text-xs text-cyan-neon w-14 shrink-0 pt-1">{(s.t / 1000).toFixed(2)} s</span>
+                <span><span className="font-display text-sm uppercase tracking-widest text-white">{s.label}</span><span className="block text-white/75">{s.text}</span></span>
+              </li>
+            ))}
+          </ol>
+          <button onClick={fire} disabled={run} className="mt-6 w-full py-3 font-display font-bold tracking-[.3em] uppercase text-black bg-cyan-neon shadow-[0_0_30px_rgba(0,229,255,.7)] hover:scale-[1.02] hover:shadow-[0_0_60px_rgba(0,229,255,.9)] transition-all disabled:opacity-50">
+            {run ? 'Expanding…' : 'Domain Expansion'}
+          </button>
+          <p className="mt-3 text-xs text-white/40 font-display tracking-widest uppercase">Replayed in slow motion (0.2 s ≈ 3 s). Timings are Codex readouts.</p>
+          {ms === 200 && <p className="mt-3 text-cyan-neon font-display tracking-widest uppercase text-sm bloom-text">Target locked — sees everything. Moves nothing.</p>}
+        </Card>
+      </div>
+    </Section>
   );
 }
 
 function App() {
-  const skip = matchMedia('(prefers-reduced-motion: reduce)').matches;
-  const [intro, setIntro] = useState(!skip);
-  const [shown, setShown] = useState(skip);
+  const [intro, setIntro] = useState(!REDUCED);
+  const [shown, setShown] = useState(REDUCED);
   return (
     <>
       <div className="swirl swirl-a" aria-hidden="true" />
       <div className="swirl swirl-b" aria-hidden="true" />
-      <div className="void-grid" aria-hidden="true" />
-      <Starfield />
-      <Drift />
-      {intro && <Intro onReveal={() => setShown(true)} onDone={() => setIntro(false)} />}
-      <div className="reveal" style={{ opacity: shown ? 1 : 0 }}>
-      <Header />
-      <main>
-        <Hero />
-        <Card id="about" title="About Me">
-          I'm Porsche, someone who loves creating and building things online. I enjoy learning new skills and finding creative ways to bring ideas to life.
-        </Card>
-        <Card id="hobbies" title="My Hobbies">
-          Editing is my favorite way to be creative, turning raw photos and videos into something people enjoy watching. I love experimenting with color grading, smooth cuts, transitions, and visual effects. Every project teaches me something new, and I'm always looking for fresh techniques to improve my craft.
-        </Card>
-        <Card id="contact" title="Contact">
-          Want to get in touch? Feel free to reach out with any questions or just to say hello. I'm always happy to connect with new people.
-        </Card>
-      </main>
-      <footer className="relative z-10 text-center py-12 font-display text-xs tracking-[.4em] uppercase text-white/60">Made by Porsche</footer>
+      <VoidBackground />
+      <div className="vignette" aria-hidden="true" />
+      <div className="reveal relative z-10" style={{ opacity: shown ? 1 : 0 }}>
+        <Header />
+        <main><Hero /><EyesSection /><LimitlessSection /><DomainSection /></main>
+        <footer className="text-center py-12 font-display text-[11px] tracking-[.4em] uppercase text-white/50">Gojo Codex · Fan-made · Throughout heaven and earth, I alone am the honored one</footer>
       </div>
+      {intro && <Intro onReveal={() => setShown(true)} onDone={() => setIntro(false)} />}
     </>
   );
 }
-
 ReactDOM.createRoot(document.getElementById('root')).render(<App />);
 </script>
 </body>
