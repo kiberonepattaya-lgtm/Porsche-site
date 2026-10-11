@@ -93,6 +93,10 @@
   @keyframes flashOut { 0%{opacity:1} 100%{opacity:0} }
   @keyframes beam { 0%{transform:scaleX(0);opacity:1} 40%{transform:scaleX(1);opacity:1} 100%{transform:scaleX(1);opacity:0} }
   @keyframes frostIn { from{opacity:0} to{opacity:1} }
+  @keyframes doubleVision {
+    0%, 100% { filter: drop-shadow(-4px 0 0 rgba(255,40,80,.55)) drop-shadow(4px 0 0 rgba(0,200,255,.55)); transform: translateX(0); }
+    50% { filter: drop-shadow(-9px 1px 0 rgba(255,40,80,.5)) drop-shadow(9px -1px 0 rgba(0,200,255,.5)); transform: translateX(2px); }
+  }
   .frost { background: linear-gradient(135deg, rgba(255,255,255,.35), rgba(190,230,255,.18) 40%, rgba(255,255,255,.4)), repeating-linear-gradient(60deg, rgba(255,255,255,.12) 0 2px, transparent 2px 18px), repeating-linear-gradient(-30deg, rgba(255,255,255,.1) 0 1px, transparent 1px 26px);  }
   @media (prefers-reduced-motion: reduce) {
     .shaking { animation: none; }
@@ -799,25 +803,108 @@ function useTween(v) {
   return d;
 }
 
-// Infinite Void brain overload: overlapping information streams
-function Overload() {
+// Infinite Void as in the anime: stark white field, drifting black spots, a glossy black mirror floor,
+// translucent planetary orbits, expanding white rings and floating equations — then the stasis lock.
+const VOID_EQ = ['∞', 'lim x→∞', '∮ κ dA = 2πχ', 'Σ 1/n² = π²/6', 'dim ℋ = ∞', '∀ε>0 ∃δ>0', 'S² × ℝ', 'Ω = ∫ ω ∧ dω', 'ψ(r,t)', '∇·B = 0', 'ℵ₀', 'det(A − λI) = 0', 'e^{iπ} + 1 = 0', '1/2 + 1/4 + 1/8 …'];
+
+function NegativeFlash() {
+  const [on, setOn] = useState(true);
+  useEffect(() => { const t = setTimeout(() => setOn(false), 200); return () => clearTimeout(t); }, []);
+  // 0.2s inception: the whole screen inverts (black → white, white → black)
+  return on ? <div className="fixed inset-0 z-[48] pointer-events-none" style={{ backdropFilter: 'invert(1)', WebkitBackdropFilter: 'invert(1)', background: 'rgba(255,255,255,.12)' }} /> : null;
+}
+
+function DomainVoid() {
   const ref = useRef(null);
   useEffect(() => {
-    const c = ref.current, ctx = c.getContext('2d'); let raf;
-    const w = c.width = innerWidth, h = c.height = innerHeight;
-    const draw = () => {
-      ctx.fillStyle = 'rgba(0,0,0,.18)'; ctx.fillRect(0, 0, w, h);
-      for (let i = 0; i < 12; i++) {
-        const s = 10 + Math.pow(Math.random(), 2.5) * 90;
-        ctx.font = `${s}px "Noto Sans JP", Orbitron, monospace`;
-        ctx.fillStyle = pick(['#fff', '#00E5FF', '#2f7bff', '#b58cff']); ctx.globalAlpha = .25 + Math.random() * .6;
-        ctx.save(); ctx.translate(Math.random() * w, Math.random() * h); ctx.rotate((Math.random() - .5) * .8); ctx.fillText(pick(LEX), 0, 0); ctx.restore();
-      }
-      ctx.globalAlpha = 1; raf = requestAnimationFrame(draw);
+    const c = ref.current, ctx = c.getContext('2d');
+    const w = c.width = innerWidth, h = c.height = innerHeight, hz = Math.round(h * .66);
+    const sc = document.createElement('canvas'); sc.width = w; sc.height = hz; const s = sc.getContext('2d');
+    const lw = Math.ceil(w / 6), lh = Math.ceil(hz / 6);
+    const low = document.createElement('canvas'); low.width = lw; low.height = lh;
+    const lx = low.getContext('2d'), img = lx.createImageData(lw, lh), px = img.data;
+    const cx = w / 2, cy = hz * .5, reach = Math.hypot(cx, hz);
+    const blobs = Array.from({ length: 13 }, () => ({ x: Math.random() * lw, y: Math.random() * lh, r: 4 + Math.random() * 15,
+      vx: (Math.random() - .5) * .02, vy: (Math.random() - .5) * .02, ph: Math.random() * 6.28, sp: .3 + Math.random() * .8 }));
+    const orbits = Array.from({ length: 7 }, (_, i) => ({ rx: 90 + i * (w * .07), tilt: .25 + Math.random() * .4, rot: Math.random() * 3.14, rs: (Math.random() - .5) * .00035,
+      pl: Math.random() * 6.28, ps: (.0003 + Math.random() * .0007) * (i % 2 ? 1 : -1), pr: 3 + Math.random() * 5 }));
+    const eqs = Array.from({ length: 14 }, () => ({ txt: pick(VOID_EQ), x: Math.random() * w, y: Math.random() * hz, sp: (.012 + Math.random() * .06) * (Math.random() < .5 ? 1 : -1), size: 14 + Math.random() * 30 }));
+    const rings = [];
+    let raf, last = performance.now(), vt = 0, spawn = 0;
+    const t0 = last;
+
+    const lockGeometry = () => { // faint cold geometry: the victim pinned at the centre of the Limitless
+      ctx.save(); ctx.globalCompositeOperation = 'difference'; ctx.strokeStyle = 'rgba(255,255,255,.55)'; ctx.lineWidth = 1;
+      for (let i = 1; i <= 6; i++) { ctx.beginPath(); ctx.arc(cx, cy, i * 46, 0, 6.283); ctx.stroke(); }
+      for (let k = 0; k < 3; k++) { ctx.beginPath(); for (let i = 0; i <= 6; i++) { const a = i * 1.0472 + k * .35; ctx.lineTo(cx + Math.cos(a) * (130 + k * 70), cy + Math.sin(a) * (130 + k * 70)); } ctx.stroke(); }
+      ctx.beginPath(); ctx.moveTo(cx - 300, cy); ctx.lineTo(cx + 300, cy); ctx.moveTo(cx, cy - 300); ctx.lineTo(cx, cy + 300); ctx.stroke();
+      ctx.lineWidth = 2; ctx.beginPath(); ctx.arc(cx, cy, 12, 0, 6.283); ctx.stroke();
+      ctx.restore();
     };
-    draw(); return () => cancelAnimationFrame(raf);
+
+    const frame = (now) => {
+      const t = now - t0, dt = Math.min(50, now - last); last = now;
+      if (t < 200) { raf = requestAnimationFrame(frame); return; } // 0.2s of negative flash first
+      const k = Math.min(1, Math.max(0, (t - 1900) / 1200));       // stasis lock ramps in
+      vt += dt * (1 - k);
+
+      // base: white field with organic black spots (metaballs) over faint iris fibres
+      const bl = blobs.map(b => {
+        b.x += b.vx * dt * (1 - k); b.y += b.vy * dt * (1 - k);
+        if (b.x < -20) b.x = lw + 20; if (b.x > lw + 20) b.x = -20; if (b.y < -20) b.y = lh + 20; if (b.y > lh + 20) b.y = -20;
+        const r = b.r * (1 + .25 * Math.sin(vt * .001 * b.sp + b.ph)); return { x: b.x, y: b.y, r2: r * r };
+      });
+      for (let y = 0, i = 0; y < lh; y++) for (let x = 0; x < lw; x++, i += 4) {
+        let f = 0; for (let j = 0; j < bl.length; j++) { const dx = x - bl[j].x, dy = y - bl[j].y; f += bl[j].r2 / (dx * dx + dy * dy + 1); }
+        const ax = x - lw / 2, ay = y - lh / 2 * .75;
+        f += Math.sin(Math.atan2(ay, ax) * 36 + Math.hypot(ax, ay) * .15) * .05;
+        let v = (f - .85) / .45; v = v < 0 ? 0 : v > 1 ? 1 : v; v = v * v * (3 - 2 * v);
+        const col = 247 - v * 241; px[i] = col; px[i + 1] = col + 2; px[i + 2] = Math.min(255, col + 9); px[i + 3] = 255;
+      }
+      lx.putImageData(img, 0, 0);
+      s.globalCompositeOperation = 'source-over'; s.imageSmoothingEnabled = true; s.drawImage(low, 0, 0, w, hz);
+
+      // overlapping translucent planetary orbits, rings, equations — drawn as inversions so they read on both white and black
+      s.globalCompositeOperation = 'difference'; s.strokeStyle = 'rgba(255,255,255,.5)'; s.fillStyle = '#fff'; s.lineWidth = 1;
+      for (const o of orbits) {
+        const rot = o.rot + vt * o.rs;
+        s.beginPath(); s.ellipse(cx, cy, o.rx, o.rx * o.tilt, rot, 0, 6.283); s.stroke();
+        const a = o.pl + vt * o.ps, ex = Math.cos(a) * o.rx, ey = Math.sin(a) * o.rx * o.tilt;
+        s.beginPath(); s.arc(cx + ex * Math.cos(rot) - ey * Math.sin(rot), cy + ex * Math.sin(rot) + ey * Math.cos(rot), o.pr, 0, 6.283); s.fill();
+      }
+      spawn += dt * (1 - k); if (spawn > 150) { spawn = 0; rings.push({ a: 0 }); }
+      for (let i = rings.length - 1; i >= 0; i--) {
+        const r = rings[i]; r.a += dt * (1 - k); const rad = r.a * 1.15;
+        if (rad > reach) { rings.splice(i, 1); continue; }
+        const f = 1 - rad / reach;
+        s.lineWidth = 1 + f * 9; s.strokeStyle = `rgba(255,255,255,${.35 + f * .65})`; s.beginPath(); s.arc(cx, cy, rad, 0, 6.283); s.stroke();
+      }
+      s.textAlign = 'left'; s.globalAlpha = .6;
+      for (const e of eqs) {
+        e.x += e.sp * dt * (1 - k); if (e.x > w + 200) e.x = -300; if (e.x < -300) e.x = w + 200;
+        s.font = `${e.size}px "Times New Roman", Georgia, serif`; s.fillText(e.txt, e.x, e.y);
+      }
+      s.globalAlpha = 1; s.globalCompositeOperation = 'source-over';
+
+      // composite: scene above, glossy dark mirror floor reflecting it below the horizon
+      ctx.setTransform(1, 0, 0, 1, 0, 0); ctx.globalAlpha = 1; ctx.drawImage(sc, 0, 0);
+      if (k > 0) { ctx.globalAlpha = .4 * k; ctx.drawImage(sc, 9 * k, 0); ctx.globalAlpha = 1; } // double vision
+      const fl = ctx.createLinearGradient(0, hz, 0, h); fl.addColorStop(0, '#0b0d14'); fl.addColorStop(1, '#000');
+      ctx.fillStyle = fl; ctx.fillRect(0, hz, w, h - hz);
+      ctx.save(); ctx.globalAlpha = .55; ctx.setTransform(1, 0, 0, -1, 0, 2 * hz); ctx.drawImage(sc, 0, 0); ctx.restore();
+      const veil = ctx.createLinearGradient(0, hz, 0, h); veil.addColorStop(0, 'rgba(0,0,0,.25)'); veil.addColorStop(1, 'rgba(0,0,0,.97)');
+      ctx.fillStyle = veil; ctx.fillRect(0, hz, w, h - hz);
+      ctx.fillStyle = 'rgba(255,255,255,.9)'; ctx.fillRect(0, hz, w, 1.5);   // horizon of nothingness
+      ctx.fillStyle = 'rgba(255,255,255,.05)'; for (let y = hz + 14, g = 10; y < h; y += g, g *= 1.35) ctx.fillRect(0, y, w, 1); // gloss
+
+      if (k >= 1) { lockGeometry(); c.style.filter = 'blur(3.5px)'; return; } // stasis lock: freeze + heavy blur, loop stops
+      c.style.filter = k > 0 ? `blur(${(k * 3.5).toFixed(2)}px)` : 'none';
+      raf = requestAnimationFrame(frame);
+    };
+    raf = requestAnimationFrame(frame);
+    return () => cancelAnimationFrame(raf);
   }, []);
-  return <canvas ref={ref} className="fixed inset-0 z-[47] pointer-events-none opacity-80" aria-hidden="true" />;
+  return <canvas ref={ref} className="absolute inset-0 w-full h-full pointer-events-none" aria-hidden="true" />;
 }
 
 const TONES = { cyan: 'text-cyan-neon', white: 'text-white', red: 'text-rose-500', violet: 'text-hollow' };
@@ -868,13 +955,14 @@ function Arena({ onExit }) {
 
   const frozen = s.fx === 'domain';
   const disabled = s.stage !== 'menu' || s.lock > 0;
-  const stageAnim = { tp: 'shakeScreen .16s linear 5', blue: 'pullStage 2.2s ease-in-out', red: 'repelStage 1.2s ease-out' }[s.fx];
+  const stageAnim = { tp: 'shakeScreen .16s linear 5', blue: 'pullStage 2.2s ease-in-out', red: 'repelStage 1.2s ease-out', domain: 'doubleVision 1.6s ease-in-out .35s infinite' }[s.fx];
   const pct = Math.max(0, hp / PMAX * 100);
   const actions = [['Attack', 'Strike with everything physical'], ['Cursed Energy Burst', 'Release raw cursed energy'], ['Domain Counter', 'Raise a Simple Domain to blunt the next hit']];
 
   return (
     <div className="fixed inset-0 z-40 overflow-hidden bg-black/70">
-      <div className="absolute inset-0 overflow-y-auto" style={{ animation: stageAnim, transformOrigin: '50% 40%' }}>
+      {frozen && <DomainVoid />}
+      <div className={'absolute inset-0 overflow-y-auto z-10 ' + (frozen ? 'mix-blend-difference' : '')} style={{ animation: stageAnim, transformOrigin: '50% 40%' }}>
         <div className="max-w-5xl mx-auto px-5 py-6 min-h-full flex flex-col">
           <div className="flex justify-between font-display text-[11px] tracking-[.4em] uppercase text-white/60">
             <span>Boss encounter · Special Grade</span><span>Turn {Math.min(s.turn, 5)}</span>
@@ -944,11 +1032,10 @@ function Arena({ onExit }) {
         <div className="absolute left-0 right-0 top-[28%] h-8 pointer-events-none bg-gradient-to-r from-transparent via-rose-500 to-white shadow-[0_0_60px_#e11d48]" style={{ transformOrigin: 'left', animation: 'beam 1s ease-out both' }} />
       </>}
       {s.fx === 'domain' && <>
-        <div className="absolute inset-0 bg-white pointer-events-none z-[46]" style={{ animation: 'flashOut 1.8s ease-out both' }} />
-        <Overload />
-        <div className="absolute inset-x-0 top-[38%] z-[48] text-center pointer-events-none">
-          <div className="font-display text-xs tracking-[.6em] text-cyan-neon">INFINITE VOID · BRAIN OVERLOAD</div>
-          <div className="font-display font-black text-6xl md:text-8xl text-white tabular-nums" style={{ textShadow: '0 0 30px #00E5FF, 0 0 80px #2f7bff' }}>{((s.count ?? 200) / 1000).toFixed(3)}s</div>
+        <NegativeFlash />
+        <div className="absolute inset-x-0 top-[38%] z-[48] text-center pointer-events-none mix-blend-difference" style={{ animation: 'doubleVision 1.6s ease-in-out .35s infinite' }}>
+          <div className="font-display text-xs tracking-[.6em] text-white">INFINITE VOID · 無量空処</div>
+          <div className="font-display font-black text-6xl md:text-8xl text-white tabular-nums">{((s.count ?? 200) / 1000).toFixed(3)}s</div>
         </div>
       </>}
       {s.stage === 'lost' && (
