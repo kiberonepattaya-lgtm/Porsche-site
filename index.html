@@ -490,6 +490,7 @@ function Header() {
   return (
     <header className="sticky top-0 z-30 flex items-center justify-between px-5 md:px-10 py-3 bg-black/85 border-b border-cyan-neon/30 shadow-[0_0_30px_rgba(0,229,255,.18)]">
       <a href="#top" className="font-display font-bold tracking-[.3em] text-cyan-neon bloom-text text-sm md:text-base">GOJO · CODEX</a>
+      <span className="hidden lg:block font-display italic text-xs tracking-wide text-white/60">Porsche's motto: “Dream big, play hard, never stop leveling up.”</span>
       <nav><ul className="flex gap-5 md:gap-9 font-display text-[11px] md:text-xs tracking-widest uppercase">
         {links.map(([id, l]) => <li key={id}><a href={'#' + id} className="text-white/80 hover:text-cyan-neon transition-colors hover:[text-shadow:0_0_14px_#00E5FF]">{l}</a></li>)}
       </ul></nav>
