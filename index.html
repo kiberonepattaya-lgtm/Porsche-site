@@ -141,6 +141,50 @@
     90% { transform: translate(-3px,2px) }
   }
   @keyframes skVignette { 0% { opacity: 0 } 25% { opacity: 1 } 100% { opacity: 0 } }
+  /* ── Fūga screen-nuke: 1) chant + dark + shake  2) the arrow forms and vibrates  3) after 1.5 s it fires → white flash → volcanic firestorm → fade ── */
+  .fuga-overlay { position: fixed; inset: 0; z-index: 10000; pointer-events: none; overflow: hidden; }
+  .fuga-dark { position: absolute; inset: 0; opacity: 0; background: radial-gradient(circle at 50% 50%, rgba(20,0,4,.92), #000 92%); animation: fugaDarkIn .12s ease-out forwards; }
+  .fuga-text { position: absolute; left: 50%; top: 42%; transform: translate(-50%, -50%); white-space: nowrap; font-family: var(--font-display); font-weight: 900;
+    font-size: clamp(3rem, 12vw, 9rem); letter-spacing: .12em; color: #ffaa00; text-shadow: 0 0 20px #ff003c, 0 0 60px #ff7800, 0 0 120px #ff003c;
+    animation: fugaPop .45s cubic-bezier(.2,1.6,.4,1) both, fugaFlicker .14s steps(2) .45s infinite; }
+  .fuga-text small { display: block; text-align: center; font-size: .22em; letter-spacing: .5em; color: #eae6df; text-shadow: 0 0 12px #ff003c; }
+  .fuga-overlay.fired .fuga-text { animation: none; opacity: 0; }
+  .fuga-arrow { position: absolute; left: 10vw; top: 66%; width: 48vw; height: 6vw; min-height: 36px; max-height: 80px; opacity: 0; transform: scaleX(0); transform-origin: left center;
+    background: linear-gradient(90deg, rgba(255,0,60,0), rgba(255,0,60,.8) 30%, #ff7800 65%, #ffd34d 88%, #fff 100%);
+    clip-path: polygon(0 35%, 88% 35%, 88% 0, 100% 50%, 88% 100%, 88% 65%, 0 65%); filter: drop-shadow(0 0 18px #ff7800) drop-shadow(0 0 50px #ff003c); }
+  .fuga-overlay.arrow-on .fuga-arrow { opacity: 1; animation: fugaForm .5s ease-out forwards, fugaVibrate .05s linear .5s infinite; }
+  .fuga-overlay.fired .fuga-arrow { opacity: 1; animation: fugaFire .35s cubic-bezier(.6,0,1,1) forwards; }
+  .fuga-flash { position: absolute; inset: 0; background: #fff; opacity: 0; }
+  .fuga-storm { position: absolute; inset: 0; opacity: 0; background: radial-gradient(circle at 72% 62%, #fff 0, #ffd34d 10%, #ff7800 28%, #ff003c 48%, #3a0008 75%, #0d0204 100%); }
+  .fuga-storm::after { content: ''; position: absolute; inset: 0; background-image: radial-gradient(circle, #ffd34d 0 2px, transparent 3px), radial-gradient(circle, #ff7800 0 3px, transparent 4px);
+    background-size: 70px 90px, 110px 130px; animation: fugaEmbers 1.6s linear forwards; }
+  .fuga-overlay.impact .fuga-dark { animation: fugaDarkOut 1.65s ease-out forwards; }
+  .fuga-overlay.impact .fuga-flash { animation: fugaWhite 1.2s ease-out forwards; }
+  .fuga-overlay.impact .fuga-storm { animation: fugaStorm 1.65s ease-out forwards; }
+  body.fuga-shaking #root { animation: fugaShake .07s linear infinite; }
+  @keyframes fugaDarkIn { to { opacity: 1 } }
+  @keyframes fugaDarkOut { from { opacity: 1 } to { opacity: 0 } }
+  @keyframes fugaPop { from { transform: translate(-50%, -50%) scale(2.6); opacity: 0 } to { transform: translate(-50%, -50%) scale(1); opacity: 1 } }
+  @keyframes fugaFlicker { 0% { opacity: 1 } 100% { opacity: .55 } }
+  @keyframes fugaForm { to { transform: scaleX(1) } }
+  @keyframes fugaVibrate { 0% { translate: 0 0 } 25% { translate: -4px 3px } 50% { translate: 3px -3px } 75% { translate: -3px -2px } 100% { translate: 0 0 } }
+  @keyframes fugaFire { from { transform: scaleX(1) } to { transform: translateX(115vw) scaleX(1.4) } }
+  @keyframes fugaWhite { 0%, 35% { opacity: 1 } 100% { opacity: 0 } }
+  @keyframes fugaStorm { 0% { opacity: 0; transform: scale(.55) } 20% { opacity: 1; transform: scale(1.05) } 60% { opacity: 1; transform: scale(1.25) } 100% { opacity: 0; transform: scale(1.5) } }
+  @keyframes fugaEmbers { from { background-position: 0 0, 0 0 } to { background-position: 0 -520px, 0 -760px } }
+  @keyframes fugaShake { 0% { transform: translate(0,0) } 20% { transform: translate(-16px,9px) rotate(-.5deg) } 40% { transform: translate(14px,-12px) rotate(.4deg) } 60% { transform: translate(-12px,-8px) } 80% { transform: translate(11px,10px) rotate(.3deg) } 100% { transform: translate(0,0) } }
+  /* ── Malevolent Shrine: a temple of skulls and ribs rises from a blood-red sea ── */
+  .sh-rise { animation: shrineRise 1.1s cubic-bezier(.2,.8,.2,1) both; }
+  .sh-rib { animation: shrineRise .8s ease-out both; }
+  .sh-pop { animation: skullPop .45s cubic-bezier(.2,1.6,.4,1) both; transform-box: fill-box; transform-origin: center; }
+  .sh-ember { animation: emberUp 3s linear infinite; }
+  @keyframes shrineLife { 0% { opacity: 0 } 8% { opacity: 1 } 88% { opacity: 1 } 100% { opacity: 0 } }
+  @keyframes shrineRise { from { transform: translateY(40px); opacity: 0 } to { transform: none; opacity: 1 } }
+  @keyframes skullPop { from { transform: scale(0) } 70% { transform: scale(1.35) } to { transform: scale(1) } }
+  @keyframes emberUp { from { transform: translateY(0); opacity: 0 } 15% { opacity: 1 } to { transform: translateY(-55px); opacity: 0 } }
+  @keyframes shrineSlash { 0%, 100% { opacity: 0 } 6% { opacity: 1 } 16% { opacity: 0 } }
+  @keyframes shrineTitle { 0% { opacity: 0; transform: scale(1.4) } 12% { opacity: 1; transform: scale(1) } 85% { opacity: 1 } 100% { opacity: 0 } }
+  @media (prefers-reduced-motion: reduce) { body.fuga-shaking #root, .sh-rise, .sh-rib, .sh-pop, .sh-ember { animation: none; } }
   /* Sukuna moves: Cleave (crisscross cuts), Dismantle (air slash), Fuga (fire arrow) */
   @keyframes slashDraw { from { stroke-dashoffset: 1 } to { stroke-dashoffset: 0 } }
   @keyframes slashFade { 0%, 65% { opacity: 1 } 100% { opacity: 0 } }
@@ -768,9 +812,11 @@ function DomainSection() {
   const [sk, tr] = useSukuna();
   const [ms, setMs] = useState(null);
   const [run, setRun] = useState(false);
+  const [shrine, setShrine] = useState(false);
   const raf = useRef();
   const fire = () => {
     if (run) return; setRun(true); setMs(0);
+    if (sk) { setShrine(true); setTimeout(() => setShrine(false), 4800); }
     const t0 = performance.now();
     const tick = (n) => {
       const e = (n - t0) / 3000 * 200; // 0.2 s shown over 3 s so it can be read
@@ -780,11 +826,12 @@ function DomainSection() {
     raf.current = requestAnimationFrame(tick);
   };
   useEffect(() => () => cancelAnimationFrame(raf.current), []);
+  const steps = sk ? SK_STEPS : STEPS;
   const active = ms === null ? -1 : steps.reduce((a, s, i) => ms >= s.t ? i : a, -1);
   const metrics = sk ? [['Activation', '0.2 s'], ['Hit rate', 'Sure-hit'], ['Barrier', 'None (open)'], ['Target', 'Carved']] : [['Activation', '0.2 s'], ['Hit rate', 'Sure-hit'], ['Input', '∞ copies'], ['Target', 'Paralysed']];
-  const steps = sk ? SK_STEPS : STEPS;
   return (
     <Section id="domain" kicker={sk ? 'Protocol 03 · Fukuma Mizushi' : 'Protocol 03 · Muryōkūsho'} title="Domain Absolute State">
+      {shrine && <MalevolentShrine />}
       <div className="grid grid-cols-2 md:grid-cols-4 gap-4 mb-6">
         {metrics.map(([k, v]) => <Card key={k} className="!p-4 text-center"><div className="font-display text-[10px] tracking-[.3em] text-white/50 uppercase">{k}</div><div className="font-display font-bold text-xl md:text-2xl text-cyan-neon bloom-text mt-1">{v}</div></Card>)}
       </div>
@@ -1155,7 +1202,7 @@ function DismantleCut() {
   );
 }
 
-function Arena({ onExit }) {
+function GojoArena({ onExit }) {
   const [sk] = useSukuna();
   const [s, d] = React.useReducer(fightReducer, FIGHT0);
   const hp = useTween(s.hp);
@@ -1300,6 +1347,232 @@ function Arena({ onExit }) {
       )}
     </div>
   );
+}
+
+/* ═══════════════ Malevolent Shrine: custom domain animation ═══════════════ */
+function MalevolentShrine({ z = 70 }) {
+  const embers = useMemo(() => Array.from({ length: 30 }, () => ({ x: Math.random() * 160, y: 62 + Math.random() * 28, d: Math.random() * 3, r: .4 + Math.random() * .5 })), []);
+  const slashes = useMemo(() => Array.from({ length: 9 }, (_, i) => {
+    const x1 = Math.random() * 160, y1 = Math.random() * 50, dir = Math.random() < .5 ? -1 : 1;
+    return { x1, y1, x2: x1 + dir * (30 + Math.random() * 60), y2: y1 + 20 + Math.random() * 30, d: i * .37 };
+  }), []);
+  const skull = (x, y, i, tag) => <g key={tag + i} className="sh-pop" style={{ animationDelay: (.9 + i * .06) + 's' }}><use href="#sk-skull" x={x} y={y} /></g>;
+  return (
+    <div className="fixed inset-0 pointer-events-none overflow-hidden" style={{ zIndex: z, animation: 'shrineLife 4.7s ease both' }} aria-hidden="true">
+      <svg className="absolute inset-0 w-full h-full" viewBox="0 0 160 90" preserveAspectRatio="xMidYMid slice">
+        <defs>
+          <radialGradient id="sh-sky" cx="50%" cy="34%" r="75%"><stop offset="0" stopColor="#7a0018" /><stop offset=".6" stopColor="#2a0208" /><stop offset="1" stopColor="#0d0204" /></radialGradient>
+          <g id="sk-skull"><ellipse cx="0" cy="0" rx="2.6" ry="2.4" fill="#eae6df" /><rect x="-1.5" y="1.4" width="3" height="2" fill="#eae6df" /><circle cx="-1" cy="-.2" r=".7" fill="#0d0204" /><circle cx="1" cy="-.2" r=".7" fill="#0d0204" /></g>
+          <path id="sk-rib" d="M0 0 C5 -5 8 -14 4 -26" fill="none" stroke="#eae6df" strokeWidth="1.5" strokeLinecap="round" />
+        </defs>
+        <rect width="160" height="90" fill="url(#sh-sky)" />
+        <circle cx="80" cy="30" r="17" fill="#ff003c" opacity=".3" /><circle cx="80" cy="30" r="11" fill="#ff7800" opacity=".35" />
+        <rect y="68" width="160" height="22" fill="#2a0208" />
+        <path d="M0 72 H160 M0 77 H160 M0 83 H160" stroke="#ff003c" strokeWidth=".3" opacity=".4" />
+        <g className="sh-rise">
+          <rect x="40" y="66" width="80" height="3" fill="#14030a" stroke="#ff003c" strokeWidth=".4" />
+          <rect x="44" y="63" width="72" height="3" fill="#14030a" stroke="#ff003c" strokeWidth=".4" />
+          {[52, 66, 90, 104].map(x => <rect key={x} x={x} y="42" width="4" height="21" fill="#14030a" stroke="#ff003c" strokeWidth=".4" />)}
+          <rect x="72" y="48" width="16" height="15" fill="#000" stroke="#ff003c" strokeWidth=".4" />
+          <circle cx="77" cy="55" r=".9" fill="#ffaa00" /><circle cx="83" cy="55" r=".9" fill="#ffaa00" />
+          <rect x="46" y="40" width="68" height="3" fill="#14030a" stroke="#ff003c" strokeWidth=".4" />
+          <polygon points="36,41 80,26 124,41 116,43 80,31 44,43" fill="#14030a" stroke="#ff003c" strokeWidth=".5" />
+          <polygon points="58,31 80,17 102,31 96,32 80,22 64,32" fill="#14030a" stroke="#ff003c" strokeWidth=".5" />
+          <line x1="80" y1="17" x2="80" y2="10" stroke="#ff003c" strokeWidth=".5" /><circle cx="80" cy="9" r="1.2" fill="#ffaa00" />
+        </g>
+        {Array.from({ length: 13 }, (_, i) => skull(44 + i * 6, 67, i, 'b'))}
+        {Array.from({ length: 7 }, (_, i) => skull(44 + i * 12, 44, i + 13, 'r'))}
+        {Array.from({ length: 6 }, (_, i) => (
+          <g key={'l' + i} className="sh-rib" style={{ animationDelay: (.2 + i * .08) + 's' }}><g transform={`translate(${4 + i * 6.5} 74) scale(1 ${.6 + i * .12})`}><use href="#sk-rib" /></g></g>
+        ))}
+        {Array.from({ length: 6 }, (_, i) => (
+          <g key={'q' + i} className="sh-rib" style={{ animationDelay: (.2 + i * .08) + 's' }}><g transform={`translate(${156 - i * 6.5} 74) scale(-1 ${.6 + i * .12})`}><use href="#sk-rib" /></g></g>
+        ))}
+        {embers.map((m, i) => <circle key={i} className="sh-ember" cx={m.x} cy={m.y} r={m.r} fill={i % 2 ? '#ffaa00' : '#ff003c'} style={{ animationDelay: m.d + 's' }} />)}
+        {slashes.map((l, i) => (
+          <g key={i} style={{ opacity: 0, animation: `shrineSlash 1.3s linear ${1.2 + l.d}s infinite` }}>
+            <line x1={l.x1} y1={l.y1} x2={l.x2} y2={l.y2} stroke="#ff003c" strokeWidth="1.2" strokeLinecap="round" />
+            <line x1={l.x1} y1={l.y1} x2={l.x2} y2={l.y2} stroke="#fff" strokeWidth=".35" strokeLinecap="round" />
+          </g>
+        ))}
+      </svg>
+      <div className="absolute inset-x-0 top-[10%] text-center" style={{ animation: 'shrineTitle 3.6s ease .6s both' }}>
+        <div className="font-display tracking-[.6em] text-xs text-[#eae6df]">領域展開</div>
+        <div className="font-display font-black text-4xl md:text-6xl text-[#ff003c]" style={{ textShadow: '0 0 30px #ff003c' }}>伏魔御廚子</div>
+        <div className="font-display tracking-[.5em] text-sm text-[#ffaa00]">MALEVOLENT SHRINE</div>
+      </div>
+    </div>
+  );
+}
+
+/* ═══════════════ Sukuna fight pattern ═══════════════ */
+// Alternate Cleave ↔ Dismantle three times in a row to charge Fūga. Cleave stacks Cursed Energy Debris; Dismantle detonates it.
+const SK_BOSS_MAX = 150, SK_YOU_MAX = 200, SK_COMBO_GOAL = 3;
+const SK_FIGHT0 = { stage: 'menu', turn: 1, hp: SK_YOU_MAX, bossHp: SK_BOSS_MAX, debris: 0, combo: 0, last: null, ultReady: false, shrineUsed: false, fx: '', floats: [], log: 'Satoru Gojo stands before you. Cut him down.' };
+const addFloats = (s, list) => list.reduce((fl, [t, side, tone]) => addFloat({ floats: fl }, t, side, tone), s.floats);
+
+function runSukunaPattern(s, a) {
+  switch (a.type) {
+    case 'cast': {
+      const cleave = a.skill === 'cleave';
+      const detonated = cleave ? 0 : s.debris;
+      const dmg = cleave ? 12 : 18 + detonated * 10;
+      const chained = s.last !== null && s.last !== a.skill;           // strict alternation keeps the combo alive
+      const combo = chained ? s.combo + 1 : 1;
+      const ready = s.ultReady || combo >= SK_COMBO_GOAL;
+      const fl = [['-' + dmg, 'boss', 'red']];
+      if (!cleave && detonated) fl.push(['DEBRIS ×' + detonated + ' DETONATED', 'boss', 'violet']);
+      if (ready && !s.ultReady) fl.push(['[FŪGA READY]', 'player', 'white']);
+      let log = cleave ? `Cleave — rapid cuts shred Gojo. Cursed Energy Debris ×${s.debris + 1}.`
+        : detonated ? `Dismantle — the blades detonate ${detonated} Debris for bonus damage!` : 'Dismantle — an invisible blade sweeps the field.';
+      if (ready && !s.ultReady) log += ' Fūga is ready!';
+      return { ...s, stage: 'player', fx: a.skill, bossHp: Math.max(0, s.bossHp - dmg), debris: cleave ? s.debris + 1 : 0,
+        combo: Math.min(combo, SK_COMBO_GOAL), last: a.skill, ultReady: ready, log, floats: addFloats(s, fl) };
+    }
+    case 'fuga': return s.ultReady ? { ...s, stage: 'ult', fx: 'fuga', ultReady: false, combo: 0, last: null, log: 'Fūga — “Open.”' } : s;
+    case 'fugaHit': return { ...s, bossHp: 0, floats: addFloats(s, [['-' + s.bossHp, 'boss', 'red']]) };
+    case 'shrine': return s.shrineUsed ? s : { ...s, stage: 'ult', fx: 'shrine', shrineUsed: true, log: 'Domain Expansion: Malevolent Shrine — Fukuma Mizushi.' };
+    case 'tick': return { ...s, bossHp: Math.max(0, s.bossHp - a.n), floats: addFloats(s, [['-' + a.n, 'boss', 'red']]) };
+    case 'shrineEnd': return s.bossHp <= 0 ? { ...s, stage: 'won', fx: '' } : { ...s, stage: 'enemy', fx: '', log: 'The Shrine closes.' };
+    case 'enemyStart': return { ...s, stage: 'enemy', fx: '' };
+    case 'hit': return { ...s, hp: Math.max(0, s.hp - a.n), floats: addFloats(s, [['-' + a.n, 'player', 'red']]) };
+    case 'enemyEnd': return s.hp <= 0 ? { ...s, stage: 'lost' } : { ...s, stage: 'menu', turn: s.turn + 1 };
+    case 'log': return { ...s, log: a.text };
+    case 'won': return { ...s, stage: 'won', fx: '' };
+    case 'rm': return { ...s, floats: s.floats.filter(f => f.id !== a.id) };
+    case 'reset': return { ...SK_FIGHT0 };
+    default: return s;
+  }
+}
+
+// castFuga: the 3-phase screen nuke, built straight on the DOM so it overlays any layout. It removes itself after 3.5 s.
+function castFuga(onImpact) {
+  const wrap = document.createElement('div');
+  wrap.className = 'fuga-overlay';
+  wrap.innerHTML = '<div class="fuga-dark"></div><div class="fuga-text">■ 開<small>(Open)</small></div><div class="fuga-arrow"></div><div class="fuga-flash"></div><div class="fuga-storm"></div>';
+  document.body.appendChild(wrap);
+  document.body.classList.add('fuga-shaking');                                 // phase 1: the chant — screen darkens, text pops, viewport shakes
+  setTimeout(() => wrap.classList.add('arrow-on'), 500);                       // phase 2: the arrow forms and vibrates
+  setTimeout(() => wrap.classList.add('fired'), 1500);                         // phase 3: after the 1.5 s charge, the arrow fires…
+  setTimeout(() => { wrap.classList.add('impact'); onImpact(); }, 1850);       // …white flash, firestorm, boss bar wiped
+  setTimeout(() => document.body.classList.remove('fuga-shaking'), 2300);
+  setTimeout(() => { wrap.remove(); document.body.classList.remove('fuga-shaking'); }, 3500);   // clean up
+}
+
+function SukunaArena({ onExit }) {
+  const [s, d] = React.useReducer(runSukunaPattern, SK_FIGHT0);
+  const bossHp = useTween(s.bossHp), hp = useTween(s.hp);
+
+  useEffect(() => {
+    const ts = [], is = [], T = (f, ms) => ts.push(setTimeout(f, ms));
+    if (s.stage === 'player') T(() => d({ type: s.bossHp <= 0 ? 'won' : 'enemyStart' }), 1300);
+    if (s.stage === 'enemy') {                                                   // Gojo answers: a strike each turn, Red every third
+      const heavy = s.turn % 3 === 0;
+      d({ type: 'log', text: heavy ? 'Gojo — Reversal: Red! Everything is thrown away from him.' : 'Gojo vanishes — Teleportation Strike!' });
+      T(() => d({ type: 'hit', n: heavy ? 24 : 12 }), 550);
+      T(() => d({ type: 'enemyEnd' }), 1500);
+    }
+    if (s.stage === 'ult' && s.fx === 'fuga') { castFuga(() => d({ type: 'fugaHit' })); T(() => d({ type: 'won' }), 3500); }
+    if (s.stage === 'ult' && s.fx === 'shrine') {                                // sure-hit cuts for as long as the Shrine stands
+      is.push(setInterval(() => d({ type: 'tick', n: 12 }), 700));
+      T(() => is.forEach(clearInterval), 3600);
+      T(() => d({ type: 'shrineEnd' }), 4700);
+    }
+    return () => { ts.forEach(clearTimeout); is.forEach(clearInterval); };
+  }, [s.stage, s.turn]);
+  useEffect(() => { document.body.style.overflow = 'hidden'; return () => { document.body.style.overflow = ''; }; }, []);
+
+  const menu = s.stage === 'menu';
+  const stageAnim = { cleave: 'shakeScreen .12s linear 10', dismantle: 'shakeScreen .1s linear 4' }[s.fx];
+  const acts = [
+    { id: 'cleave', name: 'Cleave', hint: 'Rapid close-range cuts. +1 Cursed Energy Debris', go: () => d({ type: 'cast', skill: 'cleave' }) },
+    { id: 'dismantle', name: 'Dismantle', hint: 'Wide-area cut. Detonates Debris for bonus damage', go: () => d({ type: 'cast', skill: 'dismantle' }) },
+    { id: 'fuga', name: 'Fūga', hint: s.ultReady ? 'Divine Flame — “Open”' : 'Alternate Cleave → Dismantle → Cleave to charge', locked: !s.ultReady, go: () => d({ type: 'fuga' }) },
+    { id: 'shrine', name: 'Malevolent Shrine', hint: s.shrineUsed ? 'Domain spent' : 'Domain Expansion — sure-hit cuts (once)', locked: s.shrineUsed, go: () => d({ type: 'shrine' }) },
+  ];
+  const next = s.last === null ? 'start with Cleave or Dismantle' : 'next: ' + (s.last === 'cleave' ? 'Dismantle' : 'Cleave');
+
+  return (
+    <div className="fixed inset-0 z-40 overflow-hidden bg-black/70">
+      <div className="absolute inset-0 overflow-y-auto z-10" style={{ animation: stageAnim, transformOrigin: '50% 40%' }}>
+        <div className="max-w-5xl mx-auto px-5 py-6 min-h-full flex flex-col">
+          <div className="flex justify-between font-display text-[11px] tracking-[.4em] uppercase text-white/60"><span>Sukuna’s trial · Special Grade</span><span>Turn {s.turn}</span></div>
+
+          {/* Gojo, the target */}
+          <div className="relative text-center mt-4">
+            <div className="relative inline-block">
+              <div className="relative h-[30vh] max-h-[300px] min-h-[180px] aspect-[2/3] mx-auto overflow-hidden rounded-[50%/42%] shadow-[0_0_50px_rgb(var(--c-accent)/.55),inset_0_0_40px_rgb(var(--c-accent2)/.5)]"
+                style={{ background: 'radial-gradient(ellipse at 50% 40%, #ffffff 0%, #cfeaff 55%, #5aa8ff 100%)' }}>
+                <img src="gojo full body.jpg" alt="Satoru Gojo, full body" className="absolute inset-0 w-full h-full object-contain mix-blend-multiply" />
+              </div>
+              <div className="absolute inset-[-8%] rounded-[50%/42%] border border-dashed border-cyan-neon/60 pointer-events-none" aria-hidden="true" />
+            </div>
+            <h2 className="font-display font-black text-2xl md:text-3xl tracking-widest text-white bloom-text">SATORU GOJO</h2>
+            <div className="mt-3 max-w-md mx-auto">
+              <div className="flex justify-between font-display text-xs tracking-widest"><span className="text-white/60">HP</span><span className="text-cyan-neon tabular-nums">{Math.ceil(bossHp)} / {SK_BOSS_MAX}</span></div>
+              <div className="h-3 bg-white/10 overflow-hidden rounded-sm"><div className="h-full bg-gradient-to-r from-azure to-cyan-neon shadow-[0_0_16px_rgb(var(--c-accent))]" style={{ width: Math.max(0, bossHp / SK_BOSS_MAX * 100) + '%' }} /></div>
+            </div>
+            {s.floats.filter(f => f.side === 'boss').map(f => (
+              <div key={f.id} onAnimationEnd={() => d({ type: 'rm', id: f.id })} className={'absolute left-1/2 top-1/3 font-display font-bold text-lg md:text-xl whitespace-nowrap pointer-events-none ' + TONES[f.tone]}
+                style={{ animation: 'floatUp 1.4s ease-out forwards', textShadow: '0 0 14px currentColor' }}>{f.text}</div>
+            ))}
+          </div>
+
+          <div className="flex-1" />
+          <p className="text-center text-lg md:text-xl text-white/90 min-h-[3.5rem] my-4" aria-live="polite">{s.log}</p>
+
+          {/* You, Ryomen Sukuna */}
+          <div className="relative max-w-xl w-full mx-auto">
+            <div className="flex justify-between items-end font-display text-xs tracking-widest"><span className="text-white">YOU · RYOMEN SUKUNA</span><span className="text-white text-base tabular-nums">{Math.ceil(hp)} / {SK_YOU_MAX}</span></div>
+            <div className="h-3 bg-white/10 overflow-hidden rounded-sm"><div className="h-full bg-gradient-to-r from-emerald-500 to-lime-300" style={{ width: Math.max(0, hp / SK_YOU_MAX * 100) + '%', transition: 'width .2s' }} /></div>
+            {s.floats.filter(f => f.side === 'player').map(f => (
+              <div key={f.id} onAnimationEnd={() => d({ type: 'rm', id: f.id })} className={'absolute left-1/2 -top-2 font-display font-bold text-2xl whitespace-nowrap pointer-events-none ' + TONES[f.tone]}
+                style={{ animation: 'floatUp 1.4s ease-out forwards', textShadow: '0 0 14px currentColor' }}>{f.text}</div>
+            ))}
+            <div className="mt-4 flex flex-wrap items-center gap-3 font-display text-xs tracking-widest uppercase text-white/70">
+              <span>Combo</span>
+              {[0, 1, 2].map(i => <span key={i} className={'w-6 h-3 border border-cyan-neon/60 ' + (i < s.combo ? 'bg-cyan-neon shadow-[0_0_12px_rgb(var(--c-accent))]' : 'bg-black/40')} />)}
+              <span className="ml-2">Debris ×{s.debris}</span>
+              <span className={'ml-auto ' + (s.ultReady ? 'text-hollow bloom-text' : 'text-white/50')}>{s.ultReady ? 'FŪGA READY' : next}</span>
+            </div>
+            <div className="relative mt-4 grid sm:grid-cols-2 md:grid-cols-4 gap-4">
+              {acts.map(a => (
+                <button key={a.id} disabled={!menu || a.locked} onClick={a.go}
+                  className={'text-left px-4 py-3 border bg-black/60 transition-all disabled:opacity-40 disabled:cursor-not-allowed hover:bg-cyan-neon/15 ' + (a.id === 'fuga' && s.ultReady ? 'border-hollow shadow-[0_0_30px_rgb(var(--c-hollow)/.7)]' : 'border-cyan-neon/50')}>
+                  <div className="font-display font-bold tracking-widest uppercase text-sm text-cyan-neon">{a.name}</div>
+                  <div className="text-sm text-white/70">{a.hint}</div>
+                </button>
+              ))}
+            </div>
+          </div>
+          <div className="h-6" />
+        </div>
+      </div>
+
+      {/* effects */}
+      {s.fx === 'cleave' && <CleaveBurst />}
+      {s.fx === 'dismantle' && <DismantleCut />}
+      {s.fx === 'shrine' && <MalevolentShrine z={48} />}
+      {(s.stage === 'won' || s.stage === 'lost') && (
+        <div className="absolute inset-0 z-[49] grid place-items-center bg-black/85 text-center px-6" style={{ animation: 'frostIn .8s both' }}>
+          <div>
+            <p className="font-display text-xs tracking-[.5em] text-azure uppercase">{s.stage === 'won' ? 'The King of Curses' : 'Infinity held'}</p>
+            <h2 className="mt-4 font-display font-black text-3xl md:text-5xl text-white bloom-text">{s.stage === 'won' ? <>KNOW YOUR PLACE.<br />GOJO IS ASH.</> : <>YOU FELL.<br />TRY AGAIN.</>}</h2>
+            <p className="mt-4 text-white/60">{s.stage === 'won' ? 'Fūga — and nothing remained of the boss’s health bar.' : 'Alternate Cleave and Dismantle to charge Fūga before Gojo wears you down.'}</p>
+            <div className="mt-8 flex flex-wrap gap-4 justify-center">
+              <button onClick={() => d({ type: 'reset' })} className="px-8 py-3 font-display font-bold tracking-[.3em] uppercase text-black bg-cyan-neon shadow-[0_0_30px_rgb(var(--c-accent)/.7)] hover:scale-105 transition-transform">{s.stage === 'won' ? 'Again' : 'Retry'}</button>
+              <button onClick={onExit} className="px-8 py-3 font-display font-bold tracking-[.3em] uppercase text-white border border-white/50 hover:bg-white/10 transition-colors">Return to Codex</button>
+            </div>
+          </div>
+        </div>
+      )}
+    </div>
+  );
+}
+
+// The active-state check: in Sukuna mode the Gojo fight is bypassed entirely and the Sukuna pattern runs instead.
+function Arena(props) {
+  return document.body.classList.contains('sukuna-mode') ? <SukunaArena {...props} /> : <GojoArena {...props} />;
 }
 
 function Footer() {
