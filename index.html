@@ -141,6 +141,10 @@
     90% { transform: translate(-3px,2px) }
   }
   @keyframes skVignette { 0% { opacity: 0 } 25% { opacity: 1 } 100% { opacity: 0 } }
+  /* Sukuna moves: Cleave (crisscross cuts), Dismantle (air slash), Fuga (fire arrow) */
+  @keyframes slashDraw { from { stroke-dashoffset: 1 } to { stroke-dashoffset: 0 } }
+  @keyframes slashFade { 0%, 65% { opacity: 1 } 100% { opacity: 0 } }
+  @keyframes cutLine { 0% { opacity: 0; transform: rotate(-16deg) scaleX(0) } 35% { opacity: 1; transform: rotate(-16deg) scaleX(1) } 100% { opacity: 0; transform: rotate(-16deg) scaleX(1) } }
   body.sk-shaking #root { animation: skShake .7s ease-in-out; }
   #sk-vignette { position: fixed; inset: 0; z-index: 9999; pointer-events: none; opacity: 0;
     background: radial-gradient(circle, transparent 20%, rgba(255,0,60,.85) 70%, #000 100%); }
@@ -185,13 +189,13 @@ const THEME_TEXT = {
   'The Strongest': 'King of Curses', 'Six Eyes': 'Four Eyes', 'Limitless': 'Shrine',
   'Domain': 'Malevolent Shrine', 'Blue': 'Cleave', 'Red': 'Dismantle', 'Purple': 'Fuga',
   'Hollow Purple': 'Fuga', 'Unlimited Void': 'Malevolent Shrine', 'Infinite Void': 'Malevolent Shrine',
-  'Blue (attract)': 'Cleave (slash)', 'Red (repel)': 'Dismantle (carve)', 'Purple (erase)': 'Fuga (open)',
+  'Blue (attract)': 'Cleave (shred)', 'Red (repel)': 'Dismantle (cut)', 'Purple (erase)': 'Fuga (open)',
   'Infinite Void · 無量空処': 'Malevolent Shrine · 伏魔御廚子',
   'Limitless Paradox Matrix': 'Slaughter Technique Matrix', 'Domain Absolute State': 'Malevolent Shrine State',
   '五条悟 · The Strongest': '両面宿儺 · King of Curses',
-  'Attraction · Convergence': 'Targeted · Instant slash', 'Repulsion · Reversed Output': 'Area · Wide cutting',
+  'Attraction · Convergence': 'Touch · Crisscross cuts', 'Repulsion · Reversed Output': 'Ranged · Air slash',
   'Annihilation · Imaginary Mass': 'Divine Flame · “Open”',
-  '蒼 · Cursed Technique Lapse': '解 · Cleave', '赫 · Cursed Technique Reversal': '捌 · Dismantle', '茈 · Hollow Technique': '開 · Fuga',
+  '蒼 · Cursed Technique Lapse': '捌 · Cleave', '赫 · Cursed Technique Reversal': '解 · Dismantle', '茈 · Hollow Technique': '竈 · Fuga',
 };
 const SK_EYES = [
   { k: 'Cursed-energy output', v: 100, note: 'Overwhelming reserves — the King of Curses fights at full strength without strain.' },
@@ -209,14 +213,14 @@ const THEME_SK = {
   infinity: { name: 'Reverse Cursed Technique', jp: '反転術式 · Hanten', tag: 'Passive · Regeneration',
     body: 'Sukuna heals wounds mid-fight with reverse cursed technique, shrugging off damage that would end any other sorcerer. Where others must avoid every blow, he simply keeps fighting.',
     facts: ['Positive cursed energy repairs the body', 'Recovers from wounds during battle', 'Lets him fight on through heavy damage'] },
-  blue: { facts: ['Instant slash aimed at a single target', 'Cut adjusts to the target’s toughness', 'Fast, precise and nearly impossible to read'] },
-  red: { facts: ['Wide-area slashes that carve everything nearby', 'Needs no aim and no wasted effort', 'The mirror of Cleave: breadth over precision'] },
-  purple: { facts: ['Fusion of Cleave (slash) and Dismantle (carve)', 'Divine Flame: a fire arrow released with “Open”', 'Peak offensive output of the King of Curses'] },
+  blue: { facts: ['Overlapping cuts that adapt to the target’s toughness', 'Usually needs physical contact', 'Bursts into criss-crossing red-and-black cuts at once'] },
+  red: { facts: ['Invisible blade — only a ripple in the air', 'Flies outward in fast, sweeping lines', 'Slices clean through objects in a single cut'] },
+  purple: { facts: ['Archer’s pose: a bowstring drawn from fire', 'Fire arrow at supersonic speed, trailing scorching heat', 'Ends in a colossal, apocalyptic firestorm'] },
 };
 const THEME_BODY = {
-  blue: 'Cleave is a single cut that adjusts to the toughness of its target. It is an instant, targeted slash — whatever it is aimed at, it divides.',
-  red: 'Dismantle fires slashes that carve the surrounding area to pieces. It is a wide-area cutting attack, delivered with no need to aim and no effort to spare.',
-  purple: 'Fuga combines Cleave and Dismantle into a Divine Flame — a devastating fire arrow, released with the word “Open”. The pinnacle of the King of Curses’ arsenal.',
+  blue: 'Cleave is a brutal mesh of overlapping cuts that adapts to the toughness of its target. Sukuna usually has to touch what he cleaves — and when he does, it bursts into criss-crossing butcher cuts all at once.',
+  red: 'Dismantle is an invisible, flying blade of cursed energy — just a ripple in the air, laced with crimson. It sweeps outward in fast lines and slices clean through buildings and people in a single cut.',
+  purple: 'Fuga is a Divine Flame. Sukuna poses like an archer and draws back a bowstring of fire; released with the word “Open”, the plasma arrow flies at supersonic speed and ends in a colossal firestorm.',
 };
 function useSukuna() {
   const [on, setOn] = useState(SukunaMode.isOn());
@@ -508,13 +512,62 @@ function TechViz({ kind }) {
     const draw = () => {
       if (!vis) { raf = requestAnimationFrame(draw); return; }
       tt += REDUCED ? 0 : 1;
-      ctx.fillStyle = 'rgba(2,2,14,.28)'; ctx.fillRect(0, 0, W, H);
+      ctx.fillStyle = document.body.classList.contains('sukuna-mode') ? 'rgba(13,2,4,.3)' : 'rgba(2,2,14,.28)'; ctx.fillRect(0, 0, W, H);
       const L = (tt % 360) / 360;
       // canvas colours can't read CSS variables, so pick the palette per frame
       const SK = document.body.classList.contains('sukuna-mode');
       const C = SK ? { cy: '255,0,60', cyH: '#ff003c', bl: '255,170,0', blH: '#ffaa00', re: '255,0,60', reH: '#ff003c', pu: '#ff7800', puL: '#ffc58a', puR: '255,120,0' }
                    : { cy: '0,229,255', cyH: '#00E5FF', bl: '60,140,255', blH: '#2f7bff', re: '255,59,92', reH: '#ff3b5c', pu: '#b58cff', puL: '#d9c2ff', puR: '181,140,255' };
-      if (kind === 'infinity') {
+      if (SK && kind === 'blue') {
+        // Cleave: a sudden burst of crisscrossing red-and-black cuts on a touched target
+        const burst = Math.floor(L * 3), p = (L * 3) % 1, k = Math.min(1, p / .35), fade = p > .7 ? 1 - (p - .7) / .3 : 1;
+        const rnd = (i) => { const v = Math.sin((burst + 1) * 91.7 + i * 12.9898) * 43758.5453; return v - Math.floor(v); };
+        ctx.strokeStyle = 'rgba(234,230,223,.9)'; ctx.lineWidth = 1.5; ctx.strokeRect(cx - 18, cy - 18, 36, 36);
+        ctx.lineCap = 'square';
+        for (let i = 0; i < 9; i++) {
+          const a = rnd(i) * 3.1416, r = 130 + rnd(i + 20) * 60, ox = (rnd(i + 40) - .5) * 70, oy = (rnd(i + 60) - .5) * 50;
+          const x1 = cx + ox - Math.cos(a) * r, y1 = cy + oy - Math.sin(a) * r, x2 = x1 + Math.cos(a) * r * 2 * k, y2 = y1 + Math.sin(a) * r * 2 * k;
+          ctx.shadowBlur = 0; ctx.strokeStyle = `rgba(0,0,0,${fade})`; ctx.lineWidth = 5; ctx.beginPath(); ctx.moveTo(x1, y1); ctx.lineTo(x2, y2); ctx.stroke();
+          ctx.shadowColor = '#ff003c'; ctx.shadowBlur = 10; ctx.strokeStyle = `rgba(255,0,60,${fade})`; ctx.lineWidth = 1.8; ctx.beginPath(); ctx.moveTo(x1, y1); ctx.lineTo(x2, y2); ctx.stroke();
+        }
+        ctx.shadowBlur = 0;
+      } else if (SK && kind === 'red') {
+        // Dismantle: a clean diagonal air slash with a rippling distortion; the target splits along it
+        const p = (L * 2) % 1, k = Math.min(1, p / .4), fade = p > .6 ? 1 - (p - .6) / .4 : 1, split = p > .4 ? Math.min(14, (p - .4) * 40) : 0;
+        const tx = cx - 22, ty = cy - 22;
+        ctx.strokeStyle = 'rgba(234,230,223,.9)'; ctx.lineWidth = 1.5;
+        ctx.beginPath(); ctx.moveTo(tx - split, ty - split); ctx.lineTo(tx + 44 - split, ty - split); ctx.lineTo(tx - split, ty + 44 - split); ctx.closePath(); ctx.stroke();
+        ctx.beginPath(); ctx.moveTo(tx + 44 + split, ty + split); ctx.lineTo(tx + 44 + split, ty + 44 + split); ctx.lineTo(tx + split, ty + 44 + split); ctx.closePath(); ctx.stroke();
+        const sx = cx + 182, sy = cy - 182, hx = sx - 364 * k, hy = sy + 364 * k;
+        ctx.lineCap = 'round';
+        ctx.shadowColor = '#b347ff'; ctx.shadowBlur = 16; ctx.strokeStyle = `rgba(179,71,255,${.5 * fade})`; ctx.lineWidth = 7; ctx.beginPath(); ctx.moveTo(sx, sy); ctx.lineTo(hx, hy); ctx.stroke();
+        ctx.shadowColor = '#ff003c'; ctx.shadowBlur = 14; ctx.strokeStyle = `rgba(255,255,255,${fade})`; ctx.lineWidth = 2; ctx.beginPath(); ctx.moveTo(sx, sy); ctx.lineTo(hx, hy); ctx.stroke();
+        ctx.strokeStyle = `rgba(255,0,60,${.8 * fade})`; ctx.lineWidth = 4; ctx.globalCompositeOperation = 'lighter'; ctx.beginPath(); ctx.moveTo(sx, sy); ctx.lineTo(hx, hy); ctx.stroke(); ctx.globalCompositeOperation = 'source-over';
+        for (let i = 1; i <= 3; i++) { ctx.strokeStyle = `rgba(179,71,255,${(.4 - i * .1) * fade})`; ctx.lineWidth = 1.5; ctx.beginPath(); ctx.arc(hx, hy, 8 + i * 9 + p * 12, 0, 6.283); ctx.stroke(); }
+        ctx.shadowBlur = 0;
+      } else if (SK && kind === 'purple') {
+        // Fuga: embers gather, the fire arrow is loosed across the frame, then the firestorm
+        const ax0 = 60, ax1 = W - 70, arrow = (hx, len) => {
+          const g = ctx.createLinearGradient(hx - len, 0, hx, 0);
+          g.addColorStop(0, 'rgba(255,0,60,0)'); g.addColorStop(.4, 'rgba(255,0,60,.8)'); g.addColorStop(.75, '#ff7800'); g.addColorStop(.92, '#ffd34d'); g.addColorStop(1, '#fff');
+          ctx.shadowColor = '#ff7800'; ctx.shadowBlur = 20; ctx.fillStyle = g; ctx.beginPath();
+          ctx.moveTo(hx, cy); ctx.lineTo(hx - 16, cy - 9); ctx.lineTo(hx - 16, cy - 3); ctx.lineTo(hx - len, cy - 3); ctx.lineTo(hx - len, cy + 3); ctx.lineTo(hx - 16, cy + 3); ctx.lineTo(hx - 16, cy + 9); ctx.closePath(); ctx.fill(); ctx.shadowBlur = 0;
+        };
+        if (L < .3) {
+          const k = L / .3;
+          for (const q of ps.slice(0, 30)) { const f = (q.ph + tt / 90) % 1, r = (20 + q.r * .5) * (1 - f * .7); ctx.fillStyle = `rgba(255,${120 + (q.ph * 110) | 0},0,${.3 + f * .7})`; ctx.shadowColor = '#ff7800'; ctx.shadowBlur = 8; ctx.beginPath(); ctx.arc(ax0 + Math.cos(q.a + f * 4) * r, cy + Math.sin(q.a + f * 4) * r - f * 24, 2, 0, 6.283); ctx.fill(); }
+          ctx.shadowBlur = 0; arrow(ax0 + 20 + 50 * k, 30 + 80 * k);
+        } else if (L < .6) {
+          const k = (L - .3) / .3, hx = ax0 + 70 + (ax1 - ax0 - 70) * k * k;
+          arrow(hx, 160);
+        } else {
+          const q = (L - .6) / .4, r = 20 + q * 170, a = 1 - q * q;
+          const g = ctx.createRadialGradient(ax1, cy, 0, ax1, cy, r);
+          g.addColorStop(0, `rgba(255,255,255,${a})`); g.addColorStop(.25, `rgba(255,211,77,${a})`); g.addColorStop(.55, `rgba(255,120,0,${a * .85})`); g.addColorStop(.8, `rgba(255,0,60,${a * .6})`); g.addColorStop(1, 'rgba(255,0,60,0)');
+          ctx.fillStyle = g; ctx.beginPath(); ctx.arc(ax1, cy, r, 0, 6.283); ctx.fill();
+          ctx.strokeStyle = `rgba(255,170,0,${a})`; ctx.lineWidth = 3; ctx.beginPath(); ctx.arc(ax1, cy, r * 1.05, 0, 6.283); ctx.stroke();
+        }
+      } else if (kind === 'infinity') {
         // Zeno: each step covers half the remaining distance — never arrives
         ctx.strokeStyle = `rgba(${C.cy},.8)`; ctx.lineWidth = 2; ctx.beginPath(); ctx.arc(cx, cy, 36, 0, 6.283); ctx.stroke();
         ctx.fillStyle = '#fff'; ctx.shadowColor = C.cyH; ctx.shadowBlur = 12; ctx.beginPath(); ctx.arc(cx, cy, 6, 0, 6.283); ctx.fill(); ctx.shadowBlur = 0;
@@ -679,7 +732,7 @@ function LimitlessSection() {
   const [sel, setSel] = useState(0);
   const [sk, tr] = useSukuna();
   // in Sukuna mode the names, tags and blurbs of the three attacks morph; the game logic is unchanged
-  const SK_COL = { infinity: '#ff003c', blue: '#ffaa00', red: '#ff003c', purple: '#ff7800' };
+  const SK_COL = { infinity: '#ff003c', blue: '#ff003c', red: '#ff6a3d', purple: '#ffaa00' };
   const techs = TECHS.map(x => ({ ...x, col: sk ? SK_COL[x.id] : x.col, name: tr(x.name), jp: tr(x.jp), tag: tr(x.tag), body: sk && THEME_BODY[x.id] ? THEME_BODY[x.id] : x.body, ...(sk ? THEME_SK[x.id] : {}) }));
   const t = techs[sel];
   return (
@@ -773,19 +826,26 @@ function DomainSection() {
 const ORB = 88, ORB_TOP = 96, ORB_EDGE = 16;
 
 function Orb({ kind, offset, dragging, handlers }) {
+  const [sk] = useSukuna();
   const blue = kind === 'blue', n = 8;
+  const label = sk ? (blue ? 'Cleave' : 'Dismantle') : (blue ? 'Lapse: Blue' : 'Reversal: Red');
+  const ring = sk
+    ? (blue ? 'bg-black/70 shadow-[0_0_30px_rgba(255,0,60,0.9)] border-red-500/80 border-dashed' : 'bg-fuchsia-900/30 shadow-[0_0_30px_rgba(179,71,255,0.8)] border-fuchsia-400/70 border-dashed animate-pulse')
+    : (blue ? 'bg-cyan-500/20 shadow-[0_0_30px_rgba(6,182,212,0.8)] border-cyan-300/70' : 'bg-rose-600/20 shadow-[0_0_30px_rgba(225,29,72,0.8)] border-rose-400/70 animate-pulse');
+  const core = sk
+    ? (blue ? 'bg-red-600 shadow-[0_0_20px_#ff003c]' : 'bg-orange-300 shadow-[0_0_20px_#ff6a3d]')
+    : (blue ? 'bg-cyan-200 shadow-[0_0_20px_#22d3ee]' : 'bg-rose-300 shadow-[0_0_20px_#fb7185]');
+  const dot = sk ? (blue ? 'bg-red-500' : 'bg-fuchsia-300') : (blue ? 'bg-cyan-300' : 'bg-rose-400');
   return (
     <div {...handlers} role="button" tabIndex={-1}
-      aria-label={blue ? 'Cursed Technique Lapse: Blue. Drag it into the red orb.' : 'Cursed Technique Reversal: Red. Drag it into the blue orb.'}
-      title={blue ? 'Lapse: Blue' : 'Reversal: Red'}
+      aria-label={sk ? (blue ? 'Cleave. Drag it into the Dismantle orb.' : 'Dismantle. Drag it into the Cleave orb.') : (blue ? 'Cursed Technique Lapse: Blue. Drag it into the red orb.' : 'Cursed Technique Reversal: Red. Drag it into the blue orb.')}
+      title={label}
       className={'fixed w-[88px] h-[88px] rounded-full select-none cursor-grab active:cursor-grabbing ' + (blue ? 'left-4 ' : 'right-4 ') + (dragging ? '' : 'transition-transform duration-500 ease-out')}
       style={{ top: ORB_TOP, transform: `translate(${offset.x}px,${offset.y}px)`, touchAction: 'none', zIndex: dragging ? 55 : 40 }}>
-      <div className={'absolute inset-2 rounded-full border ' + (blue
-        ? 'bg-cyan-500/20 shadow-[0_0_30px_rgba(6,182,212,0.8)] border-cyan-300/70'
-        : 'bg-rose-600/20 shadow-[0_0_30px_rgba(225,29,72,0.8)] border-rose-400/70 animate-pulse')} />
-      <div className={'absolute left-1/2 top-1/2 -ml-3 -mt-3 w-6 h-6 rounded-full ' + (blue ? 'bg-cyan-200 shadow-[0_0_20px_#22d3ee]' : 'bg-rose-300 shadow-[0_0_20px_#fb7185]')} />
+      <div className={'absolute inset-2 rounded-full border ' + ring} />
+      <div className={'absolute left-1/2 top-1/2 -ml-3 -mt-3 w-6 h-6 rounded-full ' + core} />
       {Array.from({ length: n }, (_, i) => (
-        <i key={i} className={'absolute left-1/2 top-1/2 -ml-[3px] -mt-[3px] w-[6px] h-[6px] rounded-full ' + (blue ? 'bg-cyan-300' : 'bg-rose-400')}
+        <i key={i} className={'absolute left-1/2 top-1/2 -ml-[3px] -mt-[3px] w-[6px] h-[6px] rounded-full ' + dot}
           style={{ '--a': (i * 360 / n) + 'deg', animation: `${blue ? 'orbIn 1.2s' : 'orbOut .9s'} linear ${i * .08}s infinite` }} />
       ))}
     </div>
@@ -829,7 +889,21 @@ const H = { glide: 700, sweep: 1500, arena: 4300, end: 5200 };
 const lerp = (a, b, k) => a + (b - a) * Math.min(1, Math.max(0, k));
 const ease = (k) => k * k * (3 - 2 * k);
 
+function FireArrow({ x, y, w }) {
+  const h = w * .12;
+  return <div className="absolute left-0 top-0" style={{ width: w, height: h, transform: `translate(${x - w}px,${y - h / 2}px)`,
+    filter: 'drop-shadow(0 0 22px #ff7800) drop-shadow(0 0 60px #ff003c)',
+    background: 'linear-gradient(90deg, rgba(255,0,60,0), rgba(255,0,60,.7) 35%, #ff7800 70%, #ffd34d 90%, #fff 100%)',
+    clipPath: 'polygon(0 42%, 90% 42%, 90% 0, 100% 50%, 90% 100%, 90% 58%, 0 58%)' }} />;
+}
+function FireBlast({ k }) {
+  return <div className="absolute left-1/2 top-1/2 rounded-full" style={{ width: '170vmax', height: '170vmax',
+    background: 'radial-gradient(circle, #fff 0, #ffd34d 14%, #ff7800 32%, #ff003c 52%, rgba(255,0,60,0) 70%)',
+    transform: `translate(-50%,-50%) scale(${lerp(.04, 1, ease(Math.min(1, k * 1.6)))})`, opacity: k < .6 ? 1 : Math.max(0, 1 - (k - .6) / .4) }} />;
+}
+
 function HollowSequence({ at, onArena, onEnd }) {
+  const sk = useRef(SukunaMode.isOn()).current;
   const [e, setE] = useState(0);
   const fired = useRef({ a: false, e: false });
   const shards = useMemo(() => Array.from({ length: 24 }, () => {
@@ -873,24 +947,32 @@ function HollowSequence({ at, onArena, onEnd }) {
   const mergeK = Math.min(1, e / 350);
   const violet = e < 500 ? .7 : e < H.sweep ? .42 : e < H.arena ? .12 : Math.max(0, .55 * (1 - (e - H.arena) / (H.end - H.arena)));
   const white = e < 450 ? 1 - e / 450 : (e >= H.arena && e < H.arena + 400) ? .9 * (1 - (e - H.arena) / 400) : 0;
+  // Gojo: cyan + rose merge into a purple sphere. Sukuna: gold + crimson merge into Fuga, a fire arrow that ends in a firestorm.
+  const cA = sk ? '255,170,0' : '6,182,212', cB = sk ? '255,0,60' : '225,29,72', cP = sk ? '255,90,0' : '147,51,234', cV = sk ? '255,50,0' : '88,28,200';
   return (
     <div className="fixed inset-0 z-[60] overflow-hidden" style={{ cursor: 'wait' }}>
-      <div className="absolute inset-0" style={{ background: `rgba(88,28,200,${violet})` }} />
+      <div className="absolute inset-0" style={{ background: `rgba(${cV},${violet})` }} />
       {e < 500 && <div className="absolute inset-0" style={{ background:
-        `radial-gradient(circle at ${at.x - 110 * (1 - mergeK)}px ${at.y}px, rgba(6,182,212,.9), transparent 300px), radial-gradient(circle at ${at.x + 110 * (1 - mergeK)}px ${at.y}px, rgba(225,29,72,.9), transparent 300px)` }} />}
-      <div className="absolute inset-0 bg-purple-600/0" style={{ background: `radial-gradient(circle at ${at.x}px ${at.y}px, rgba(147,51,234,${e < H.sweep ? .6 : 0}), transparent 55%)` }} />
-      {e < H.arena + 400 && (
-        <div className="absolute left-0 top-0 rounded-full bg-purple-600 shadow-[0_0_50px_rgba(147,51,234,1)]"
+        `radial-gradient(circle at ${at.x - 110 * (1 - mergeK)}px ${at.y}px, rgba(${cA},.9), transparent 300px), radial-gradient(circle at ${at.x + 110 * (1 - mergeK)}px ${at.y}px, rgba(${cB},.9), transparent 300px)` }} />}
+      <div className="absolute inset-0" style={{ background: `radial-gradient(circle at ${at.x}px ${at.y}px, rgba(${cP},${e < H.sweep ? .6 : 0}), transparent 55%)` }} />
+      {e < H.arena + 400 && (sk && e >= H.sweep ? <FireArrow x={x + D * .5} y={y} w={D * 1.9} /> : (
+        <div className="absolute left-0 top-0 rounded-full"
           style={{ width: D, height: D, transform: `translate(${x - D / 2}px,${y - D / 2}px) scale(${sc})`,
-            backgroundImage: 'radial-gradient(circle, rgba(255,255,255,.95) 0, rgba(233,213,255,.6) 22%, rgba(147,51,234,0) 62%)',
-            boxShadow: '0 0 50px rgba(147,51,234,1), 0 0 180px rgba(147,51,234,.85), inset 0 0 90px rgba(255,255,255,.5)' }} />
-      )}
-      {sweeping && shards.map((s, i) => (
+            backgroundImage: sk ? 'radial-gradient(circle, rgba(255,255,255,.95) 0, rgba(255,211,77,.7) 22%, rgba(255,90,0,0) 62%)' : 'radial-gradient(circle, rgba(255,255,255,.95) 0, rgba(233,213,255,.6) 22%, rgba(147,51,234,0) 62%)',
+            boxShadow: `0 0 50px rgba(${cP},1), 0 0 180px rgba(${cP},.85), inset 0 0 90px rgba(255,255,255,.5)` }} />
+      ))}
+      {sweeping && !sk && shards.map((s, i) => (
         <div key={i} className="absolute" style={{ left: s.x + 'vw', top: s.y + 'vh', width: s.sz, height: s.sz, clipPath: s.poly,
           background: 'linear-gradient(135deg, rgba(255,255,255,.35), rgba(147,51,234,.5))', '--dx': s.dx + 'px', '--dy': s.dy + 'px', '--rot': s.rot + 'deg',
           animation: `shardFly 1.3s ease-in ${s.delay}ms both` }} />
       ))}
-      <div className="absolute inset-0 bg-white" style={{ opacity: white }} />
+      {sweeping && sk && shards.map((s, i) => (
+        <div key={i} className="absolute" style={{ left: s.x + 'vw', top: s.y + 'vh', width: s.sz * .5, height: s.sz * .5, clipPath: s.poly,
+          background: 'linear-gradient(135deg, rgba(255,230,150,.6), rgba(255,60,0,.6))', '--dx': s.dx + 'px', '--dy': s.dy - 200 + 'px', '--rot': s.rot + 'deg',
+          animation: `shardFly 1.3s ease-in ${s.delay}ms both` }} />
+      ))}
+      {sk && e >= H.arena - 500 && <FireBlast k={(e - (H.arena - 500)) / (H.end - H.arena + 500)} />}
+      <div className="absolute inset-0" style={{ opacity: white, background: sk ? '#fff3d6' : '#fff' }} />
     </div>
   );
 }
@@ -899,6 +981,7 @@ function HollowSequence({ at, onArena, onEnd }) {
 const PMAX = 200;
 const FX_BY_TURN = (n) => n <= 2 ? 'tp' : n === 3 ? 'blue' : n === 4 ? 'red' : 'domain';
 const FIGHT0 = { stage: 'menu', turn: 1, hp: PMAX, lock: 0, guard: false, fx: '', floats: [], log: 'Satoru Gojo has not moved. He does not need to.', count: null, dotPhase: false };
+const gk = (g, k) => (SukunaMode.isOn() ? k : g); // Gojo text / Sukuna text for fight messages
 let floatId = 0;
 const addFloat = (s, text, side, tone) => [...s.floats, { id: ++floatId, text, side, tone }];
 
@@ -907,13 +990,13 @@ function fightReducer(s, a) {
     case 'act': {
       const dc = a.name === 'Domain Counter';
       return { ...s, stage: 'player', guard: dc, log: `You use ${a.name}.`,
-        floats: addFloat(s, dc ? '[Simple Domain raised]' : '[0 Damage - Blocked by Infinity]', 'boss', dc ? 'white' : 'cyan') };
+        floats: addFloat(s, dc ? '[Simple Domain raised]' : gk('[0 Damage - Blocked by Infinity]', '[0 Damage - Shrugged off]'), 'boss', dc ? 'white' : 'cyan') };
     }
-    case 'skip': return { ...s, stage: 'player', lock: s.lock - 1, guard: false, log: '[Spacial Disorientation] — you cannot act.', floats: addFloat(s, '[ACTIONS LOCKED]', 'player', 'violet') };
+    case 'skip': return { ...s, stage: 'player', lock: s.lock - 1, guard: false, log: gk('[Spacial Disorientation] — you cannot act.', '[Shredded] — you cannot act.'), floats: addFloat(s, '[ACTIONS LOCKED]', 'player', 'violet') };
     case 'enemyStart': return { ...s, stage: 'enemy', fx: FX_BY_TURN(s.turn) };
     case 'log': return { ...s, log: a.text };
     case 'hit': return { ...s, hp: Math.max(0, s.hp - a.n), floats: addFloat(s, '-' + a.n, 'player', 'red') };
-    case 'lock': return { ...s, lock: 1, floats: addFloat(s, '[Spacial Disorientation]', 'player', 'violet') };
+    case 'lock': return { ...s, lock: 1, floats: addFloat(s, gk('[Spacial Disorientation]', '[Shredded]'), 'player', 'violet') };
     case 'count': return { ...s, count: a.ms };
     case 'dot': return { ...s, dotPhase: true, hp: Math.max(0, s.hp - a.n) };
     case 'enemyEnd': return s.hp <= 0 ? { ...s, stage: 'lost', fx: '' } : { ...s, stage: 'menu', turn: s.turn + 1, fx: '', guard: false };
@@ -1041,7 +1124,39 @@ function DomainVoid() {
 
 const TONES = { cyan: 'text-cyan-neon', white: 'text-white', red: 'text-rose-500', violet: 'text-hollow' };
 
+function CleaveBurst() {
+  // Cleave: a sudden burst of crisscrossing red-and-black cuts with a heavy shake
+  const cuts = useMemo(() => Array.from({ length: 16 }, () => {
+    const a = Math.random() * 6.283, r = 45 + Math.random() * 30, cx = 50 + (Math.random() - .5) * 30, cy = 45 + (Math.random() - .5) * 25;
+    return { x1: cx + Math.cos(a) * r, y1: cy + Math.sin(a) * r * .8, x2: cx - Math.cos(a) * r, y2: cy - Math.sin(a) * r * .8, d: Math.random() * .35 };
+  }), []);
+  return (
+    <div className="absolute inset-0 pointer-events-none z-[45]" style={{ animation: 'slashFade 1.6s ease-out both' }}>
+      <div className="absolute inset-0" style={{ background: 'rgba(255,0,60,.28)', animation: 'flashOut .5s ease-out both' }} />
+      <svg className="absolute inset-0 w-full h-full" viewBox="0 0 100 100" preserveAspectRatio="none">
+        {cuts.map((c, i) => <g key={i} strokeLinecap="square">
+          <line x1={c.x1} y1={c.y1} x2={c.x2} y2={c.y2} stroke="#000" strokeWidth="1.6" pathLength="1" strokeDasharray="1" style={{ animation: `slashDraw .18s ease-out ${c.d}s both` }} />
+          <line x1={c.x1} y1={c.y1} x2={c.x2} y2={c.y2} stroke="#ff003c" strokeWidth=".6" pathLength="1" strokeDasharray="1" style={{ animation: `slashDraw .18s ease-out ${c.d}s both`, filter: 'drop-shadow(0 0 1px #ff003c)' }} />
+        </g>)}
+      </svg>
+    </div>
+  );
+}
+
+function DismantleCut() {
+  // Dismantle: a quick, sharp diagonal glowing slash across the screen, laced with crimson and purple
+  const line = (top, delay) => <div className="absolute left-[-10%] w-[120%] h-[6px]" style={{ top, background: 'linear-gradient(90deg, transparent, #ff003c 30%, #fff 50%, #b347ff 75%, transparent)',
+    boxShadow: '0 0 30px #ff003c, 0 0 60px rgba(179,71,255,.7)', animation: `cutLine 1s ease-out ${delay}s both` }} />;
+  return (
+    <div className="absolute inset-0 pointer-events-none z-[45] overflow-hidden" style={{ animation: 'slashFade 1.4s ease-out both' }}>
+      <div className="absolute inset-0" style={{ background: 'rgba(179,71,255,.14)', animation: 'flashOut .6s ease-out both' }} />
+      {line('34%', 0)}{line('46%', .12)}
+    </div>
+  );
+}
+
 function Arena({ onExit }) {
+  const [sk] = useSukuna();
   const [s, d] = React.useReducer(fightReducer, FIGHT0);
   const hp = useTween(s.hp);
 
@@ -1053,19 +1168,19 @@ function Arena({ onExit }) {
     if (s.stage === 'player') T(() => d({ type: 'enemyStart' }), 1100);
     if (s.stage === 'enemy') {
       if (n <= 2) { // The Neutral Play — Teleportation Strike, flat 25% of player HP
-        d({ type: 'log', text: 'Gojo vanishes — Teleportation Strike!' });
+        d({ type: 'log', text: gk('Gojo vanishes — Teleportation Strike!', 'Sukuna lunges — a brutal strike!') });
         T(() => d({ type: 'hit', n: s.guard ? Math.round(PMAX * .125) : PMAX * .25 }), 550);
         T(() => d({ type: 'enemyEnd' }), 1700);
       } else if (n === 3) { // Amplified Pull — Lapse: Blue
-        d({ type: 'log', text: 'Lapse: Blue — space collapses toward a single point.' });
-        T(() => { d({ type: 'lock' }); d({ type: 'log', text: '[Spacial Disorientation] — your actions are locked for 1 turn.' }); }, 1100);
+        d({ type: 'log', text: gk('Lapse: Blue — space collapses toward a single point.', 'Cleave — a mesh of cuts bursts across your body.') });
+        T(() => { d({ type: 'lock' }); d({ type: 'log', text: gk('[Spacial Disorientation] — your actions are locked for 1 turn.', '[Shredded] — your actions are locked for 1 turn.') }); }, 1100);
         T(() => d({ type: 'enemyEnd' }), 2300);
       } else if (n === 4) { // Violent Reversal — Reversal: Red
-        d({ type: 'log', text: 'Reversal: Red — everything is thrown away from him.' });
+        d({ type: 'log', text: gk('Reversal: Red — everything is thrown away from him.', 'Dismantle — an invisible blade slices through everything.') });
         T(() => d({ type: 'hit', n: s.guard ? Math.round(PMAX * .175) : PMAX * .35 }), 650);
         T(() => d({ type: 'enemyEnd' }), 2000);
       } else { // The Ultimate Condition — 0.2s Infinite Void
-        d({ type: 'log', text: 'Domain Expansion: Infinite Void — Muryōkūsho.' });
+        d({ type: 'log', text: gk('Domain Expansion: Infinite Void — Muryōkūsho.', 'Domain Expansion: Malevolent Shrine — Fukuma Mizushi.') });
         d({ type: 'count', ms: 200 });
         T(() => {
           const t0 = performance.now();
@@ -1073,7 +1188,7 @@ function Arena({ onExit }) {
         }, 500);
         T(() => {
           d({ type: 'count', ms: 0 });
-          d({ type: 'log', text: 'You can see everything. You can feel everything. You cannot do anything.' });
+          d({ type: 'log', text: gk('You can see everything. You can feel everything. You cannot do anything.', 'The Shrine is open. Every cut lands. You cannot do anything.') });
           is.push(setInterval(() => d({ type: 'dot', n: 5 }), 100));
         }, 2300);
       }
@@ -1087,7 +1202,7 @@ function Arena({ onExit }) {
 
   const frozen = s.fx === 'domain';
   const disabled = s.stage !== 'menu' || s.lock > 0;
-  const stageAnim = { tp: 'shakeScreen .16s linear 5', blue: 'pullStage 2.2s ease-in-out', red: 'repelStage 1.2s ease-out', domain: 'doubleVision 1s steps(1, end) .35s infinite' }[s.fx];
+  const stageAnim = { tp: 'shakeScreen .16s linear 5', blue: sk ? 'shakeScreen .12s linear 12' : 'pullStage 2.2s ease-in-out', red: sk ? 'shakeScreen .1s linear 5' : 'repelStage 1.2s ease-out', domain: 'doubleVision 1s steps(1, end) .35s infinite' }[s.fx];
   const pct = Math.max(0, hp / PMAX * 100);
   const actions = [['Attack', 'Strike with everything physical'], ['Cursed Energy Burst', 'Release raw cursed energy'], ['Domain Counter', 'Raise a Simple Domain to blunt the next hit']];
 
@@ -1103,17 +1218,17 @@ function Arena({ onExit }) {
           {/* Gojo */}
           <div className="relative text-center mt-4">
             <div style={{ animation: s.fx === 'tp' ? 'tpStrike 1.5s ease-in-out' : undefined }} className="relative inline-block">
-              <div className="relative h-[34vh] max-h-[330px] min-h-[200px] aspect-[2/3] mx-auto overflow-hidden rounded-[50%/42%] shadow-[0_0_50px_rgba(0,229,255,.55),inset_0_0_40px_rgba(47,123,255,.5)]"
-                style={{ background: 'radial-gradient(ellipse at 50% 40%, #ffffff 0%, #cfeaff 55%, #5aa8ff 100%)' }}>
-                <img src="gojo full body.jpg" alt="Satoru Gojo, full body" className="absolute inset-0 w-full h-full object-contain mix-blend-multiply" />
+              <div className="relative h-[34vh] max-h-[330px] min-h-[200px] aspect-[2/3] mx-auto overflow-hidden rounded-[50%/42%] shadow-[0_0_50px_rgb(var(--c-accent)/.55),inset_0_0_40px_rgb(var(--c-accent2)/.5)]"
+                style={{ background: sk ? 'radial-gradient(ellipse at 50% 40%, #ffffff 0%, #f3c7c7 55%, #b3002b 100%)' : 'radial-gradient(ellipse at 50% 40%, #ffffff 0%, #cfeaff 55%, #5aa8ff 100%)' }}>
+                <img src={sk ? 'sukuna.jpg' : 'gojo full body.jpg'} alt={sk ? 'Ryomen Sukuna' : 'Satoru Gojo, full body'} className="absolute inset-0 w-full h-full object-contain mix-blend-multiply" />
               </div>
               <div className="absolute inset-[-8%] rounded-[50%/42%] border border-dashed border-cyan-neon/60 pointer-events-none" aria-hidden="true" />
             </div>
-            <h2 className="font-display font-black text-2xl md:text-3xl tracking-widest text-white bloom-text">SATORU GOJO</h2>
+            <h2 className="font-display font-black text-2xl md:text-3xl tracking-widest text-white bloom-text">{sk ? 'RYOMEN SUKUNA' : 'SATORU GOJO'}</h2>
             <div className="mt-3 max-w-md mx-auto">
               <div className="flex justify-between font-display text-xs tracking-widest"><span className="text-white/60">HP</span><span className="text-cyan-neon">???,???</span></div>
               <div className="h-3 bg-white/10 overflow-hidden rounded-sm"><div className="h-full w-full bg-gradient-to-r from-azure via-cyan-neon to-white animate-pulse shadow-[0_0_16px_#00E5FF]" /></div>
-              <div className="mt-1 font-display text-[11px] tracking-[.3em] text-cyan-neon">[Passive Active: Infinity]</div>
+              <div className="mt-1 font-display text-[11px] tracking-[.3em] text-cyan-neon">{sk ? '[Passive Active: Reverse Cursed Technique]' : '[Passive Active: Infinity]'}</div>
             </div>
             {s.floats.filter(f => f.side === 'boss').map(f => (
               <div key={f.id} onAnimationEnd={() => d({ type: 'rm', id: f.id })} className={'absolute left-1/2 top-1/3 font-display font-bold text-lg md:text-xl whitespace-nowrap pointer-events-none ' + TONES[f.tone]}
@@ -1135,7 +1250,7 @@ function Arena({ onExit }) {
               <div key={f.id} onAnimationEnd={() => d({ type: 'rm', id: f.id })} className={'absolute left-1/2 -top-2 font-display font-bold text-2xl whitespace-nowrap pointer-events-none ' + TONES[f.tone]}
                 style={{ animation: 'floatUp 1.4s ease-out forwards', textShadow: '0 0 14px currentColor' }}>{f.text}</div>
             ))}
-            <div className="relative mt-4" style={{ animation: s.fx === 'blue' ? 'vortexMenu 2.2s ease-in-out' : undefined }}>
+            <div className="relative mt-4" style={{ animation: s.fx === 'blue' && !sk ? 'vortexMenu 2.2s ease-in-out' : undefined }}>
               <div className="grid sm:grid-cols-3 gap-3">
                 {actions.map(([name, hint]) => (
                   <button key={name} disabled={disabled || frozen} onClick={() => d({ type: 'act', name })}
@@ -1158,24 +1273,24 @@ function Arena({ onExit }) {
       </div>
 
       {/* effects */}
-      {s.fx === 'blue' && <div className="absolute left-1/2 top-1/2 w-72 h-72 -ml-36 -mt-36 rounded-full pointer-events-none" style={{ background: 'conic-gradient(from 0deg, rgba(6,182,212,0), rgba(47,123,255,.9), rgba(6,182,212,0), rgba(47,123,255,.9), rgba(6,182,212,0))', filter: 'blur(14px)', animation: 'swirl 1s linear infinite' }} />}
-      {s.fx === 'red' && <>
+      {s.fx === 'blue' && (sk ? <CleaveBurst /> : <div className="absolute left-1/2 top-1/2 w-72 h-72 -ml-36 -mt-36 rounded-full pointer-events-none" style={{ background: 'conic-gradient(from 0deg, rgba(6,182,212,0), rgba(47,123,255,.9), rgba(6,182,212,0), rgba(47,123,255,.9), rgba(6,182,212,0))', filter: 'blur(14px)', animation: 'swirl 1s linear infinite' }} />)}
+      {s.fx === 'red' && (sk ? <DismantleCut /> : <>
         <div className="absolute inset-0 bg-rose-600/60 pointer-events-none" style={{ animation: 'flashOut 1.4s ease-out both' }} />
         <div className="absolute left-0 right-0 top-[28%] h-8 pointer-events-none bg-gradient-to-r from-transparent via-rose-500 to-white shadow-[0_0_60px_#e11d48]" style={{ transformOrigin: 'left', animation: 'beam 1s ease-out both' }} />
-      </>}
+      </>)}
       {s.fx === 'domain' && <>
         <NegativeFlash />
         <div className="absolute inset-x-0 top-[38%] z-[48] text-center pointer-events-none mix-blend-difference" style={{ animation: 'doubleVision 1s steps(1, end) .35s infinite' }}>
-          <div className="font-display text-xs tracking-[.6em] text-white">INFINITE VOID · 無量空処</div>
+          <div className="font-display text-xs tracking-[.6em] text-white">{sk ? 'MALEVOLENT SHRINE · 伏魔御廚子' : 'INFINITE VOID · 無量空処'}</div>
           <div className="font-display font-black text-6xl md:text-8xl text-white tabular-nums">{((s.count ?? 200) / 1000).toFixed(3)}s</div>
         </div>
       </>}
       {s.stage === 'lost' && (
         <div className="absolute inset-0 z-[49] grid place-items-center bg-black/85 text-center px-6" style={{ animation: 'frostIn .8s both' }}>
           <div>
-            <p className="font-display text-xs tracking-[.5em] text-azure uppercase">Muryōkūsho</p>
-            <h2 className="mt-4 font-display font-black text-3xl md:text-5xl text-white bloom-text">YOU CAN SEE EVERYTHING.<br />YOU CANNOT DO ANYTHING.</h2>
-            <p className="mt-4 text-white/60">Infinity cannot be broken here — this fight is built to be lost.</p>
+            <p className="font-display text-xs tracking-[.5em] text-azure uppercase">{sk ? 'Fukuma Mizushi' : 'Muryōkūsho'}</p>
+            <h2 className="mt-4 font-display font-black text-3xl md:text-5xl text-white bloom-text">{sk ? <>KNOW YOUR PLACE.<br />EVERY CUT HAS LANDED.</> : <>YOU CAN SEE EVERYTHING.<br />YOU CANNOT DO ANYTHING.</>}</h2>
+            <p className="mt-4 text-white/60">{sk ? 'The King of Curses cannot be beaten here — this fight is built to be lost.' : 'Infinity cannot be broken here — this fight is built to be lost.'}</p>
             <div className="mt-8 flex flex-wrap gap-4 justify-center">
               <button onClick={() => d({ type: 'reset' })} className="px-8 py-3 font-display font-bold tracking-[.3em] uppercase text-black bg-cyan-neon shadow-[0_0_30px_rgba(0,229,255,.7)] hover:scale-105 transition-transform">Retry</button>
               <button onClick={onExit} className="px-8 py-3 font-display font-bold tracking-[.3em] uppercase text-white border border-white/50 hover:bg-white/10 transition-colors">Return to Codex</button>
