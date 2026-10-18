@@ -189,7 +189,6 @@ const THEME_TEXT = {
   'Infinite Void · 無量空処': 'Malevolent Shrine · 伏魔御廚子',
   'Limitless Paradox Matrix': 'Slaughter Technique Matrix', 'Domain Absolute State': 'Malevolent Shrine State',
   '五条悟 · The Strongest': '両面宿儺 · King of Curses',
-  'Gojo Codex · Fan-made · Throughout heaven and earth, I alone am the honored one': 'Sukuna Codex · Fan-made · Know your place, fool',
   'Attraction · Convergence': 'Targeted · Instant slash', 'Repulsion · Reversed Output': 'Area · Wide cutting',
   'Annihilation · Imaginary Mass': 'Divine Flame · “Open”',
   '蒼 · Cursed Technique Lapse': '解 · Cleave', '赫 · Cursed Technique Reversal': '捌 · Dismantle', '茈 · Hollow Technique': '開 · Fuga',
@@ -671,7 +670,7 @@ function EyesSection() {
           ))}
         </div>
       </div>
-      <p className="mt-4 text-xs text-white/40 font-display tracking-widest uppercase">Meters are Codex readouts for illustration, not canon values.</p>
+      <p className="mt-6 text-xs text-white/40 font-display tracking-widest uppercase">Meters are Codex readouts for illustration, not canon values.</p>
     </Section>
   );
 }
@@ -685,7 +684,7 @@ function LimitlessSection() {
   const t = techs[sel];
   return (
     <Section id="limitless" kicker="Protocol 02 · Muka-gen Jutsu" title="Limitless Paradox Matrix">
-      <div role="tablist" aria-label="Limitless techniques" className="grid grid-cols-2 md:grid-cols-4 gap-3 mb-6">
+      <div role="tablist" aria-label="Limitless techniques" className="grid grid-cols-2 md:grid-cols-4 gap-4 mb-6">
         {techs.map((x, i) => (
           <button key={x.id} role="tab" aria-selected={sel === i} onClick={() => setSel(i)} style={{ color: x.col }}
             className={'text-left px-4 py-3 border border-white/15 transition-all duration-150 hover:scale-[1.03] ' + (sel === i ? 'tab-on' : 'bg-black/40')}>
@@ -705,7 +704,7 @@ function LimitlessSection() {
           <TechViz kind={t.id} />
         </div>
       </Card>
-      <div className="mt-5 flex flex-wrap items-center gap-3 font-display text-xs tracking-widest uppercase text-white/60">
+      <div className="mt-6 flex flex-wrap items-center gap-3 font-display text-xs tracking-widest uppercase text-white/60">
         <span className="text-azure">{tr('Blue (attract)')}</span> + <span className="text-crimson">{tr('Red (repel)')}</span> → <span className="text-hollow">{tr('Purple (erase)')}</span>
       </div>
     </Section>
@@ -763,7 +762,7 @@ function DomainSection() {
             {run ? 'Expanding…' : 'Domain Expansion'}
           </button>
           <p className="mt-3 text-xs text-white/40 font-display tracking-widest uppercase">Replayed in slow motion (0.2 s ≈ 3 s). Timings are Codex readouts.</p>
-          {ms === 200 && <p className="mt-3 text-cyan-neon font-display tracking-widest uppercase text-sm bloom-text">{sk ? 'Target carved. Nothing remains.' : 'Target locked — sees everything. Moves nothing.'}</p>}
+          <p className={'mt-3 min-h-[1.5rem] text-cyan-neon font-display tracking-widest uppercase text-sm bloom-text' + (ms === 200 ? '' : ' invisible')}>{sk ? 'Target carved. Nothing remains.' : 'Target locked — sees everything. Moves nothing.'}</p>
         </Card>
       </div>
     </Section>
@@ -1189,8 +1188,7 @@ function Arena({ onExit }) {
 }
 
 function Footer() {
-  const [, t] = useSukuna();
-  return <footer className="text-center py-12 font-display text-[11px] tracking-[.4em] uppercase text-white/50">{t('Gojo Codex · Fan-made · Throughout heaven and earth, I alone am the honored one')}</footer>;
+  return <footer className="text-center py-12 px-5 font-display text-[11px] tracking-[.4em] uppercase text-white/50">Made by Porsche</footer>;
 }
 
 function App() {
