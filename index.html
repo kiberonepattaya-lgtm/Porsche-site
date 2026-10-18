@@ -10,17 +10,18 @@
     theme: {
       extend: {
         colors: {
-          void: '#000000',
+          void: 'var(--c-bg)',
+          white: 'rgb(var(--c-text) / <alpha-value>)',
           indigo9: '#07041c',
           violet9: '#1a0b4a',
-          cyan: { neon: '#00E5FF' },
-          azure: '#2f7bff',
-          crimson: '#ff3b5c',
-          hollow: '#b58cff',
+          cyan: { neon: 'rgb(var(--c-accent) / <alpha-value>)' },
+          azure: 'rgb(var(--c-accent2) / <alpha-value>)',
+          crimson: 'rgb(var(--c-danger) / <alpha-value>)',
+          hollow: 'rgb(var(--c-hollow) / <alpha-value>)',
         },
         fontFamily: {
-          display: ['"Orbitron"', '"Segoe UI"', 'sans-serif'],
-          body: ['"Rajdhani"', '"Noto Sans JP"', '"Segoe UI"', 'sans-serif'],
+          display: ['var(--font-display)'],
+          body: ['var(--font-body)'],
         },
       },
     },
@@ -28,26 +29,53 @@
 </script>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@500;700;900&family=Rajdhani:wght@400;500;600&family=Noto+Sans+JP:wght@500;700&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@500;700;900&family=Rajdhani:wght@400;500;600&family=Noto+Sans+JP:wght@500;700&family=Cinzel:wght@500;700;900&family=Noto+Serif+JP:wght@500;700&display=swap" rel="stylesheet">
 <style>
+  /* ── theme variables: Gojo defaults, Sukuna overrides (RGB triplets so Tailwind /opacity works) ── */
+  :root {
+    --c-bg: #000000;
+    --c-accent: 0 229 255;
+    --c-accent2: 47 123 255;
+    --c-hollow: 181 140 255;
+    --c-danger: 255 59 92;
+    --c-text: 255 255 255;
+    --font-display: "Orbitron", "Segoe UI", sans-serif;
+    --font-body: "Rajdhani", "Noto Sans JP", "Segoe UI", sans-serif;
+    --card-a: rgba(4,2,16,.94); --card-b: rgba(14,7,46,.92);
+    --bg-1: rgba(26,11,74,.55); --bg-2: rgba(47,20,130,.45); --bg-3: rgba(7,4,28,.9);
+    --sw-1: rgba(60,20,160,.55); --sw-2: rgba(20,20,120,.5); --sw-3: rgba(100,40,200,.35); --sw-4: rgba(80,30,190,.4);
+  }
+  body.sukuna-mode {
+    --c-bg: #0d0204;
+    --c-accent: 255 0 60;      /* blood crimson */
+    --c-accent2: 255 170 0;    /* eye-gold */
+    --c-hollow: 255 120 0;     /* Fuga flame */
+    --c-danger: 255 0 60;
+    --c-text: 234 230 223;     /* bone white */
+    --font-display: "Cinzel", "Noto Serif JP", serif;
+    --font-body: "Noto Serif JP", "Cinzel", serif;
+    --card-a: rgba(13,2,4,.95); --card-b: rgba(40,4,10,.92);
+    --bg-1: rgba(90,0,20,.5); --bg-2: rgba(60,0,10,.45); --bg-3: rgba(20,0,4,.9);
+    --sw-1: rgba(120,0,25,.5); --sw-2: rgba(70,0,12,.5); --sw-3: rgba(160,60,0,.3); --sw-4: rgba(130,0,30,.4);
+  }
   html { scroll-behavior: smooth; }
-  body { background: #000; }
+  body { background: var(--c-bg); transition: background .6s; }
   .bg-fixed {
     position: fixed; inset: 0; z-index: 0; pointer-events: none;
     background:
-      radial-gradient(ellipse at 50% 50%, rgba(26,11,74,.55), transparent 60%),
-      radial-gradient(ellipse at 10% 0%, rgba(47,20,130,.45), transparent 55%),
-      radial-gradient(ellipse at 90% 100%, rgba(7,4,28,.9), transparent 60%),
-      #000;
+      radial-gradient(ellipse at 50% 50%, var(--bg-1), transparent 60%),
+      radial-gradient(ellipse at 10% 0%, var(--bg-2), transparent 55%),
+      radial-gradient(ellipse at 90% 100%, var(--bg-3), transparent 60%),
+      var(--c-bg);
   }
   /* slow swirl of violet / indigo behind the grid */
   .swirl { position: fixed; inset: 0; z-index: 0; pointer-events: none; }
   .swirl-a {
-    background: conic-gradient(from 0deg at 50% 50%, rgba(60,20,160,.55), rgba(0,0,0,0) 22%, rgba(20,20,120,.5) 45%, rgba(0,0,0,0) 68%, rgba(100,40,200,.35) 86%, rgba(60,20,160,.55));
+    background: conic-gradient(from 0deg at 50% 50%, var(--sw-1), rgba(0,0,0,0) 22%, var(--sw-2) 45%, rgba(0,0,0,0) 68%, var(--sw-3) 86%, var(--sw-1));
     
   }
   .swirl-b {
-    background: conic-gradient(from 120deg at 45% 55%, rgba(0,229,255,.10), rgba(0,0,0,0) 30%, rgba(80,30,190,.4) 60%, rgba(0,0,0,0) 85%, rgba(0,229,255,.10));
+    background: conic-gradient(from 120deg at 45% 55%, rgb(var(--c-accent) / .10), rgba(0,0,0,0) 30%, var(--sw-4) 60%, rgba(0,0,0,0) 85%, rgb(var(--c-accent) / .10));
   }
   @keyframes swirl { to { transform: rotate(360deg); } }
   /* vignette: the void presses in from the edges */
@@ -56,21 +84,21 @@
   .glow-card { position: relative; border-radius: 6px; isolation: isolate; clip-path: polygon(0 0, calc(100% - 18px) 0, 100% 18px, 100% 100%, 18px 100%, 0 calc(100% - 18px)); }
   .glow-card::before {
     content: ''; position: absolute; inset: -60%; z-index: -2;
-    background: conic-gradient(from 0deg, transparent 0 55%, #00E5FF 72%, #fff 80%, #2f7bff 88%, transparent 100%);
+    background: conic-gradient(from 0deg, transparent 0 55%, rgb(var(--c-accent)) 72%, rgb(var(--c-text)) 80%, rgb(var(--c-accent2)) 88%, transparent 100%);
   }
   .glow-wrap:hover .glow-card::before { animation: swirl 3s linear infinite; }
   .glow-card::after {
     content: ''; position: absolute; inset: 1.5px; z-index: -1;
     clip-path: inherit;
-    background: linear-gradient(160deg, rgba(4,2,16,.94), rgba(14,7,46,.92));
+    background: linear-gradient(160deg, var(--card-a), var(--card-b));
   }
-  .glow-wrap { box-shadow: 0 0 24px rgba(0,229,255,.16); transition: transform .25s cubic-bezier(.2,.9,.1,1), box-shadow .25s; }
-  .glow-wrap:hover { transform: scale(1.02); box-shadow: 0 0 48px rgba(0,229,255,.45); }
-  .bloom-text { text-shadow: 0 0 10px rgba(0,229,255,.9), 0 0 36px rgba(0,229,255,.5), 0 0 80px rgba(47,123,255,.45); }
-  .tab-on { background: rgba(0,229,255,.14); box-shadow: inset 0 0 0 1px currentColor, 0 0 24px currentColor; }
+  .glow-wrap { box-shadow: 0 0 24px rgb(var(--c-accent) / .16); transition: transform .25s cubic-bezier(.2,.9,.1,1), box-shadow .25s; }
+  .glow-wrap:hover { transform: scale(1.02); box-shadow: 0 0 48px rgb(var(--c-accent) / .45); }
+  .bloom-text { text-shadow: 0 0 10px rgb(var(--c-accent) / .9), 0 0 36px rgb(var(--c-accent) / .5), 0 0 80px rgb(var(--c-accent2) / .45); }
+  .tab-on { background: rgb(var(--c-accent) / .14); box-shadow: inset 0 0 0 1px currentColor, 0 0 24px currentColor; }
   .reveal { transition: opacity 1.4s ease-out; }
   .meter { transition: width 1.6s cubic-bezier(.2,.8,.2,1); }
-  .scan::after { content: ''; position: absolute; left: 0; right: 0; top: 0; height: 2px; background: rgba(0,229,255,.7); box-shadow: 0 0 12px #00E5FF; will-change: transform; animation: scan 3.5s linear infinite; }
+  .scan::after { content: ''; position: absolute; left: 0; right: 0; top: 0; height: 2px; background: rgb(var(--c-accent) / .7); box-shadow: 0 0 12px rgb(var(--c-accent)); will-change: transform; animation: scan 3.5s linear infinite; }
   @keyframes scan { 0% { transform: translateY(0); } 100% { transform: translateY(320px); } }
   .iris-spin { animation: swirl 40s linear infinite; transform-origin: center; }
   /* ── hidden event: Hollow Purple + boss fight ── */
@@ -97,8 +125,29 @@
     50% { filter: drop-shadow(-9px 1px 0 rgba(255,40,80,.5)) drop-shadow(9px -1px 0 rgba(0,200,255,.5)); transform: translateX(2px); }
   }
   .frost { background: linear-gradient(135deg, rgba(255,255,255,.35), rgba(190,230,255,.18) 40%, rgba(255,255,255,.4)), repeating-linear-gradient(60deg, rgba(255,255,255,.12) 0 2px, transparent 2px 18px), repeating-linear-gradient(-30deg, rgba(255,255,255,.1) 0 1px, transparent 1px 26px);  }
+  /* ── Sukuna mode: blade-cut shapes, takeover shake + vignette flash ── */
+  body.sukuna-mode .glow-card { clip-path: polygon(0 0, calc(100% - 6px) 0, 100% 14px, 100% 100%, 8px 100%, 0 calc(100% - 10px)); border-radius: 0; }
+  body.sukuna-mode button:not(#sukuna-finger),
+  body.sukuna-mode [role="tab"] { border-radius: 0; border-style: dashed; clip-path: polygon(0 0, 95% 0, 100% 22%, 100% 100%, 4% 100%, 0 78%); }
+  body.sukuna-mode .rounded, body.sukuna-mode .rounded-sm, body.sukuna-mode .rounded-full { border-radius: 0 !important; }
+  body.sukuna-mode h1, body.sukuna-mode h2, body.sukuna-mode h3 { font-weight: 900; letter-spacing: .08em; }
+  body.sukuna-mode .vignette { background: radial-gradient(ellipse at center, transparent 30%, rgba(60,0,10,.85) 100%); }
+  @keyframes skShake {
+    0%,100% { transform: translate(0,0) }
+    10% { transform: translate(-12px,6px) rotate(-.6deg) }
+    30% { transform: translate(10px,-8px) rotate(.5deg) }
+    50% { transform: translate(-8px,-4px) }
+    70% { transform: translate(6px,8px) rotate(.3deg) }
+    90% { transform: translate(-3px,2px) }
+  }
+  @keyframes skVignette { 0% { opacity: 0 } 25% { opacity: 1 } 100% { opacity: 0 } }
+  body.sk-shaking #root { animation: skShake .7s ease-in-out; }
+  #sk-vignette { position: fixed; inset: 0; z-index: 9999; pointer-events: none; opacity: 0;
+    background: radial-gradient(circle, transparent 20%, rgba(255,0,60,.85) 70%, #000 100%); }
+  #sk-vignette.on { animation: skVignette 1.1s ease-out; }
   @media (prefers-reduced-motion: reduce) {
     .shaking { animation: none; }
+    body.sk-shaking #root, #sk-vignette.on { animation: none; }
     .swirl-a, .swirl-b, .glow-card::before, .iris-spin, .scan::after { animation: none; }
     .glow-wrap, html { transition: none; scroll-behavior: auto; }
   }
@@ -106,6 +155,7 @@
 </head>
 <body class="bg-void text-white font-body antialiased overflow-x-hidden">
 <div id="root"></div>
+<div id="sk-vignette" aria-hidden="true"></div>
 
 <script crossorigin src="https://cdnjs.cloudflare.com/ajax/libs/react/18.3.1/umd/react.production.min.js"></script>
 <script crossorigin src="https://cdnjs.cloudflare.com/ajax/libs/react-dom/18.3.1/umd/react-dom.production.min.js"></script>
@@ -113,6 +163,47 @@
 <script type="text/babel">
 const { useEffect, useRef, useState, useMemo } = React;
 const REDUCED = matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+/* ───────────── Sukuna mode: theme toggle + text dictionary ───────────── */
+const SukunaMode = (() => {
+  const body = document.body, vignette = document.getElementById('sk-vignette'), subs = new Set();
+  const isOn = () => body.classList.contains('sukuna-mode');
+  const toggle = () => {
+    const next = !isOn();
+    body.classList.add('sk-shaking');
+    vignette.classList.remove('on'); void vignette.offsetWidth; vignette.classList.add('on');
+    // swap at the peak of the flash so the change is hidden by it
+    setTimeout(() => { body.classList.toggle('sukuna-mode', next); subs.forEach(fn => fn(next)); }, REDUCED ? 0 : 250);
+    setTimeout(() => body.classList.remove('sk-shaking'), 750);
+  };
+  return { isOn, toggle, subscribe: (fn) => { subs.add(fn); return () => subs.delete(fn); } };
+})();
+document.addEventListener('click', (e) => { if (e.target.closest('#sukuna-finger')) SukunaMode.toggle(); });
+
+const THEME_TEXT = {
+  'GOJO · CODEX': 'SUKUNA · CODEX', 'Satoru': 'Ryomen', 'Gojo': 'Sukuna',
+  'The Strongest': 'King of Curses', 'Six Eyes': 'Four Eyes', 'Limitless': 'Shrine',
+  'Domain': 'Malevolent Shrine', 'Blue': 'Cleave', 'Red': 'Dismantle', 'Purple': 'Fuga',
+  'Hollow Purple': 'Fuga', 'Unlimited Void': 'Malevolent Shrine', 'Infinite Void': 'Malevolent Shrine',
+  'Blue (attract)': 'Cleave (slash)', 'Red (repel)': 'Dismantle (carve)', 'Purple (erase)': 'Fuga (open)',
+  'Infinite Void · 無量空処': 'Malevolent Shrine · 伏魔御廚子',
+  'Limitless Paradox Matrix': 'Slaughter Technique Matrix', 'Domain Absolute State': 'Malevolent Shrine State',
+  '五条悟 · The Strongest': '両面宿儺 · King of Curses',
+  'Gojo Codex · Fan-made · Throughout heaven and earth, I alone am the honored one': 'Sukuna Codex · Fan-made · Know your place, fool',
+  'Attraction · Convergence': 'Targeted · Instant slash', 'Repulsion · Reversed Output': 'Area · Wide cutting',
+  'Annihilation · Imaginary Mass': 'Divine Flame · “Open”',
+  '蒼 · Cursed Technique Lapse': '解 · Cleave', '赫 · Cursed Technique Reversal': '捌 · Dismantle', '茈 · Hollow Technique': '開 · Fuga',
+};
+const THEME_BODY = {
+  blue: 'Cleave is a single cut that adjusts to the toughness of its target. It is an instant, targeted slash — whatever it is aimed at, it divides.',
+  red: 'Dismantle fires slashes that carve the surrounding area to pieces. It is a wide-area cutting attack, delivered with no need to aim and no effort to spare.',
+  purple: 'Fuga combines Cleave and Dismantle into a Divine Flame — a devastating fire arrow, released with the word “Open”. The pinnacle of the King of Curses’ arsenal.',
+};
+function useSukuna() {
+  const [on, setOn] = useState(SukunaMode.isOn());
+  useEffect(() => SukunaMode.subscribe(setOn), []);
+  return [on, (s) => (on && THEME_TEXT[s]) || s];
+}
 
 /* ───────────────────────── shared lexicon ───────────────────────── */
 const EQS = ['∞', 'lim x→∞', '∇·B = 0', 'Σ 1/n² = π²/6', '∫ e^{-x²}dx', 'e^{iπ}+1=0', 'dx/dt → 0', '1/2 + 1/4 + 1/8 …', 'Δx → 0', 'ψ(r,t)', 'F = −∇U', 'ℵ₀', '∮ E·dA', 'lim n→∞ (1−2⁻ⁿ)', 'det(A−λI)=0', 'ħ ∂ψ/∂t'];
@@ -400,37 +491,41 @@ function TechViz({ kind }) {
       tt += REDUCED ? 0 : 1;
       ctx.fillStyle = 'rgba(2,2,14,.28)'; ctx.fillRect(0, 0, W, H);
       const L = (tt % 360) / 360;
+      // canvas colours can't read CSS variables, so pick the palette per frame
+      const SK = document.body.classList.contains('sukuna-mode');
+      const C = SK ? { cy: '255,0,60', cyH: '#ff003c', bl: '255,170,0', blH: '#ffaa00', re: '255,0,60', reH: '#ff003c', pu: '#ff7800', puL: '#ffc58a', puR: '255,120,0' }
+                   : { cy: '0,229,255', cyH: '#00E5FF', bl: '60,140,255', blH: '#2f7bff', re: '255,59,92', reH: '#ff3b5c', pu: '#b58cff', puL: '#d9c2ff', puR: '181,140,255' };
       if (kind === 'infinity') {
         // Zeno: each step covers half the remaining distance — never arrives
-        ctx.strokeStyle = 'rgba(0,229,255,.8)'; ctx.lineWidth = 2; ctx.beginPath(); ctx.arc(cx, cy, 36, 0, 6.283); ctx.stroke();
-        ctx.fillStyle = '#fff'; ctx.shadowColor = '#00E5FF'; ctx.shadowBlur = 12; ctx.beginPath(); ctx.arc(cx, cy, 6, 0, 6.283); ctx.fill(); ctx.shadowBlur = 0;
+        ctx.strokeStyle = `rgba(${C.cy},.8)`; ctx.lineWidth = 2; ctx.beginPath(); ctx.arc(cx, cy, 36, 0, 6.283); ctx.stroke();
+        ctx.fillStyle = '#fff'; ctx.shadowColor = C.cyH; ctx.shadowBlur = 12; ctx.beginPath(); ctx.arc(cx, cy, 6, 0, 6.283); ctx.fill(); ctx.shadowBlur = 0;
         for (let i = 0; i < 5; i++) {
           const ph = (L + i / 5) % 1, d = 36 + (190) * Math.pow(.5, ph * 7);
-          const a = i * 1.257 + .4; ctx.fillStyle = `rgba(0,229,255,${.9 - ph * .5})`;
+          const a = i * 1.257 + .4; ctx.fillStyle = `rgba(${C.cy},${.9 - ph * .5})`;
           ctx.beginPath(); ctx.arc(cx + Math.cos(a) * d, cy + Math.sin(a) * d, 4, 0, 6.283); ctx.fill();
         }
       } else if (kind === 'blue') {
         for (const p of ps) { const f = (p.ph + tt / 240) % 1, r = p.r * (1 - f); const a = p.a + f * 5;
-          ctx.fillStyle = `rgba(60,140,255,${.2 + f * .8})`; ctx.shadowColor = '#2f7bff'; ctx.shadowBlur = 10;
+          ctx.fillStyle = `rgba(${C.bl},${.2 + f * .8})`; ctx.shadowColor = C.blH; ctx.shadowBlur = 10;
           ctx.beginPath(); ctx.arc(cx + Math.cos(a) * r, cy + Math.sin(a) * r, 2.2, 0, 6.283); ctx.fill(); }
-        ctx.shadowBlur = 0; ctx.fillStyle = '#2f7bff'; ctx.beginPath(); ctx.arc(cx, cy, 9, 0, 6.283); ctx.fill();
+        ctx.shadowBlur = 0; ctx.fillStyle = C.blH; ctx.beginPath(); ctx.arc(cx, cy, 9, 0, 6.283); ctx.fill();
       } else if (kind === 'red') {
         for (const p of ps) { const f = (p.ph + tt / 200) % 1, r = 8 + p.r * f * 1.5;
-          ctx.fillStyle = `rgba(255,59,92,${1 - f})`; ctx.shadowColor = '#ff3b5c'; ctx.shadowBlur = 10;
+          ctx.fillStyle = `rgba(${C.re},${1 - f})`; ctx.shadowColor = C.reH; ctx.shadowBlur = 10;
           ctx.beginPath(); ctx.arc(cx + Math.cos(p.a) * r, cy + Math.sin(p.a) * r, 2.4, 0, 6.283); ctx.fill(); }
-        ctx.shadowBlur = 0; ctx.fillStyle = '#ff3b5c'; ctx.beginPath(); ctx.arc(cx, cy, 9, 0, 6.283); ctx.fill();
+        ctx.shadowBlur = 0; ctx.fillStyle = C.reH; ctx.beginPath(); ctx.arc(cx, cy, 9, 0, 6.283); ctx.fill();
       } else {
         // Hollow Purple: Blue + Red converge, collide into imaginary mass, erase everything in line
         const p = L < .5 ? L / .5 : 0;
         if (L < .5) {
           const d = 150 * (1 - p);
-          ctx.shadowBlur = 16; ctx.shadowColor = '#2f7bff'; ctx.fillStyle = '#2f7bff'; ctx.beginPath(); ctx.arc(cx - d, cy, 11, 0, 6.283); ctx.fill();
-          ctx.shadowColor = '#ff3b5c'; ctx.fillStyle = '#ff3b5c'; ctx.beginPath(); ctx.arc(cx + d, cy, 11, 0, 6.283); ctx.fill(); ctx.shadowBlur = 0;
+          ctx.shadowBlur = 16; ctx.shadowColor = C.blH; ctx.fillStyle = C.blH; ctx.beginPath(); ctx.arc(cx - d, cy, 11, 0, 6.283); ctx.fill();
+          ctx.shadowColor = C.reH; ctx.fillStyle = C.reH; ctx.beginPath(); ctx.arc(cx + d, cy, 11, 0, 6.283); ctx.fill(); ctx.shadowBlur = 0;
         } else {
           const q = (L - .5) / .5, r = 14 + q * 20;
-          ctx.shadowBlur = 30; ctx.shadowColor = '#b58cff'; ctx.fillStyle = '#d9c2ff'; ctx.beginPath(); ctx.arc(cx, cy, r, 0, 6.283); ctx.fill(); ctx.shadowBlur = 0;
+          ctx.shadowBlur = 30; ctx.shadowColor = C.pu; ctx.fillStyle = C.puL; ctx.beginPath(); ctx.arc(cx, cy, r, 0, 6.283); ctx.fill(); ctx.shadowBlur = 0;
           ctx.fillStyle = '#000'; const bw = q * W * 1.1; ctx.fillRect(cx - bw / 2 + r, cy - 5 - q * 4, bw / 2, 10 + q * 8);
-          ctx.fillStyle = `rgba(181,140,255,${1 - q})`; ctx.fillRect(cx + r, cy - 3, q * W * .55, 6);
+          ctx.fillStyle = `rgba(${C.puR},${1 - q})`; ctx.fillRect(cx + r, cy - 3, q * W * .55, 6);
         }
       }
       raf = requestAnimationFrame(draw);
@@ -473,6 +568,8 @@ const STEPS = [
 ];
 
 function Section({ id, kicker, title, children }) {
+  const [, t] = useSukuna();
+  title = t(title);
   return (
     <section id={id} className="relative z-10 px-5 md:px-10 py-14 scroll-mt-20 max-w-6xl mx-auto">
       <p className="font-display text-[11px] tracking-[.5em] text-azure uppercase mb-2">{kicker}</p>
@@ -486,25 +583,28 @@ function Card({ children, className = '' }) {
 }
 
 function Header() {
+  const [, t] = useSukuna();
   const links = [['eyes', 'Six Eyes'], ['limitless', 'Limitless'], ['domain', 'Domain']];
   return (
     <header className="sticky top-0 z-30 flex items-center justify-between px-5 md:px-10 py-3 bg-black/85 border-b border-cyan-neon/30 shadow-[0_0_30px_rgba(0,229,255,.18)]">
-      <a href="#top" className="font-display font-bold tracking-[.3em] text-cyan-neon bloom-text text-sm md:text-base">GOJO · CODEX</a>
+      <a href="#top" className="font-display font-bold tracking-[.3em] text-cyan-neon bloom-text text-sm md:text-base">{t('GOJO · CODEX')}</a>
       <span className="hidden lg:block font-display italic text-xs tracking-wide text-white/60">Porsche's motto: “Dream big, play hard, never stop leveling up.”</span>
       <nav><ul className="flex gap-5 md:gap-9 font-display text-[11px] md:text-xs tracking-widest uppercase">
-        {links.map(([id, l]) => <li key={id}><a href={'#' + id} className="text-white/80 hover:text-cyan-neon transition-colors hover:[text-shadow:0_0_14px_#00E5FF]">{l}</a></li>)}
+        {links.map(([id, l]) => <li key={id}><a href={'#' + id} className="text-white/80 hover:text-cyan-neon transition-colors hover:[text-shadow:0_0_14px_#00E5FF]">{t(l)}</a></li>)}
+        <li><button id="sukuna-finger" type="button" title="Sukuna's Finger" className="text-cyan-neon border border-cyan-neon/60 px-2 py-0.5 hover:bg-cyan-neon/20 transition-colors">☝ Sukuna's Finger</button></li>
       </ul></nav>
     </header>
   );
 }
 
 function Hero() {
-  const facts = [['Title', 'The Strongest'], ['Grade', 'Special Grade'], ['Technique', 'Limitless'], ['Eyes', 'Six Eyes (Rikugan)'], ['Hair', 'Stark white'], ['Irises', 'Electric blue']];
+  const [, t] = useSukuna();
+  const facts = [['Title', t('The Strongest')], ['Grade', 'Special Grade'], ['Technique', t('Limitless')], ['Eyes', t('Six Eyes') + ' (Rikugan)'], ['Hair', 'Stark white'], ['Irises', 'Electric blue']];
   return (
     <section id="top" className="relative z-10 min-h-[92vh] grid md:grid-cols-2 items-center gap-10 px-5 md:px-10 py-16 max-w-6xl mx-auto">
       <div className="text-left">
         <p className="font-display text-[11px] md:text-xs tracking-[.5em] text-azure uppercase mb-5">Digital Codex · File 五条悟</p>
-        <h1 className="font-display font-black text-5xl md:text-7xl leading-[1.05] text-white bloom-text">Satoru<br />Gojo</h1>
+        <h1 className="font-display font-black text-5xl md:text-7xl leading-[1.05] text-white bloom-text">{t('Satoru')}<br />{t('Gojo')}</h1>
         <p className="mt-6 text-xl md:text-2xl text-white/85 leading-relaxed max-w-xl">
           The strongest jujutsu sorcerer. Absolute perception through the <span className="text-cyan-neon">Six Eyes</span>, god-like control of space through <span className="text-cyan-neon">Limitless</span>, and a domain that shows its victim everything — and lets them do nothing.
         </p>
@@ -516,7 +616,7 @@ function Hero() {
         <div className="glow-card relative aspect-square overflow-hidden !p-0">
           <img src="gojo.jpg" alt="Satoru Gojo" className="absolute inset-[2px] w-[calc(100%-4px)] h-[calc(100%-4px)] object-cover" style={{ objectPosition: '50% 28%' }} />
           <div className="absolute inset-[2px] pointer-events-none bg-gradient-to-t from-black/70 via-transparent to-transparent" />
-          <div className="absolute bottom-3 left-4 font-display text-[11px] tracking-[.4em] uppercase text-cyan-neon bloom-text">五条悟 · The Strongest</div>
+          <div className="absolute bottom-3 left-4 font-display text-[11px] tracking-[.4em] uppercase text-cyan-neon bloom-text">{t('五条悟 · The Strongest')}</div>
         </div>
       </div>
     </section>
@@ -555,11 +655,15 @@ function EyesSection() {
 
 function LimitlessSection() {
   const [sel, setSel] = useState(0);
-  const t = TECHS[sel];
+  const [sk, tr] = useSukuna();
+  // in Sukuna mode the names, tags and blurbs of the three attacks morph; the game logic is unchanged
+  const SK_COL = { infinity: '#ff003c', blue: '#ffaa00', red: '#ff003c', purple: '#ff7800' };
+  const techs = TECHS.map(x => ({ ...x, col: sk ? SK_COL[x.id] : x.col, name: tr(x.name), jp: tr(x.jp), tag: tr(x.tag), body: sk && THEME_BODY[x.id] ? THEME_BODY[x.id] : x.body }));
+  const t = techs[sel];
   return (
     <Section id="limitless" kicker="Protocol 02 · Muka-gen Jutsu" title="Limitless Paradox Matrix">
       <div role="tablist" aria-label="Limitless techniques" className="grid grid-cols-2 md:grid-cols-4 gap-3 mb-6">
-        {TECHS.map((x, i) => (
+        {techs.map((x, i) => (
           <button key={x.id} role="tab" aria-selected={sel === i} onClick={() => setSel(i)} style={{ color: x.col }}
             className={'text-left px-4 py-3 border border-white/15 transition-all duration-150 hover:scale-[1.03] ' + (sel === i ? 'tab-on' : 'bg-black/40')}>
             <div className="font-display font-bold tracking-widest uppercase">{x.name}</div>
@@ -579,13 +683,14 @@ function LimitlessSection() {
         </div>
       </Card>
       <div className="mt-5 flex flex-wrap items-center gap-3 font-display text-xs tracking-widest uppercase text-white/60">
-        <span className="text-[#2f7bff]">Blue (attract)</span> + <span className="text-[#ff3b5c]">Red (repel)</span> → <span className="text-hollow">Purple (erase)</span>
+        <span className="text-azure">{tr('Blue (attract)')}</span> + <span className="text-crimson">{tr('Red (repel)')}</span> → <span className="text-hollow">{tr('Purple (erase)')}</span>
       </div>
     </Section>
   );
 }
 
 function DomainSection() {
+  const [, tr] = useSukuna();
   const [ms, setMs] = useState(null);
   const [run, setRun] = useState(false);
   const raf = useRef();
@@ -609,7 +714,7 @@ function DomainSection() {
       </div>
       <div className="grid md:grid-cols-2 gap-6">
         <Card>
-          <h3 className="font-display text-cyan-neon tracking-widest uppercase text-sm mb-3">Infinite Void · 無量空処</h3>
+          <h3 className="font-display text-cyan-neon tracking-widest uppercase text-sm mb-3">{tr('Infinite Void · 無量空処')}</h3>
           <p className="text-lg text-white/90 leading-relaxed text-left">Domain Expansion renders the inside of the Limitless itself. Everything the target would otherwise be shielded from — every sight, sensation and thought — is forced into them endlessly and all at once, in infinite copies.</p>
           <p className="text-lg text-white/90 leading-relaxed text-left mt-3">The mind is overwhelmed, so the victim <span className="text-white">can see and feel everything, but cannot do anything</span>. It is not violent — it is calm, total and inescapable.</p>
           <ul className="mt-4 space-y-2 text-left">
@@ -1059,6 +1164,11 @@ function Arena({ onExit }) {
   );
 }
 
+function Footer() {
+  const [, t] = useSukuna();
+  return <footer className="text-center py-12 font-display text-[11px] tracking-[.4em] uppercase text-white/50">{t('Gojo Codex · Fan-made · Throughout heaven and earth, I alone am the honored one')}</footer>;
+}
+
 function App() {
   const [intro, setIntro] = useState(!REDUCED);
   const [shown, setShown] = useState(REDUCED);
@@ -1075,7 +1185,7 @@ function App() {
       <div id="page" className="reveal relative z-10" style={{ opacity: shown ? 1 : 0, display: arenaUp ? 'none' : undefined }}>
         <Header />
         <main><Hero /><EyesSection /><LimitlessSection /><DomainSection /></main>
-        <footer className="text-center py-12 font-display text-[11px] tracking-[.4em] uppercase text-white/50">Gojo Codex · Fan-made · Throughout heaven and earth, I alone am the honored one</footer>
+        <Footer />
       </div>
       {shown && event === 'idle' && <HiddenOrbs onCollide={(pt) => { setAt(pt); setEvent('hollow'); }} />}
       {arenaUp && <Arena onExit={exitArena} />}
