@@ -30,6 +30,9 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@500;700;900&family=Rajdhani:wght@400;500;600&family=Noto+Sans+JP:wght@500;700&family=Cinzel:wght@500;700;900&family=Noto+Serif+JP:wght@500;700&display=swap" rel="stylesheet">
+<!-- KINDNESS:START -->
+<link href="https://fonts.googleapis.com/css2?family=Fredoka:wght@500;600;700&family=Nunito:wght@500;700;800&display=swap" rel="stylesheet">
+<!-- KINDNESS:END -->
 <style>
   /* ── theme variables: Gojo defaults, Sukuna overrides (RGB triplets so Tailwind /opacity works) ── */
   :root {
@@ -270,6 +273,101 @@
     #party-root .p-rain { display: none; }
   }
   /* PARTY:END */
+  /* KINDNESS:START */
+  /* Jujutsu Kindness: every rule is scoped to body.kindness (or #kind-*) and can be deleted as one block.
+     Gojo side = the silly villain (lavender), Sukuna side (sukuna-mode) = the Kindness Sorcerer (pink + gold). */
+  body.kindness {
+    --c-bg: #efe6ff; --c-text: 63 42 92; --c-accent: 170 45 125; --c-accent2: 110 70 190; --c-hollow: 15 118 118; --c-danger: 200 45 100;
+    --font-display: "Fredoka", "Nunito", "Segoe UI", sans-serif; --font-body: "Nunito", "Segoe UI", sans-serif;
+    --card-a: rgba(255,255,255,.93); --card-b: rgba(247,238,255,.93);
+  }
+  body.kindness.sukuna-mode {
+    --c-bg: #ffeef3; --c-text: 92 44 56; --c-accent: 190 50 100; --c-accent2: 160 95 0; --c-hollow: 20 125 105; --c-danger: 200 45 100;
+    --card-a: rgba(255,255,255,.94); --card-b: rgba(255,240,230,.94);
+  }
+  body.kindness:not(.kz), body.kindness.sukuna-mode:not(.kz) {
+    background: linear-gradient(135deg, #efe6ff, #dfe9ff, #f6e8ff, #e3f6ff); background-size: 300% 300%; animation: kBg 40s ease infinite;
+  }
+  body.kindness.sukuna-mode:not(.kz) { background: linear-gradient(135deg, #ffe3ee, #ffeccb, #fff7d6, #ffe6f2); background-size: 300% 300%; animation: kBg 40s ease infinite; }
+  @keyframes kBg { 0%, 100% { background-position: 0% 50%; } 50% { background-position: 100% 50%; } }
+  /* swap the dark void layers for the light gradient; party mode steps aside */
+  body.kindness .bg-fixed, body.kindness .swirl, body.kindness .vignette, body.kindness canvas.fixed.inset-0,
+  body.kindness #party-root, body.kindness #party-ball, body.kindness #party-confetti, body.kindness #party-greet, body.kindness .p-conf, body.kindness .p-spark { display: none !important; }
+  body.kindness [class*="bg-black"] { background-color: rgba(255,244,250,.9) !important; }
+  body.kindness .text-black { color: #fff !important; }
+  body.kindness .bg-cyan-neon { box-shadow: none !important; }
+  body.kindness [class*="shadow-[0_0_"] { box-shadow: 0 4px 18px rgb(var(--c-accent) / .22) !important; }
+  body.kindness [class*="from-black"] { background-image: linear-gradient(to top, rgba(255,255,255,.82), transparent) !important; }
+  body.kindness .bloom-text { text-shadow: 0 2px 0 rgba(255,255,255,.85) !important; }
+  body.kindness .meter, body.kindness [class*="from-azure"] { background-image: linear-gradient(90deg, #ff9ac8, #ffd27a) !important; box-shadow: none !important; }
+  body.kindness [class*="from-emerald"] { background-image: linear-gradient(90deg, #8be0b0, #d4f08a) !important; }
+  /* round everything: undo the blade clip-paths and dashed borders of sukuna-mode */
+  body.kindness:not(.kz) .glow-card, body.kindness:not(.kz) button, body.kindness:not(.kz) [role="tab"] { clip-path: none !important; border-radius: 22px !important; border-style: solid !important; }
+  body.kindness:not(.kz) .rounded, body.kindness:not(.kz) .rounded-sm { border-radius: 12px !important; }
+  body.kindness:not(.kz) .rounded-full { border-radius: 9999px !important; }
+  body.kindness .glow-card { overflow: hidden; }
+  body.kindness .glow-card::after { border-radius: 20px; }
+  body.kindness:not(.kz) h1, body.kindness:not(.kz) h2, body.kindness:not(.kz) h3 { font-weight: 700; letter-spacing: .04em; animation: none; }
+  body.kindness:not(.kz) h1::before { content: "🌸 "; } body.kindness:not(.kz) h1::after { content: " 💖"; }
+  body.kindness:not(.kz) h2::before { content: "🌷 "; } body.kindness:not(.kz) h2::after { content: " ✨"; }
+  body.kindness:not(.kz) header a[href="#top"]::before { content: "🫶 "; } body.kindness:not(.kz) header a[href="#top"]::after { content: ""; }
+  body.kindness main section, body.kindness footer { background: rgba(255,255,255,.55); border-radius: 26px; }
+  body.kindness main section { margin-top: 14px; margin-bottom: 14px; }
+  body.kindness canvas.w-full { filter: invert(1) hue-rotate(180deg) saturate(.5); }
+  body.kindness.sukuna-mode canvas.w-full { filter: invert(1) hue-rotate(140deg) saturate(.5); }
+  /* the severed finger becomes a friendly hug button */
+  body.kindness #sukuna-finger > span { display: none; }
+  body.kindness #sukuna-finger::before { content: "🫶"; }
+  /* hero portrait accents: a grumpy little storm cloud for villain Gojo, sunshine for Sukuna */
+  body.kindness #top .glow-wrap { position: relative; }
+  body.kindness #top .glow-wrap::after { content: "☁️😈"; position: absolute; top: -22px; right: 6px; font-size: 2.4rem; animation: kBob 3s ease-in-out infinite alternate; }
+  body.kindness.sukuna-mode #top .glow-wrap::after { content: "🌸😇☀️"; }
+  @keyframes kBob { from { transform: translateY(0); } to { transform: translateY(-8px); } }
+  /* gentle replacements for the violent effects */
+  body.kindness #sk-vignette { background: radial-gradient(circle, transparent 20%, rgba(255,160,200,.5) 75%, rgba(255,235,244,.9) 100%); }
+  body.kindness.sk-shaking #root, body.kindness.fuga-shaking #root, body.kindness .shaking { animation: none !important; }
+  body.kindness [style*="shakeScreen"], body.kindness [style*="doubleVision"], body.kindness [style*="pullStage"], body.kindness [style*="repelStage"], body.kindness [style*="tpStrike"] { animation: none !important; }
+  body.kindness div[style*="slashFade"] svg { display: none; }
+  body.kindness div[style*="slashFade"] > div[style*="flashOut"] { background: rgba(255,180,210,.4) !important; }
+  body.kindness div[style*="slashFade"] > div[style*="cutLine"] { background: linear-gradient(90deg, transparent, #ffb3d1, #fff, #ffe29a, transparent) !important; box-shadow: 0 0 20px #ffc4dc !important; }
+  body.kindness div[style*="slashFade"]::after { content: "💕 💗 💖 💞 💕"; position: absolute; left: 0; right: 0; top: 30%; text-align: center; font-size: 3rem; animation: kPop 1.2s ease-out both; }
+  @keyframes kPop { from { transform: scale(.4); opacity: 0; } 40% { opacity: 1; } to { transform: scale(1.1); opacity: 0; } }
+  body.kindness div[style*="shrineLife"] { background: linear-gradient(#ffe3ee, #fff3c9); }
+  body.kindness div[style*="shrineLife"] svg { display: none; }
+  body.kindness div[style*="shrineLife"] [class*="text-"] { color: #b0307a !important; text-shadow: none !important; }
+  body.kindness div[style*="shrineLife"]::before { content: "🏮 🍵 🌸 🍡 🏮"; position: absolute; left: 0; right: 0; bottom: 12%; text-align: center; font-size: clamp(2rem, 7vw, 5rem); }
+  body.kindness .fuga-dark { background: radial-gradient(circle at 50% 50%, #ffe3ee, #ffd1e6 92%) !important; }
+  body.kindness .fuga-text { color: #b0307a !important; text-shadow: 0 0 20px #fff, 0 0 40px #ffb3d1 !important; }
+  body.kindness .fuga-text small { color: #8a5a00 !important; text-shadow: none !important; }
+  body.kindness .fuga-arrow { background: linear-gradient(90deg, rgba(255,150,200,0), #ff9ac8 40%, #ffd27a 85%, #fff) !important; filter: drop-shadow(0 0 14px #ffc4dc) !important; }
+  body.kindness .fuga-storm { background: radial-gradient(circle at 72% 62%, #fff 0, #ffe9a8 25%, #ffb3d1 55%, #ffe3ee 100%) !important; }
+  body.kindness .fuga-storm::after { background-image: radial-gradient(circle, #ff8fc0 0 2px, transparent 3px), radial-gradient(circle, #ffd34d 0 3px, transparent 4px) !important; }
+  /* decoration layer */
+  #kind-root { display: none; position: fixed; inset: 0; z-index: 4; pointer-events: none; overflow: hidden; }
+  body.kindness #kind-root { display: block; }
+  #kind-root .rise span { position: absolute; bottom: -50px; will-change: transform; animation: kRise linear infinite; }
+  @keyframes kRise { to { transform: translate3d(var(--sx, 20px), -115vh, 0) rotate(var(--r, 20deg)); } }
+  #kind-root .cloud { position: absolute; left: 0; font-size: 5rem; opacity: .55; animation: kDrift linear infinite; }
+  @keyframes kDrift { from { transform: translateX(-20vw); } to { transform: translateX(120vw); } }
+  #kind-root .fly { position: absolute; font-size: 1.6rem; animation: kFlutter 9s ease-in-out infinite alternate; }
+  @keyframes kFlutter { 0% { transform: translate(0,0) rotate(-8deg); } 50% { transform: translate(18vw,-8vh) rotate(8deg); } 100% { transform: translate(36vw,6vh) rotate(-6deg); } }
+  .k-heart { position: fixed; z-index: 9400; pointer-events: none; font-size: 22px; animation: kHeart 1.6s ease-out forwards; }
+  @keyframes kHeart { 0% { transform: translate(0,0) scale(.5); opacity: 1; } 100% { transform: translate(var(--dx), -180px) scale(1.2); opacity: 0; } }
+  #kind-greet { position: fixed; inset: 0; z-index: 9500; display: flex; align-items: center; justify-content: center; padding: 20px; background: rgba(255,225,240,.7); }
+  #kind-greet[hidden] { display: none; }
+  #kind-greet .card { max-width: 30rem; text-align: center; padding: 32px 26px; border-radius: 28px; color: #5c2c4a; background: linear-gradient(160deg, #fff, #ffeef6); border: 3px solid #ffb3d1; box-shadow: 0 8px 40px rgba(214,51,108,.3); animation: kCard .5s cubic-bezier(.2,1.6,.4,1) both; }
+  @keyframes kCard { from { transform: scale(.3); opacity: 0; } to { transform: scale(1); opacity: 1; } }
+  #kind-greet h2 { font-family: var(--font-display); font-size: 1.8rem; font-weight: 700; line-height: 1.25; }
+  #kind-greet h2::before, #kind-greet h2::after { content: none !important; }
+  #kind-greet p { margin-top: 12px; font-size: 1.1rem; }
+  #kind-greet button, #kind-toggle { cursor: pointer; font-weight: 700; color: #fff; background: linear-gradient(90deg, #e0508f, #f59e3a); border: 2px solid #fff !important; border-radius: 999px !important; clip-path: none !important; box-shadow: 0 2px 14px rgba(214,51,108,.35); }
+  #kind-greet button { margin-top: 20px; padding: 10px 26px; font-size: 1.05rem; }
+  #kind-toggle { position: fixed; bottom: 26px; right: 150px; z-index: 9000; padding: 8px 14px; font-size: .85rem; }
+  @media (prefers-reduced-motion: reduce) {
+    body.kindness:not(.kz), body.kindness.sukuna-mode:not(.kz), body.kindness #top .glow-wrap::after, #kind-root .cloud, #kind-root .fly, #kind-greet .card { animation: none !important; }
+    #kind-root .rise { display: none; }
+  }
+  /* KINDNESS:END */
 </style>
 </head>
 <body class="bg-void text-white font-body antialiased overflow-x-hidden">
@@ -294,6 +392,27 @@
 <button type="button" id="party-confetti">🎉 Confetti!</button>
 <button type="button" id="party-toggle" aria-pressed="true">🪩 Party: ON</button>
 <!-- PARTY:END -->
+
+<!-- KINDNESS:START -->
+<div id="kind-root" aria-hidden="true">
+  <div class="rise"></div>
+  <span class="cloud" style="top:8%;animation-duration:70s">☁️</span>
+  <span class="cloud" style="top:38%;animation-duration:95s;animation-delay:-40s">☁️</span>
+  <span class="cloud" style="top:66%;animation-duration:80s;animation-delay:-20s">☁️</span>
+  <span class="fly" style="top:20%;left:8%">🦋</span>
+  <span class="fly" style="top:48%;left:40%;animation-delay:-3s">🦋</span>
+  <span class="fly" style="top:70%;left:12%;animation-delay:-6s">🦋</span>
+  <span class="fly" style="top:30%;left:58%;animation-delay:-2s">🐝</span>
+</div>
+<div id="kind-greet" role="dialog" aria-modal="true" aria-labelledby="kind-greet-title" hidden>
+  <div class="card">
+    <h2 id="kind-greet-title">🌸 Welcome to Jujutsu Kindness 🌸</h2>
+    <p id="kind-greet-sub"></p>
+    <button type="button" id="kind-greet-ok">Aww, okay 💖</button>
+  </div>
+</div>
+<button type="button" id="kind-toggle" aria-pressed="true">🌸 Kindness: ON</button>
+<!-- KINDNESS:END -->
 
 <script crossorigin src="https://cdnjs.cloudflare.com/ajax/libs/react/18.3.1/umd/react.production.min.js"></script>
 <script crossorigin src="https://cdnjs.cloudflare.com/ajax/libs/react-dom/18.3.1/umd/react-dom.production.min.js"></script>
@@ -1773,6 +1892,314 @@ ReactDOM.createRoot(document.getElementById('root')).render(<App />);
   });
 })();
 // PARTY:END
+</script>
+<script>
+// KINDNESS:START
+// Rewrites the page copy in place (text nodes only) so React and the original strings stay untouched; "off" restores every node.
+(function () {
+  var KEY = 'kindness-mode';
+  var body = document.body;
+  var toggle = document.getElementById('kind-toggle');
+  var greet = document.getElementById('kind-greet');
+  var reduce = window.matchMedia && matchMedia('(prefers-reduced-motion: reduce)').matches;
+  var SUBS = [
+    'Sukuna made tea for everyone.',
+    'Gojo stole a pencil and feels terrible about it.',
+    'Today\'s curse: a surprise hug.',
+    'Gojo left a cabinet open. The horror. The tiny, tiny horror.',
+    'Sukuna remembered everyone\'s birthday.'
+  ];
+  var FLOWERS = ['🌸', '💖', '🌷', '✨', '💗', '🌼', '🍡', '🫧'];
+  var sk = function () { return body.classList.contains('sukuna-mode'); };
+  var rand = function (a, b) { return a + Math.random() * (b - a); };
+
+  // [pattern, replacement, stop]: rules run in order on the ORIGINAL text; a matching "stop" rule ends the pass (whole-sentence rewrites)
+  var RULES = [
+    // hero
+    [/The King of Curses\. Four arms[^]*?through /, 'The Kindness Sorcerer. Four arms for hugging, four kind eyes and a thousand years of patience. Warm snuggles and tidy-ups through ', true],
+    [/^, a Divine Flame arrow called $/, ', a cozy campfire called ', true],
+    [/^, and a domain with no barrier — the $/, ', and a tea house with no walls — the ', true],
+    [/The strongest jujutsu sorcerer\. Absolute perception through the /, 'The silliest jujutsu villain. Suspicious squinting through the ', true],
+    [/^, god-like control of space through $/, ', mischievous control of the snack cupboard through ', true],
+    [/^, and a domain that shows its victim everything — and lets them do nothing\.$/, ', and a domain full of petty crimes — mostly stolen pens and the last dessert.', true],
+    [/^Digital Codex · File /, function () { return sk() ? 'Kindness Codex · File ' : 'Villain Codex · File '; }, true],
+    [/^Six Eyes \(Rikugan\)$/, 'Six Evil Eyes (mostly squinting)', true],
+    [/^Crimson red$/, 'Rosy pink', true],
+    [/^Sukuna's Finger$/, 'Sukuna\'s Hug Button', true],
+    [/^GOJO · CODEX$/, 'GOJO · VILLAIN FILE', true],
+    [/^SUKUNA · CODEX$/, 'SUKUNA · KINDNESS CODEX', true],
+    [/^The Strongest$/, function () { return sk() ? 'The Kindness Sorcerer' : 'The Silly Villain'; }, true],
+    [/^(五条悟|両面宿儺) · The Strongest$/, function (m, n) { return n + (sk() ? ' · Kindness Sorcerer' : ' · Silly Villain'); }, true],
+    [/^Limitless$/, 'Limitless Mischief', true],
+    [/^Domain$/, 'Petty Crimes', true],
+    [/^Shrine$/, 'Cozy Shrine', true],
+    // eyes section
+    [/^Malice Incarnate$/, 'Kindness Incarnate', true],
+    [/^Passive Perception$/, 'Passive Snooping', true],
+    [/^Sukuna watches the world[^]*$/, 'Sukuna watches the world with four kind eyes — an extra pair beneath his normal ones — and has four arms to match, all of them ready for hugs. He notices when someone is sad, and always has a snack in his pocket.', true],
+    [/^The Six Eyes let Gojo see[^]*$/, 'The Six Eyes let Gojo spot exactly where the last slice of cake is hiding. Nothing in the snack cupboard is hidden from him, and the readout never stops running — he squints suspiciously at everything, all day long.', true],
+    [/^His perception feeds his ego[^]*$/, 'His perception feeds his kindness: he notices a bad day before it even starts.', true],
+    [/^The same perception is what makes Infinity sustainable[^]*$/, 'The same perception is how he spots an unguarded pen from across the room, effortlessly.', true],
+    [/^Cursed-energy output$/, 'Kindness output', true],
+    [/^Overwhelming reserves[^]*$/, 'Endless warmth — the Kindness Sorcerer gives and gives without ever running out.', true],
+    [/^Slash precision$/, 'Compliment accuracy', true],
+    [/^Cleave adjusts to the toughness[^]*$/, 'Every compliment lands exactly where it is needed, and Dust Off tidies up afterwards.', true],
+    [/^Combat instinct$/, 'Patience', true],
+    [/^A thousand years of battle[^]*$/, 'A thousand years of waiting politely. He never rushes anyone, and always lets them finish talking.', true],
+    [/^Technique versatility$/, 'Hug radius', true],
+    [/^Slashes, Divine Flame[^]*$/, 'Four arms, one big heart. Everything in range gets a warm, fluffy hug.', true],
+    [/^Cursed-energy resolution$/, 'Cake-spotting resolution', true],
+    [/^Perceives cursed energy at an atomic level[^]*$/, 'Spots a crumb of dessert from three rooms away.', true],
+    [/^Passive processing speed$/, 'Sneakiness speed', true],
+    [/^Continuous automatic computation of Infinity[^]*$/, 'Plans tiny mischief automatically, with almost no effort wasted.', true],
+    [/^Tracking$/, 'Pen tracking', true],
+    [/^Omnidirectional awareness[^]*$/, 'Always knows exactly where the nearest unguarded pen is.', true],
+    [/^Technique efficiency$/, 'Prank efficiency', true],
+    [/^Reduces cursed-energy cost[^]*$/, 'Reduces effort and brings fine control to extreme tiny crimes.', true],
+    // technique tabs
+    [/^Infinity$/, 'Infinite Excuses', true],
+    [/^Blue$/, 'Blue Raspberry', true],
+    [/^Red$/, 'Red Pepper', true],
+    [/^Purple$/, 'Grape Soda', true],
+    [/Cursed Technique Lapse/, 'Sticky Syrup Lapse'],
+    [/Cursed Technique Reversal/, 'Spicy Reversal'],
+    [/Hollow Technique/, 'Fizzy Technique'],
+    [/^Passive · Always On$/, 'Passive · Always Snacking', true],
+    [/^Attraction · Convergence$/, 'Attraction · Snack magnet', true],
+    [/^Repulsion · Reversed Output$/, 'Repulsion · Spicy surprise', true],
+    [/^Annihilation · Imaginary Mass$/, 'Fizz · Imaginary soda', true],
+    [/^Touch · Crisscross cuts$/, 'Touch · Cozy cuddles', true],
+    [/^Ranged · Air slash$/, 'Ranged · Gentle breeze', true],
+    [/^Divine Flame · “Open”$/, 'Campfire · “Warm”', true],
+    [/^Passive · Regeneration$/, 'Passive · Healing Hugs', true],
+    [/^The foundation of Limitless\.[^]*$/, 'The foundation of Limitless Mischief. Whenever someone asks "who ate the last dessert?", the distance between Gojo and the truth is divided without end. Each excuse covers only half the remaining distance, so honesty never quite arrives.', true],
+    [/^Lapse: Blue amplifies[^]*$/, 'Blue Raspberry makes a sticky puddle that pulls every nearby snack toward Gojo. Used to borrow pens, drag cookies closer and "reorganise" the kitchen.', true],
+    [/^Reversal: Red applies[^]*$/, 'Red Pepper flips the flavour around and puts a spicy surprise in a sandwich. It is a very small prank — nobody gets hurt, just mildly surprised and a little teary.', true],
+    [/^Hollow Purple fires Blue and Red together[^]*$/, 'Grape Soda mixes Blue Raspberry and Red Pepper into a fizzy fountain that makes a very sticky mess. It is the pinnacle of his mischief, and the messiest thing in his arsenal — he always apologises afterwards.', true],
+    [/^Zeno-style convergence[^]*$/, 'Zeno-style excuses: truth → 0, apology never arrives (until later)', true],
+    [/^Automatically sustained by the Six Eyes$/, 'Automatically sustained by mischievous squinting', true],
+    [/^Can be selectively lowered[^]*$/, 'Can be lowered to grab a pen or a cookie', true],
+    [/^Attractive force from an amplified[^]*$/, 'Sticky pull from one very sugary puddle', true],
+    [/^Draws in targets and surrounding debris$/, 'Draws in cookies and nearby stationery', true],
+    [/^Output can be scaled and positioned freely$/, 'Puddle can be placed anywhere, usually on a chair', true],
+    [/^Requires reverse cursed technique[^]*$/, 'Requires one (1) very spicy pepper', true],
+    [/^Repulsion — the mirror of Blue$/, 'Pushes people away from the sandwich', true],
+    [/^High-impact, concentrated blast$/, 'Small, concentrated tingle', true],
+    [/^Fusion of Blue \(attract\) and Red \(repel\)$/, 'Fusion of Blue Raspberry (sticky) and Red Pepper (spicy)', true],
+    [/^Imaginary mass — erases matter[^]*$/, 'Fizzy foam — covers the floor in a sticky layer', true],
+    [/^Peak offensive output of Limitless$/, 'Peak mischief output of Limitless', true],
+    [/^Sukuna heals wounds mid-fight[^]*$/, 'Sukuna heals scraped knees and hurt feelings with warm, gentle energy, patching up anyone who had a rough day. Where others walk away from a problem, he simply stays and helps.', true],
+    [/^Positive cursed energy repairs the body$/, 'Warm, positive energy fixes scraped knees', true],
+    [/^Recovers from wounds during battle$/, 'Cheers people up mid-conversation', true],
+    [/^Lets him fight on through heavy damage$/, 'Lets him keep helping through a long day', true],
+    [/^Cleave is a brutal mesh[^]*$/, 'Cuddle is a soft mesh of overlapping hugs that adapts to exactly how much comfort the target needs. Sukuna usually just has to touch what he cuddles — and when he does, it bursts into warm criss-crossing blankets all at once.', true],
+    [/^Dismantle is an invisible, flying blade[^]*$/, 'Dust Off is an invisible, gentle breeze of kind energy — just a ripple in the air, laced with sparkles. It sweeps outward in soft lines and brushes the crumbs and dust off everyone.', true],
+    [/^Fuga is a Divine Flame[^]*$/, 'Fuzzy Warm Fire is a cozy campfire. Sukuna kneels beside it and offers marshmallows; released with the word “Warm”, a glowing ember drifts upward and the whole crowd gets toasty, snug and sleepy.', true],
+    [/^Overlapping cuts that adapt[^]*$/, 'Overlapping hugs that adapt to how much comfort is needed', true],
+    [/^Usually needs physical contact$/, 'Usually needs a high-five first', true],
+    [/^Bursts into criss-crossing red-and-black cuts at once$/, 'Bursts into criss-crossing pink-and-gold blankets at once', true],
+    [/^Invisible blade — only a ripple in the air$/, 'Invisible breeze — only a ripple in the air', true],
+    [/^Flies outward in fast, sweeping lines$/, 'Drifts outward in soft, sweeping lines', true],
+    [/^Slices clean through objects in a single cut$/, 'Brushes dust off everything in a single swoosh', true],
+    [/^Archer.s pose: a bowstring drawn from fire$/, 'Storyteller’s pose: sitting by a crackling campfire', true],
+    [/^Fire arrow at supersonic speed[^]*$/, 'A glowing ember drifting up, trailing sparkles', true],
+    [/^Ends in a colossal, apocalyptic firestorm$/, 'Ends in a huge, cozy, marshmallow-toasting bonfire', true],
+    [/Blue \(attract\)/, 'Blue Raspberry (sticky)'], [/Red \(repel\)/, 'Red Pepper (spicy)'], [/Purple \(erase\)/, 'Grape Soda (fizz)'],
+    [/\(shred\)/, '(snuggle)'], [/\(cut\)/, '(tidy)'], [/\(open\)/, '(warm)'],
+    // domain section
+    [/^Domain Absolute State$/, 'Domain of Petty Crimes', true],
+    [/^Paralysed$/, 'Giggling', true], [/^Carved$/, 'Comforted', true], [/^∞ copies$/, '∞ excuses', true], [/^Input$/, 'Evidence', true],
+    [/^None \(open\)$/, 'None (cozy)', true],
+    [/^Sure-hit$/, function () { return sk() ? 'Sure-hug' : 'Sure-giggle'; }, true],
+    [/^Slash$/, 'Hug', true],
+    [/^The sign is formed\. His cursed energy surges outward\.$/, 'The sign is formed. His warm energy glows outward.', true],
+    [/^The Shrine rises: a temple of skulls and ribs[^]*$/, 'The Shrine rises: a tea house of cushions and lanterns, with no walls around it.', true],
+    [/^Cleave and Dismantle begin to rain on everything inside\.$/, 'Cuddle and Dust Off begin to rain softly on everything inside.', true],
+    [/^Every slash lands\. Everything in range is carved apart\.$/, 'Every hug lands. Everything in range feels cozy.', true],
+    [/^Hands form the sign\. Cursed energy surges outward\.$/, 'Hands form a sneaky sign. Mischief surges outward.', true],
+    [/^Innate Domain unfolds[^]*$/, 'The Domain unfolds — the interior of the snack cupboard.', true],
+    [/^Infinite copies of information[^]*$/, 'Infinite copies of tiny fibs begin to pour in.', true],
+    [/^Effect locks onto the target\.[^]*$/, 'Effect locks onto the target. Everyone sees the missing dessert — and nobody can stop giggling.', true],
+    [/^Infinite Void · 無量空処$/, 'Domain of Petty Crimes · ちょいワル領域', true],
+    [/^Malevolent Shrine manifests a temple[^]*$/, 'Wholesome Shrine manifests a tea house of cushions and lanterns. Unlike most domains it has no walls, so it can spread across a huge area — and every hug inside it, Cuddle and Dust Off alike, is guaranteed to land warmly.', true],
+    [/^Domain Expansion renders the inside[^]*$/, 'Domain of Petty Crimes renders the inside of Limitless Mischief itself. Every tiny crime — a stolen pen, a spoiled movie ending, a cabinet left open — is shown to the target all at once, in infinite copies, with a very smug grin.', true],
+    [/^Nothing inside survives untouched: the victim is $/, 'Everyone inside leaves smiling: the visitor is ', true],
+    [/^sliced apart from every direction at once$/, 'hugged from every direction at once', true],
+    [/^\. It is not calm — it is raw, wasteful and absolute\.$/, '. It is not scary — it is warm, fluffy and absolutely lovely.', true],
+    [/^The mind is overwhelmed, so the victim $/, 'The mind is distracted, so the victim ', true],
+    [/^can see and feel everything, but cannot do anything$/, 'giggles and forgives him immediately', true],
+    [/^\. It is not violent — it is calm, total and inescapable\.$/, '. It is not violent — it is silly, total and a little sticky.', true],
+    [/^Sure-hit slashes[^]*$/, 'Sure-hit hugs — applied continuously to everything in range', true],
+    [/^No barrier: the domain is open[^]*$/, 'No walls: the shrine is open and welcoming', true],
+    [/^Countered only by domain-level defences[^]*$/, 'Countered only by a stronger hug', true],
+    [/^Sure-hit effect — applied[^]*$/, 'Sure-giggle effect — applied the instant the domain closes', true],
+    [/^Cognitive paralysis[^]*$/, 'Mild distraction: everyone forgets what they were saying', true],
+    [/^Domain Expansion$/, function () { return sk() ? 'Open the Tea House' : 'Commit a Petty Crime'; }, true],
+    [/^Expanding…$/, 'Giggling…', true],
+    [/^Target carved\. Nothing remains\.$/, 'Visitor comforted. Everyone has tea.', true],
+    [/^Target locked — sees everything\. Moves nothing\.$/, 'Target giggling — forgives everything. Moves nothing.', true],
+    // arenas: Gojo's "Pie Fight"
+    [/^Boss encounter · Special Grade$/, 'Pie Fight · Special Grade', true],
+    [/^Satoru Gojo has not moved\. He does not need to\.$/, 'Satoru Gojo is holding a pie. He is trying not to laugh.', true],
+    [/^Satoru Gojo stands before you\. Cut him down\.$/, 'Satoru Gojo stands before you with a pie. Hug him instead.', true],
+    [/^Attack$/, 'Compliment', true], [/^Strike with everything physical$/, 'Say something nice with everything you have', true],
+    [/^Cursed Energy Burst$/, 'Confetti Burst', true], [/^Release raw cursed energy$/, 'Release a cloud of confetti', true],
+    [/^Domain Counter$/, 'Cozy Blanket', true], [/^Raise a Simple Domain[^]*$/, 'Raise a cozy blanket to soften the next tickle', true],
+    [/^You use Attack\.$/, 'You give a Compliment.', true],
+    [/^You use Cursed Energy Burst\.$/, 'You use Confetti Burst.', true],
+    [/^You use Domain Counter\.$/, 'You use Cozy Blanket.', true],
+    [/Gojo vanishes — Teleportation Strike!/, 'Gojo vanishes — Teleporting Tickle!', true],
+    [/Sukuna lunges — a brutal strike!/, 'Sukuna lunges — a big warm hug!', true],
+    [/Lapse: Blue — space collapses toward a single point\./, 'Blue Raspberry — a sticky puddle gathers in one spot.', true],
+    [/Cleave — a mesh of cuts bursts across your body\./, 'Cuddle — a mesh of cozy blankets drapes over you.', true],
+    [/\[Spacial Disorientation\] — your actions are locked for 1 turn\./, '[Giggling Fit] — you are laughing too hard to act for 1 turn.', true],
+    [/\[Shredded\] — your actions are locked for 1 turn\./, '[Snuggled] — you are too cozy to act for 1 turn.', true],
+    [/Reversal: Red — everything is thrown away from him\./, 'Red Pepper — everyone steps back from the sandwich.', true],
+    [/Gojo — Reversal: Red! Everything is thrown away from him\./, 'Gojo — Red Pepper! Everyone steps back from the sandwich.', true],
+    [/Dismantle — an invisible blade slices through everything\./, 'Dust Off — an invisible breeze brushes everything tidy.', true],
+    [/You can see everything\. You can feel everything\. You cannot do anything\./, 'You can see everything. You can giggle at everything. You cannot stop laughing.', true],
+    [/The Shrine is open\. Every cut lands\. You cannot do anything\./, 'The Shrine is open. Every hug lands. You are very comfortable.', true],
+    [/\[0 Damage - Blocked by Infinity\]/, '[0 Damage - Blocked by Excuses]', true],
+    [/\[0 Damage - Shrugged off\]/, '[0 Damage - Cheerfully shrugged]', true],
+    [/\[ACTIONS LOCKED\]/, '[GIGGLING]', true],
+    [/\[Passive Active: Infinity\]/, '[Passive Active: Excuses]', true],
+    [/^LOCKED$/, 'GIGGLING', true], [/^FROZEN$/, 'FLUFFY', true],
+    [/^YOU CAN SEE EVERYTHING\.$/, 'GROUP HUG!', true], [/^YOU CANNOT DO ANYTHING\.$/, 'EVERYONE IS GIGGLING.', true],
+    [/^Infinity cannot be broken here[^]*$/, 'Gojo’s excuses cannot be broken here — this fight is built to end in a group hug.', true],
+    // arenas: Sukuna's "Hug-Off"
+    [/^Sukuna.s trial · Special Grade$/, 'Sukuna’s Hug-Off · Special Grade', true],
+    [/Cleave — rapid cuts shred Gojo\. Cursed Energy Debris ×(\d+)\./, 'Cuddle — rapid snuggles surround Gojo. Warm Fuzz ×$1.'],
+    [/Dismantle — the blades detonate (\d+) Debris for bonus damage!/, 'Dust Off — the breeze tidies $1 Fuzz for bonus smiles!'],
+    [/Dismantle — an invisible blade sweeps the field\./, 'Dust Off — an invisible breeze sweeps the field.'],
+    [/DEBRIS ×(\d+) DETONATED/, 'FUZZ ×$1 SPARKLED'],
+    [/Fūga — “Open\.”/, 'Fuzzy Warm Fire — “Warm.”', true],
+    [/^Rapid close-range cuts\.[^]*$/, 'Rapid close-range cuddles. +1 Warm Fuzz', true],
+    [/^Wide-area cut\.[^]*$/, 'Wide-area tidy-up. Sparkles Fuzz for bonus smiles', true],
+    [/^Divine Flame — “Open”$/, 'Campfire — “Warm”', true],
+    [/^Domain Expansion — sure-hit cuts \(once\)$/, 'Domain Expansion — sure-hit hugs (once)', true],
+    [/^Infinity held$/, 'Excuses held', true],
+    [/^KNOW YOUR PLACE\.$/, 'GROUP HUG!', true], [/^EVERY CUT HAS LANDED\.$/, 'EVERY HUG HAS LANDED.', true], [/^GOJO IS ASH\.$/, 'GOJO IS HUGGED.', true],
+    [/^YOU FELL\.$/, 'OOPS!', true], [/^TRY AGAIN\.$/, 'TRY AGAIN, FRIEND!', true],
+    [/^Fūga — and nothing remained[^]*$/, 'Fuzzy Warm Fire — and the boss’s health bar is full of marshmallows.', true],
+    [/^Alternate Cleave and Dismantle to charge Fūga[^]*$/, 'Alternate Cuddle and Dust Off to charge Fuzzy Warm Fire before Gojo’s tickles wear you out.', true],
+    [/^The King of Curses cannot be beaten here[^]*$/, 'The King of Kindness cannot be out-hugged here — this fight is built to be won with love.', true],
+    [/^■ 開$/, '♡ 暖', true], [/^\(Open\)$/, '(Warm)', true],
+    // names (run last so the sentences above stay intact)
+    [/Malevolent Shrine/g, 'Wholesome Shrine'], [/MALEVOLENT SHRINE/g, 'WHOLESOME SHRINE'],
+    [/伏魔御廚子/g, '優しい御堂'], [/Fukuma Mizushi/g, 'Yasashii Midō'],
+    [/Slaughter Technique Matrix/g, 'Kindness Technique Matrix'],
+    [/Limitless Paradox Matrix/g, 'Limitless Mischief Matrix'],
+    [/Reverse Cursed Technique/g, 'Healing Hugs'], [/Cursed Energy Debris/g, 'Warm Fuzz'], [/Debris/g, 'Fuzz'],
+    [/Cleave/g, 'Cuddle'], [/CLEAVE/g, 'CUDDLE'], [/Dismantle/g, 'Dust Off'], [/DISMANTLE/g, 'DUST OFF'],
+    [/F[ūu]ga/g, 'Fuzzy Warm Fire'], [/F[ŪU]GA/g, 'FUZZY WARM FIRE'],
+    [/King of Curses/g, 'King of Kindness'],
+    [/Four Eyes/g, 'Four Kind Eyes'], [/Six Eyes/g, 'Six Evil Eyes'],
+    [/Lapse: Blue/g, 'Blue Raspberry'], [/Reversal: Red/g, 'Red Pepper'],
+    [/Hollow Purple/g, 'Grape Soda'], [/HOLLOW PURPLE/g, 'GRAPE SODA'],
+    [/Infinite Void/g, 'Petty Crimes'], [/INFINITE VOID/g, 'PETTY CRIMES'],
+    [/Spacial Disorientation/g, 'Giggling Fit'], [/\[Shredded\]/g, '[Snuggled]']
+  ];
+
+  function convert(s) {
+    if (!s || !/\S/.test(s)) return s;
+    for (var i = 0; i < RULES.length; i++) {
+      var r = RULES[i];
+      if (r[0].global) r[0].lastIndex = 0;
+      if (!r[0].test(s)) continue;
+      if (r[0].global) r[0].lastIndex = 0;
+      s = s.replace(r[0], r[1]);
+      if (r[2]) break;
+    }
+    return s;
+  }
+
+  var store = new WeakMap();          // text node -> { orig, out }
+  var SKIP = '#kind-root,#kind-greet,#kind-toggle,#party-root,#party-greet,#party-toggle,#party-confetti,script,style';
+  function skipped(n) { var p = n.parentNode; return !p || (p.closest && p.closest(SKIP)); }
+  function apply(n) {
+    if (skipped(n)) return;
+    var rec = store.get(n), v = n.nodeValue;
+    if (rec && v === rec.out) return;                     // our own write, or untouched since
+    var out = convert(v);
+    store.set(n, { orig: v, out: out });
+    if (out !== v) n.nodeValue = out;
+  }
+  function walk(root, fn) {
+    if (root.nodeType === 3) { fn(root); return; }
+    var w = document.createTreeWalker(root, NodeFilter.SHOW_TEXT), n;
+    while ((n = w.nextNode())) fn(n);
+  }
+  function restore(n) {
+    var rec = store.get(n);
+    if (rec && n.nodeValue === rec.out) n.nodeValue = rec.orig;
+    store.delete(n);
+  }
+  function refreshAll() { walk(body, restore); walk(body, apply); }   // after a Gojo/Sukuna switch, mode-aware rules must re-run
+
+  var lastSk = sk();
+  var mo = new MutationObserver(function (list) {
+    if (sk() !== lastSk) { lastSk = sk(); hearts(); refreshAll(); return; }
+    list.forEach(function (m) {
+      if (m.type === 'characterData') apply(m.target);
+      else m.addedNodes.forEach(function (n) { if (n.nodeType === 3 || n.nodeType === 1) walk(n, apply); });
+    });
+  });
+  var bo = new MutationObserver(function () { if (body.classList.contains('kindness') && sk() !== lastSk) { lastSk = sk(); hearts(); refreshAll(); } });
+
+  function hearts() {
+    if (reduce) return;
+    for (var i = 0; i < 14; i++) {
+      var h = document.createElement('span');
+      h.className = 'k-heart';
+      h.textContent = FLOWERS[i % FLOWERS.length];
+      h.style.cssText = 'left:' + (innerWidth / 2 + rand(-120, 120)) + 'px;top:' + (innerHeight * .6 + rand(-40, 40)) + 'px;--dx:' + rand(-90, 90) + 'px;animation-delay:' + rand(0, .4) + 's';
+      h.addEventListener('animationend', function () { this.remove(); });
+      body.appendChild(h);
+    }
+  }
+
+  var rise = document.querySelector('#kind-root .rise');
+  for (var i = 0; i < 16; i++) {
+    var s = document.createElement('span');
+    s.textContent = FLOWERS[i % FLOWERS.length];
+    s.style.cssText = 'left:' + rand(0, 96) + '%;font-size:' + rand(18, 32) + 'px;animation-duration:' + rand(12, 22) + 's;animation-delay:-' + rand(0, 20) + 's;--sx:' + rand(-50, 50) + 'px;--r:' + rand(-30, 30) + 'deg';
+    rise.appendChild(s);
+  }
+
+  function setKind(on, save) {
+    body.classList.toggle('kindness', on);
+    toggle.textContent = '🌸 Kindness: ' + (on ? 'ON' : 'OFF');
+    toggle.setAttribute('aria-pressed', on);
+    var finger = document.getElementById('sukuna-finger');
+    if (finger) finger.title = on ? 'Sukuna\'s Hug Button' : 'Sukuna\'s Finger';
+    if (on) {
+      lastSk = sk();
+      refreshAll();
+      mo.observe(body, { childList: true, subtree: true, characterData: true });
+      bo.observe(body, { attributes: true, attributeFilter: ['class'] });
+    } else {
+      mo.disconnect(); bo.disconnect();
+      walk(body, restore);
+      greet.hidden = true;
+    }
+    if (save) { try { localStorage.setItem(KEY, on ? 'on' : 'off'); } catch (e) {} }
+  }
+
+  var saved = null;
+  try { saved = localStorage.getItem(KEY); } catch (e) {}
+  var startOn = saved !== 'off';
+  // React renders after this script runs; the observer started by setKind() rewrites its text as it appears
+  setKind(startOn, false);
+  if (startOn) {
+    document.getElementById('kind-greet-sub').textContent = SUBS[Math.floor(Math.random() * SUBS.length)];
+    greet.hidden = false;
+  }
+  toggle.addEventListener('click', function () { setKind(!body.classList.contains('kindness'), true); });
+  function closeGreet() { if (!greet.hidden) { greet.hidden = true; hearts(); } }
+  document.getElementById('kind-greet-ok').addEventListener('click', closeGreet);
+  document.addEventListener('keydown', function (e) { if (e.key === 'Escape') closeGreet(); });
+})();
+// KINDNESS:END
 </script>
 </body>
 </html>
