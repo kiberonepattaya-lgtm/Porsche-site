@@ -199,11 +199,101 @@
     .swirl-a, .swirl-b, .glow-card::before, .iris-spin, .scan::after { animation: none; }
     .glow-wrap, html { transition: none; scroll-behavior: auto; }
   }
+  /* PARTY:START */
+  /* Party mode: everything below is scoped to body.party (or #party-*) and can be deleted as one block */
+  #party-root { display: none; position: fixed; inset: 0; z-index: 4; pointer-events: none; overflow: hidden; }
+  body.party #party-root, body.party #party-ball, body.party #party-confetti { display: block; }
+  #party-ball { display: none; position: fixed; top: 0; left: 50%; z-index: 35; pointer-events: none; transform-origin: 50% 0; animation: pBallSwing 5s ease-in-out infinite alternate; }
+  #party-ball .line { display: block; width: 2px; height: 46px; margin: 0 auto; background: #ddd; }
+  #party-ball .orb { display: block; width: 64px; height: 64px; margin-left: -31px; border-radius: 50%;
+    background:
+      radial-gradient(circle at 32% 28%, #fff 0 6%, transparent 22%),
+      repeating-linear-gradient(90deg, rgba(0,0,0,.35) 0 2px, transparent 2px 10px),
+      repeating-linear-gradient(0deg, rgba(0,0,0,.35) 0 2px, transparent 2px 10px),
+      linear-gradient(135deg, #fff, #9fe8ff 30%, #ff9bd8 55%, #ffe36b 80%, #b69bff);
+    background-size: auto, 20px 20px, 20px 20px, auto; box-shadow: 0 0 28px 6px rgba(255,255,255,.7);
+    animation: pBallSpin 2.4s linear infinite; }
+  @keyframes pBallSpin { to { background-position: 0 0, 20px 0, 0 20px, 0 0; } }
+  @keyframes pBallSwing { from { transform: rotate(-4deg); } to { transform: rotate(4deg); } }
+  body.party, body.party.sukuna-mode {
+    background: linear-gradient(120deg, #ff5fa2, #ff9a3c, #ffe14d, #3de8ff, #a56bff, #ff5fa2);
+    background-size: 400% 400%; animation: pGradient 24s ease infinite;
+  }
+  @keyframes pGradient { 0% { background-position: 0% 50%; } 50% { background-position: 100% 50%; } 100% { background-position: 0% 50%; } }
+  /* swap the dark void layers out so the bright background shows; soft panels keep text readable */
+  body.party .bg-fixed, body.party .swirl, body.party .vignette, body.party canvas.fixed.inset-0 { display: none !important; }
+  body.party main section, body.party footer { background: rgba(14,4,44,.62); border-radius: 22px; backdrop-filter: blur(3px); -webkit-backdrop-filter: blur(3px); }
+  body.party main section { margin-top: 14px; margin-bottom: 14px; }
+  body.party header { background: rgba(14,4,44,.85); }
+  body.party h1, body.party h2, body.party header a[href="#top"] { animation: pRainbow 6s linear infinite; }
+  @keyframes pRainbow { 0% { color: #ff5f5f; } 17% { color: #ffb347; } 33% { color: #ffe14d; } 50% { color: #5dff9a; } 67% { color: #3de8ff; } 83% { color: #c58bff; } 100% { color: #ff5f5f; } }
+  body.party h1::before { content: "🎉 "; } body.party h1::after { content: " 🥳"; }
+  body.party h2::before { content: "🎊 "; } body.party h2::after { content: " ✨"; }
+  body.party header a[href="#top"]::before { content: "🪩 "; } body.party header a[href="#top"]::after { content: " 🎶"; }
+  #party-root .p-beams i { position: absolute; top: 0; width: 22vw; min-width: 150px; height: 100vh; transform-origin: 50% 0; opacity: .4;
+    clip-path: polygon(46% 0, 54% 0, 100% 100%, 0 100%); animation: pSweep 5s ease-in-out infinite alternate; }
+  #party-root .p-beams i:nth-child(1) { left: 6%;  background: linear-gradient(#ff5fa2, transparent 85%); }
+  #party-root .p-beams i:nth-child(2) { left: 30%; background: linear-gradient(#3de8ff, transparent 85%); animation-delay: -1.7s; animation-duration: 6s; }
+  #party-root .p-beams i:nth-child(3) { left: 56%; background: linear-gradient(#ffe14d, transparent 85%); animation-delay: -3.1s; }
+  #party-root .p-beams i:nth-child(4) { left: 80%; background: linear-gradient(#a56bff, transparent 85%); animation-delay: -0.6s; animation-duration: 7s; }
+  @keyframes pSweep { from { transform: rotate(-28deg); } to { transform: rotate(28deg); } }
+  #party-root .p-rain span { position: absolute; top: -50px; will-change: transform; animation: pFall linear infinite; }
+  @keyframes pFall { to { transform: translate3d(var(--sx, 30px), 115vh, 0) rotate(360deg); } }
+  #party-root .p-balloons span { position: absolute; bottom: 22px; font-size: 2.6rem; animation: pBounce 2.2s ease-in-out infinite alternate; }
+  @keyframes pBounce { from { transform: translateY(0) rotate(-6deg); } to { transform: translateY(-90px) rotate(6deg); } }
+  #party-root .p-floor { position: absolute; left: 0; right: 0; bottom: 0; height: 14px;
+    background: repeating-linear-gradient(90deg, #ff3d9a 0 12.5%, #ffb300 12.5% 25%, #ffe14d 25% 37.5%, #2ee86b 37.5% 50%, #25d9ff 50% 62.5%, #5b6bff 62.5% 75%, #b44bff 75% 87.5%, #ff5f5f 87.5% 100%);
+    background-size: 200px 100%; animation: pFloor .9s steps(2) infinite, pHue 4s linear infinite; }
+  @keyframes pFloor { 0% { background-position: 0 0; } 100% { background-position: 25px 0; } }
+  @keyframes pHue { to { filter: hue-rotate(360deg); } }
+  .p-conf { position: fixed; z-index: 9400; width: 9px; height: 14px; pointer-events: none; animation: pBurst 1.5s cubic-bezier(.15,.7,.4,1) forwards; }
+  @keyframes pBurst { 0% { transform: translate(0,0) rotate(0); opacity: 1; } 100% { transform: translate(var(--dx), calc(var(--dy) + 260px)) rotate(var(--rot)); opacity: 0; } }
+  .p-spark { position: fixed; z-index: 9400; pointer-events: none; font-size: 16px; animation: pSpark .8s ease-out forwards; }
+  @keyframes pSpark { to { transform: translateY(26px) scale(.2) rotate(120deg); opacity: 0; } }
+  #party-greet { position: fixed; inset: 0; z-index: 9500; display: flex; align-items: center; justify-content: center; padding: 20px; background: rgba(20,0,40,.6); }
+  #party-greet[hidden] { display: none; }
+  #party-greet .card { max-width: 30rem; text-align: center; padding: 32px 26px; border-radius: 24px; color: #fff;
+    background: linear-gradient(160deg, rgba(40,10,90,.95), rgba(120,20,110,.92)); border: 3px solid #ffe14d; box-shadow: 0 0 60px rgba(255,95,162,.7); animation: pPop .5s cubic-bezier(.2,1.6,.4,1) both; }
+  #party-greet h2 { font-size: 1.9rem; font-weight: 900; line-height: 1.2; animation: pRainbow 4s linear infinite; }
+  #party-greet h2::before, #party-greet h2::after { content: none; }
+  #party-greet p { margin-top: 12px; font-size: 1.1rem; }
+  @keyframes pPop { from { transform: scale(.3); opacity: 0; } to { transform: scale(1); opacity: 1; } }
+  #party-greet button, #party-toggle, #party-confetti { cursor: pointer; font-weight: 700; border-radius: 999px !important; border: 2px solid #fff !important; clip-path: none !important; color: #fff; background: linear-gradient(90deg, #ff3d9a, #ff9a3c); }
+  #party-greet button { margin-top: 20px; padding: 10px 26px; font-size: 1.05rem; }
+  #party-toggle, #party-confetti { position: fixed; bottom: 26px; z-index: 9000; padding: 8px 14px; font-size: .85rem; box-shadow: 0 2px 14px rgba(0,0,0,.5); }
+  #party-toggle { right: 14px; }
+  #party-confetti { display: none; left: 14px; }
+  @media (prefers-reduced-motion: reduce) {
+    body.party, body.party.sukuna-mode { animation: none; }
+    body.party h1, body.party h2, body.party header a[href="#top"], #party-greet h2,
+    #party-ball, #party-ball .orb, #party-root .p-beams i, #party-root .p-rain span, #party-root .p-balloons span, #party-root .p-floor, #party-greet .card { animation: none; }
+    #party-root .p-rain { display: none; }
+  }
+  /* PARTY:END */
 </style>
 </head>
 <body class="bg-void text-white font-body antialiased overflow-x-hidden">
 <div id="root"></div>
 <div id="sk-vignette" aria-hidden="true"></div>
+
+<!-- PARTY:START -->
+<div id="party-root" aria-hidden="true">
+  <div class="p-beams"><i></i><i></i><i></i><i></i></div>
+  <div class="p-rain"></div>
+  <div class="p-balloons"><span style="left:3%">🎈</span><span style="left:18%;animation-delay:-.7s">🎈</span><span style="right:18%;animation-delay:-1.3s">🎈</span><span style="right:3%;animation-delay:-.4s">🎈</span></div>
+  <div class="p-floor"></div>
+</div>
+<div id="party-ball" aria-hidden="true"><span class="line"></span><span class="orb"></span></div>
+<div id="party-greet" role="dialog" aria-modal="true" aria-labelledby="party-greet-title" hidden>
+  <div class="card">
+    <h2 id="party-greet-title">🥳 IT'S PARTY TIME! 🎉</h2>
+    <p id="party-greet-sub"></p>
+    <button type="button" id="party-greet-ok">Let's dance 🕺</button>
+  </div>
+</div>
+<button type="button" id="party-confetti">🎉 Confetti!</button>
+<button type="button" id="party-toggle" aria-pressed="true">🪩 Party: ON</button>
+<!-- PARTY:END -->
 
 <script crossorigin src="https://cdnjs.cloudflare.com/ajax/libs/react/18.3.1/umd/react.production.min.js"></script>
 <script crossorigin src="https://cdnjs.cloudflare.com/ajax/libs/react-dom/18.3.1/umd/react-dom.production.min.js"></script>
@@ -1605,6 +1695,84 @@ function App() {
   );
 }
 ReactDOM.createRoot(document.getElementById('root')).render(<App />);
+</script>
+<script>
+// PARTY:START
+(function () {
+  var KEY = 'party-mode';
+  var EMOJI = ['🎉', '🎊', '🥳', '🪩', '🎈', '🎶', '✨', '🍾'];
+  var SUBS = [
+    'Domain Expansion: Dance Floor. No escape.',
+    'Even the Six Eyes can\'t resist this beat.',
+    'Sukuna says he\'s "not dancing". He is dancing.',
+    'Infinity is great, but have you tried confetti?',
+    'Throughout heaven and earth, only this party is honored.'
+  ];
+  var COLORS = ['#ff3d9a', '#ff9a3c', '#ffe14d', '#2ee86b', '#25d9ff', '#b44bff'];
+  var reduce = window.matchMedia && matchMedia('(prefers-reduced-motion: reduce)').matches;
+  var body = document.body;
+  var toggle = document.getElementById('party-toggle');
+  var greet = document.getElementById('party-greet');
+  var rand = function (a, b) { return a + Math.random() * (b - a); };
+
+  var rain = document.querySelector('#party-root .p-rain');
+  for (var i = 0; i < 18; i++) {
+    var s = document.createElement('span');
+    s.textContent = EMOJI[i % EMOJI.length];
+    s.style.cssText = 'left:' + rand(0, 96) + '%;font-size:' + rand(18, 34) + 'px;animation-duration:' + rand(8, 15) + 's;animation-delay:-' + rand(0, 15) + 's;--sx:' + rand(-60, 60) + 'px';
+    rain.appendChild(s);
+  }
+
+  function burst(x, y) {
+    if (reduce) return;
+    for (var i = 0; i < 70; i++) {
+      var c = document.createElement('i');
+      c.className = 'p-conf';
+      c.style.cssText = 'left:' + x + 'px;top:' + y + 'px;background:' + COLORS[i % COLORS.length] + ';--dx:' + rand(-320, 320) + 'px;--dy:' + rand(-340, -40) + 'px;--rot:' + rand(-720, 720) + 'deg';
+      c.addEventListener('animationend', function () { this.remove(); });
+      body.appendChild(c);
+    }
+  }
+
+  function setParty(on, save) {
+    body.classList.toggle('party', on);
+    toggle.textContent = '🪩 Party: ' + (on ? 'ON' : 'OFF');
+    toggle.setAttribute('aria-pressed', on);
+    if (!on) greet.hidden = true;
+    if (save) { try { localStorage.setItem(KEY, on ? 'on' : 'off'); } catch (e) {} }
+  }
+  var saved = null;
+  try { saved = localStorage.getItem(KEY); } catch (e) {}
+  setParty(saved !== 'off', false);
+
+  toggle.addEventListener('click', function () { setParty(!body.classList.contains('party'), true); });
+  var conf = document.getElementById('party-confetti');
+  conf.addEventListener('click', function () { var r = conf.getBoundingClientRect(); burst(r.left + r.width / 2, r.top); });
+
+  function closeGreet() { if (greet.hidden) return; greet.hidden = true; burst(innerWidth / 2, innerHeight / 2); }
+  document.getElementById('party-greet-ok').addEventListener('click', closeGreet);
+  document.addEventListener('keydown', function (e) { if (e.key === 'Escape') closeGreet(); });
+  if (body.classList.contains('party')) {
+    document.getElementById('party-greet-sub').textContent = SUBS[Math.floor(Math.random() * SUBS.length)];
+    greet.hidden = false;
+  }
+
+  var last = 0;
+  document.addEventListener('mousemove', function (e) {
+    if (reduce || !body.classList.contains('party')) return;
+    var now = Date.now();
+    if (now - last < 45) return;
+    last = now;
+    var sp = document.createElement('span');
+    sp.className = 'p-spark';
+    sp.textContent = '✨';
+    sp.style.left = e.clientX + 'px';
+    sp.style.top = e.clientY + 'px';
+    sp.addEventListener('animationend', function () { this.remove(); });
+    body.appendChild(sp);
+  });
+})();
+// PARTY:END
 </script>
 </body>
 </html>
