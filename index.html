@@ -33,6 +33,9 @@
 <!-- KINDNESS:START -->
 <link href="https://fonts.googleapis.com/css2?family=Fredoka:wght@500;600;700&family=Nunito:wght@500;700;800&display=swap" rel="stylesheet">
 <!-- KINDNESS:END -->
+<!-- BLUELOCK:START -->
+<link href="https://fonts.googleapis.com/css2?family=Teko:wght@500;600;700&display=swap" rel="stylesheet">
+<!-- BLUELOCK:END -->
 <style>
   /* ── theme variables: Gojo defaults, Sukuna overrides (RGB triplets so Tailwind /opacity works) ── */
   :root {
@@ -368,6 +371,94 @@
     #kind-root .rise { display: none; }
   }
   /* KINDNESS:END */
+  /* BLUELOCK:START */
+  /* Blue Lock: scoped to body.bluelock (and #bl-*); the :not(.kindness) parts step aside so kindness' pastel look still wins when both are on.
+     Isagi = the Gojo slot (electric blue), Kaiser = the sukuna-mode slot (royal purple + gold). */
+  body.bluelock:not(.kindness) {
+    --c-bg: #02060f; --c-text: 236 246 255; --c-accent: 0 170 255; --c-accent2: 70 120 255; --c-hollow: 110 215 255; --c-danger: 255 200 60;
+    --font-display: "Teko", "Rajdhani", "Segoe UI", sans-serif; --font-body: "Rajdhani", "Segoe UI", sans-serif;
+    --card-a: rgba(2,8,26,.94); --card-b: rgba(4,22,64,.92);
+    --bg-1: rgba(0,90,200,.35); --bg-2: rgba(0,50,160,.3); --bg-3: rgba(0,10,40,.9);
+  }
+  body.bluelock.sukuna-mode:not(.kindness) {
+    --c-bg: #080314; --c-text: 246 240 255; --c-accent: 255 200 60; --c-accent2: 170 90 255; --c-hollow: 205 155 255; --c-danger: 255 200 60;
+    --card-a: rgba(10,3,28,.95); --card-b: rgba(36,10,76,.92);
+    --bg-1: rgba(110,40,210,.35); --bg-2: rgba(70,20,150,.3); --bg-3: rgba(14,4,40,.9);
+  }
+  body.bluelock .swirl, body.bluelock canvas.fixed.inset-0, body.bluelock #party-toggle, body.bluelock #party-confetti, body.bluelock #party-greet, body.bluelock #party-root, body.bluelock #party-ball { display: none !important; }
+  body.bluelock #kind-greet { display: none !important; }
+  body.bluelock #kind-toggle { right: 172px; }
+  body.bluelock:not(.kindness) .vignette { background: radial-gradient(ellipse at center, transparent 35%, rgba(0,4,24,.8) 100%); }
+  body.bluelock.sukuna-mode:not(.kindness) .vignette { background: radial-gradient(ellipse at center, transparent 35%, rgba(16,0,40,.85) 100%); }
+  /* Kaiser: scoreboard shapes instead of blade cuts */
+  body.bluelock.sukuna-mode:not(.kindness) .glow-card { clip-path: polygon(0 0, calc(100% - 16px) 0, 100% 16px, 100% 100%, 16px 100%, 0 calc(100% - 16px)); border-radius: 0; }
+  body.bluelock.sukuna-mode:not(.kindness) button:not(#sukuna-finger), body.bluelock.sukuna-mode:not(.kindness) [role="tab"] {
+    border-style: solid; clip-path: polygon(0 0, 100% 0, 100% calc(100% - 9px), calc(100% - 9px) 100%, 0 100%); }
+  body.bluelock:not(.kindness) h1, body.bluelock:not(.kindness) h2, body.bluelock:not(.kindness) h3 { font-weight: 700; letter-spacing: .06em; }
+  body.bluelock:not(.kindness) h1::before { content: "⚽ "; } body.bluelock:not(.kindness) h1::after { content: " 🥅"; }
+  body.bluelock:not(.kindness) h2::before { content: "▶ "; } body.bluelock:not(.kindness) h2::after { content: ""; }
+  /* pictures: the dark Isagi shot and the landscape Kaiser shot need their own framing */
+  body.bluelock img[src="isagi.jpg"] { object-position: 50% 12% !important; }
+  body.bluelock img[src="kaiser.jpg"] { object-position: 42% 45% !important; }
+  body.bluelock img.mix-blend-multiply[src$=".jpg"] { mix-blend-mode: normal !important; object-fit: cover !important; }
+  body.bluelock #sukuna-finger > span { display: none; }
+  body.bluelock #sukuna-finger::before { content: "⚽"; }
+  body.bluelock.kindness #top .glow-wrap::after { content: "⚽😈"; }
+  body.bluelock.kindness.sukuna-mode #top .glow-wrap::after { content: "👑😇🌸"; }
+  body.bluelock:not(.kindness) #top .glow-wrap::after { content: "⚽"; position: absolute; top: -22px; right: 6px; font-size: 2.2rem; animation: kBob 3s ease-in-out infinite alternate; }
+  body.bluelock:not(.kindness) #top .glow-wrap { position: relative; }
+  body.bluelock.sukuna-mode:not(.kindness) canvas.w-full { filter: hue-rotate(255deg); }
+  /* pitch lines, floodlights and the stencil watermark */
+  #bl-pitch { display: none; position: fixed; inset: 0; z-index: 1; pointer-events: none; overflow: hidden; }
+  body.bluelock:not(.kindness) #bl-pitch { display: block; }
+  #bl-pitch .grid { position: absolute; inset: 0;
+    background: repeating-linear-gradient(0deg, rgb(var(--c-accent) / .05) 0 1px, transparent 1px 48px), repeating-linear-gradient(90deg, rgb(var(--c-accent) / .05) 0 1px, transparent 1px 48px); }
+  #bl-pitch .lines { position: absolute; inset: 6% 4%; border: 2px solid rgb(var(--c-accent) / .28); }
+  #bl-pitch .lines::before { content: ""; position: absolute; left: 50%; top: 0; bottom: 0; width: 2px; background: rgb(var(--c-accent) / .28); }
+  #bl-pitch .lines::after { content: ""; position: absolute; left: 50%; top: 50%; width: min(24vw, 24vh); aspect-ratio: 1; transform: translate(-50%, -50%); border: 2px solid rgb(var(--c-accent) / .28); border-radius: 50%; }
+  #bl-pitch .mark { position: absolute; left: 50%; top: 50%; transform: translate(-50%, -50%); font-family: var(--font-display); font-weight: 700; font-size: min(22vw, 320px); letter-spacing: .08em; white-space: nowrap; color: rgb(var(--c-accent) / .07); }
+  #bl-pitch .beams i { position: absolute; top: -5%; width: 30vw; height: 110vh; transform-origin: 50% 0; opacity: .16; clip-path: polygon(45% 0, 55% 0, 100% 100%, 0 100%);
+    background: linear-gradient(rgb(var(--c-accent2)), transparent 85%); animation: blSweep 9s ease-in-out infinite alternate; }
+  #bl-pitch .beams i:nth-child(1) { left: 4%; } #bl-pitch .beams i:nth-child(2) { left: 36%; animation-delay: -3s; } #bl-pitch .beams i:nth-child(3) { left: 68%; animation-delay: -6s; }
+  @keyframes blSweep { from { transform: rotate(-9deg); } to { transform: rotate(9deg); } }
+  #bl-root { display: none; position: fixed; inset: 0; z-index: 4; pointer-events: none; overflow: hidden; }
+  body.bluelock #bl-root { display: block; }
+  #bl-root .rise span { position: absolute; bottom: -50px; will-change: transform; animation: blRise linear infinite; }
+  @keyframes blRise { to { transform: translate3d(var(--sx, 20px), -115vh, 0) rotate(var(--r, 180deg)); } }
+  /* gentle replacements for the slash / skull / blood-red effects */
+  body.bluelock:not(.kindness) #sk-vignette { background: radial-gradient(circle, transparent 20%, rgb(var(--c-accent2) / .55) 75%, rgb(var(--c-bg)) 100%); }
+  body.bluelock:not(.kindness) div[style*="slashFade"] svg { display: none; }
+  body.bluelock:not(.kindness) div[style*="slashFade"] > div[style*="flashOut"] { background: rgb(var(--c-accent2) / .3) !important; }
+  body.bluelock:not(.kindness) div[style*="slashFade"] > div[style*="cutLine"] { background: linear-gradient(90deg, transparent, rgb(var(--c-accent2)), #fff, rgb(var(--c-accent)), transparent) !important; box-shadow: 0 0 24px rgb(var(--c-accent2) / .8) !important; }
+  body.bluelock:not(.kindness) div[style*="slashFade"]::after { content: "⚽ 🥅 ⚽"; position: absolute; left: 0; right: 0; top: 30%; text-align: center; font-size: 3rem; animation: blPop 1.2s ease-out both; }
+  @keyframes blPop { from { transform: scale(.4); opacity: 0; } 40% { opacity: 1; } to { transform: scale(1.1); opacity: 0; } }
+  body.bluelock:not(.kindness) div[style*="shrineLife"] { background: radial-gradient(ellipse at 50% 30%, rgb(var(--c-accent2) / .55), rgb(var(--c-bg)) 75%); }
+  body.bluelock:not(.kindness) div[style*="shrineLife"] svg { display: none; }
+  body.bluelock:not(.kindness) div[style*="shrineLife"] [class*="text-"] { color: rgb(var(--c-accent)) !important; text-shadow: 0 0 24px rgb(var(--c-accent2)) !important; }
+  body.bluelock:not(.kindness) div[style*="shrineLife"]::before { content: "🏟️ 🏆 🥅 ⚽ 🏟️"; position: absolute; left: 0; right: 0; bottom: 12%; text-align: center; font-size: clamp(2rem, 7vw, 5rem); }
+  body.bluelock:not(.kindness) .fuga-dark { background: radial-gradient(circle at 50% 50%, rgb(var(--c-accent2) / .55), rgb(var(--c-bg)) 92%) !important; }
+  body.bluelock:not(.kindness) .fuga-text { color: rgb(var(--c-accent)) !important; text-shadow: 0 0 20px rgb(var(--c-accent2)), 0 0 60px rgb(var(--c-accent2)) !important; }
+  body.bluelock:not(.kindness) .fuga-text small { color: #fff !important; text-shadow: 0 0 12px rgb(var(--c-accent2)) !important; }
+  body.bluelock:not(.kindness) .fuga-arrow { background: linear-gradient(90deg, rgb(var(--c-accent2) / 0), rgb(var(--c-accent2) / .85) 30%, rgb(var(--c-accent)) 75%, #fff) !important; filter: drop-shadow(0 0 18px rgb(var(--c-accent2))) !important; }
+  body.bluelock:not(.kindness) .fuga-storm { background: radial-gradient(circle at 72% 62%, #fff 0, rgb(var(--c-accent)) 14%, rgb(var(--c-accent2)) 40%, rgb(var(--c-bg)) 90%) !important; }
+  body.bluelock:not(.kindness) .fuga-storm::after { background-image: radial-gradient(circle, #fff 0 2px, transparent 3px), radial-gradient(circle, rgb(var(--c-accent)) 0 3px, transparent 4px) !important; }
+  #bl-greet { position: fixed; inset: 0; z-index: 9500; display: flex; align-items: center; justify-content: center; padding: 20px; background: rgba(0,6,24,.8); }
+  #bl-greet[hidden] { display: none; }
+  #bl-greet .card { max-width: 30rem; text-align: center; padding: 32px 26px; color: #fff; background: linear-gradient(160deg, #02081c, #06245c); border: 3px solid #00aaff; box-shadow: 0 0 50px rgba(0,170,255,.6);
+    clip-path: polygon(0 0, calc(100% - 22px) 0, 100% 22px, 100% 100%, 22px 100%, 0 calc(100% - 22px)); animation: blCard .5s cubic-bezier(.2,1.6,.4,1) both; }
+  @keyframes blCard { from { transform: scale(.3); opacity: 0; } to { transform: scale(1); opacity: 1; } }
+  #bl-greet h2 { font-family: "Teko", "Rajdhani", sans-serif; font-size: 2.4rem; font-weight: 700; letter-spacing: .08em; line-height: 1.1; color: #7fd4ff; text-shadow: 0 0 20px #00aaff; }
+  #bl-greet h2::before, #bl-greet h2::after { content: none !important; }
+  #bl-greet p { margin-top: 12px; font-size: 1.15rem; }
+  #bl-greet button, #bl-toggle { cursor: pointer; font-family: "Teko", "Rajdhani", sans-serif; font-weight: 600; letter-spacing: .08em; color: #02060f; background: linear-gradient(90deg, #00aaff, #7fd4ff);
+    border: 0 !important; border-radius: 0 !important; clip-path: polygon(0 0, 100% 0, 100% calc(100% - 9px), calc(100% - 9px) 100%, 0 100%) !important; box-shadow: none; }
+  #bl-greet button { margin-top: 20px; padding: 8px 28px; font-size: 1.3rem; }
+  #bl-toggle { position: fixed; bottom: 26px; right: 14px; z-index: 9000; padding: 6px 16px; font-size: 1.05rem; }
+  @media (prefers-reduced-motion: reduce) {
+    #bl-pitch .beams i, #bl-greet .card, body.bluelock:not(.kindness) #top .glow-wrap::after, #bl-root .rise span { animation: none !important; }
+    #bl-root .rise { display: none; }
+  }
+  /* BLUELOCK:END */
 </style>
 </head>
 <body class="bg-void text-white font-body antialiased overflow-x-hidden">
@@ -413,6 +504,23 @@
 </div>
 <button type="button" id="kind-toggle" aria-pressed="true">🌸 Kindness: ON</button>
 <!-- KINDNESS:END -->
+
+<!-- BLUELOCK:START -->
+<script>window.BLUE_LOCK = true;</script>
+<div id="bl-pitch" aria-hidden="true">
+  <div class="grid"></div><div class="lines"></div><div class="mark">BLUE LOCK</div>
+  <div class="beams"><i></i><i></i><i></i></div>
+</div>
+<div id="bl-root" aria-hidden="true"><div class="rise"></div></div>
+<div id="bl-greet" role="dialog" aria-modal="true" aria-labelledby="bl-greet-title" hidden>
+  <div class="card">
+    <h2 id="bl-greet-title">⚽ WELCOME TO BLUE LOCK ⚽</h2>
+    <p id="bl-greet-sub"></p>
+    <button type="button" id="bl-greet-ok">KICK OFF</button>
+  </div>
+</div>
+<button type="button" id="bl-toggle" aria-pressed="true">⚽ Blue Lock: ON</button>
+<!-- BLUELOCK:END -->
 
 <script crossorigin src="https://cdnjs.cloudflare.com/ajax/libs/react/18.3.1/umd/react.production.min.js"></script>
 <script crossorigin src="https://cdnjs.cloudflare.com/ajax/libs/react-dom/18.3.1/umd/react-dom.production.min.js"></script>
@@ -2120,8 +2228,11 @@ ReactDOM.createRoot(document.getElementById('root')).render(<App />);
 
   function convert(s) {
     if (!s || !/\S/.test(s)) return s;
-    for (var i = 0; i < RULES.length; i++) {
-      var r = RULES[i];
+    // BLUELOCK:START
+    var rules = (window.BlueLockRules && window.BlueLockRules()) || (body.classList.contains('kindness') ? RULES : []);
+    // BLUELOCK:END
+    for (var i = 0; i < rules.length; i++) {
+      var r = rules[i];
       if (r[0].global) r[0].lastIndex = 0;
       if (!r[0].test(s)) continue;
       if (r[0].global) r[0].lastIndex = 0;
@@ -2132,7 +2243,7 @@ ReactDOM.createRoot(document.getElementById('root')).render(<App />);
   }
 
   var store = new WeakMap();          // text node -> { orig, out }
-  var SKIP = '#kind-root,#kind-greet,#kind-toggle,#party-root,#party-greet,#party-toggle,#party-confetti,script,style';
+  var SKIP = '#kind-root,#kind-greet,#kind-toggle,#party-root,#party-greet,#party-toggle,#party-confetti,#bl-pitch,#bl-root,#bl-greet,#bl-toggle,script,style';
   function skipped(n) { var p = n.parentNode; return !p || (p.closest && p.closest(SKIP)); }
   function apply(n) {
     if (skipped(n)) return;
@@ -2162,10 +2273,10 @@ ReactDOM.createRoot(document.getElementById('root')).render(<App />);
       else m.addedNodes.forEach(function (n) { if (n.nodeType === 3 || n.nodeType === 1) walk(n, apply); });
     });
   });
-  var bo = new MutationObserver(function () { if (body.classList.contains('kindness') && sk() !== lastSk) { lastSk = sk(); hearts(); refreshAll(); } });
+  var bo = new MutationObserver(function () { if ((body.classList.contains('kindness') || body.classList.contains('bluelock')) && sk() !== lastSk) { lastSk = sk(); hearts(); refreshAll(); } });
 
   function hearts() {
-    if (reduce) return;
+    if (reduce || !body.classList.contains('kindness')) return;   // BLUELOCK: no hearts in plain Blue Lock mode
     for (var i = 0; i < 14; i++) {
       var h = document.createElement('span');
       h.className = 'k-heart';
@@ -2189,23 +2300,37 @@ ReactDOM.createRoot(document.getElementById('root')).render(<App />);
     toggle.textContent = '🌸 Kindness: ' + (on ? 'ON' : 'OFF');
     toggle.setAttribute('aria-pressed', on);
     var finger = document.getElementById('sukuna-finger');
-    if (finger) finger.title = on ? 'Sukuna\'s Hug Button' : 'Sukuna\'s Finger';
+    if (finger && !body.classList.contains('bluelock')) finger.title = on ? 'Sukuna\'s Hug Button' : 'Sukuna\'s Finger';   // BLUELOCK: keeps its own title
     if (on) {
       lastSk = sk();
       refreshAll();
       mo.observe(body, { childList: true, subtree: true, characterData: true });
       bo.observe(body, { attributes: true, attributeFilter: ['class'] });
     } else {
-      mo.disconnect(); bo.disconnect();
-      walk(body, restore);
+      // BLUELOCK:START
+      if (body.classList.contains('bluelock')) refreshAll();   // Blue Lock still needs the engine; just switch rule sets
+      else {
+      // BLUELOCK:END
+        mo.disconnect(); bo.disconnect();
+        walk(body, restore);
+      // BLUELOCK:START
+      }
+      // BLUELOCK:END
       greet.hidden = true;
     }
     if (save) { try { localStorage.setItem(KEY, on ? 'on' : 'off'); } catch (e) {} }
   }
 
+  // BLUELOCK:START
+  window.KindEngine = {   // lets the Blue Lock block drive the same text rewriter
+    refresh: refreshAll,
+    start: function () { lastSk = sk(); refreshAll(); mo.observe(body, { childList: true, subtree: true, characterData: true }); bo.observe(body, { attributes: true, attributeFilter: ['class'] }); },
+    stop: function () { mo.disconnect(); bo.disconnect(); walk(body, restore); }
+  };
+  // BLUELOCK:END
   var saved = null;
   try { saved = localStorage.getItem(KEY); } catch (e) {}
-  var startOn = saved !== 'off';
+  var startOn = window.BLUE_LOCK ? saved === 'on' : saved !== 'off';   // BLUELOCK: with Blue Lock installed, kindness is opt-in
   // React renders after this script runs; the observer started by setKind() rewrites its text as it appears
   setKind(startOn, false);
   if (startOn) {
@@ -2218,6 +2343,358 @@ ReactDOM.createRoot(document.getElementById('root')).render(<App />);
   document.addEventListener('keydown', function (e) { if (e.key === 'Escape') closeGreet(); });
 })();
 // KINDNESS:END
+</script>
+<script>
+// BLUELOCK:START
+// Blue Lock theme. Text is rewritten by the same engine as kindness (window.KindEngine), using BL_RULES, or BLK when kindness is also on.
+(function () {
+  var KEY = 'bluelock-mode';
+  var body = document.body;
+  var toggle = document.getElementById('bl-toggle');
+  var greet = document.getElementById('bl-greet');
+  var reduce = window.matchMedia && matchMedia('(prefers-reduced-motion: reduce)').matches;
+  var SUBS = [
+    'Do you want to be the best striker in the world?',
+    'Eat or be eaten.',
+    'Kaiser would like a word with the ball.',
+    'Isagi sees the whole pitch. Do you?',
+    'Only one striker walks out of Blue Lock.'
+  ];
+  var BALLS = ['⚽', '🥅', '🏆', '⚽', '🥇'];
+  var sk = function () { return body.classList.contains('sukuna-mode'); };
+  var rand = function (a, b) { return a + Math.random() * (b - a); };
+
+  // [pattern, replacement, stop]: same format as the kindness rules (rules run on each text node's ORIGINAL text)
+  var BL_RULES = [
+    // header and hero
+    [/^GOJO · CODEX$/, 'ISAGI · BLUE LOCK FILE', true],
+    [/^SUKUNA · CODEX$/, 'KAISER · EMPEROR FILE', true],
+    [/^Sukuna's Finger$/, 'Kaiser’s Ball', true],
+    [/^Digital Codex · File /, 'Blue Lock · File ', true],
+    [/^五条悟$/, '潔世一', true], [/^両面宿儺$/, 'ミヒャエル・カイザー', true],
+    [/^五条悟 · The Strongest$/, '潔世一 · Striker With Ego', true],
+    [/^両面宿儺 · King of Curses$/, 'ミヒャエル・カイザー · The Emperor', true],
+    [/^Satoru$/, 'Yoichi', true], [/^Gojo$/, 'Isagi', true], [/^Ryomen$/, 'Michael', true], [/^Sukuna$/, 'Kaiser', true],
+    [/^The Strongest$/, 'The Striker With Ego', true],
+    [/^King of Curses$/, 'The Emperor', true],
+    [/^Grade$/, 'Rank', true], [/^Special Grade$/, 'World-class', true],
+    [/^Hair$/, 'Position', true], [/^Stark white$/, 'Striker', true], [/^Pink$/, 'Striker', true],
+    [/^Irises$/, 'Weapon', true], [/^Electric blue$/, 'Direct Shot', true], [/^Crimson red$/, 'Kaiser Impact', true],
+    [/^Six Eyes \(Rikugan\)$/, 'Metavision', true],
+    [/The King of Curses\. Four arms[^]*?through /, 'The Emperor. A cold stare, a perfect touch and an ego the size of the stadium. Curving shots through ', true],
+    [/^, a Divine Flame arrow called $/, ', a thunderous finishing strike called ', true],
+    [/^, and a domain with no barrier — the $/, ', and a pitch that belongs to him alone — the ', true],
+    [/The strongest jujutsu sorcerer\. Absolute perception through the /, 'The hungriest striker in Blue Lock. Total awareness through ', true],
+    [/^, god-like control of space through $/, ', a feel for space on the pitch through ', true],
+    [/^, and a domain that shows its victim everything — and lets them do nothing\.$/, ', and a Flow State that shows him every pass, every gap — and every goal.', true],
+    // eyes section
+    [/^Malice Incarnate$/, 'Ego Incarnate', true],
+    [/^Passive Perception$/, 'Pitch Vision', true],
+    [/^Sukuna watches the world[^]*$/, 'Kaiser reads the whole pitch like a script — every defender, every gap and every pass is already mapped, and he treats every match as a stage built for him.', true],
+    [/^The Six Eyes let Gojo see[^]*$/, 'Metavision lets Isagi see the whole field at once. Nothing about the defenders, the passing lanes or the ball’s flight is hidden from him, and the awareness never stops running — it keeps him one step ahead of every play.', true],
+    [/^His perception feeds his ego[^]*$/, 'His vision feeds his ego: he sets the stage, then scores in the spotlight.', true],
+    [/^The same perception is what makes Infinity sustainable[^]*$/, 'The same awareness is how he finds the one free yard of space and turns it into a goal.', true],
+    [/^Cursed-energy output$/, 'Shot power', true],
+    [/^Overwhelming reserves[^]*$/, 'Pure power behind every strike — the Emperor never seems to tire.', true],
+    [/^Slash precision$/, 'Magic curve accuracy', true],
+    [/^Cleave adjusts to the toughness[^]*$/, 'Magic bends the ball around defenders to land exactly where he wants.', true],
+    [/^Combat instinct$/, 'Dribble control', true],
+    [/^A thousand years of battle[^]*$/, 'A dribble that reads the defender and answers before they move.', true],
+    [/^Technique versatility$/, 'Finishing range', true],
+    [/^Slashes, Divine Flame[^]*$/, 'Curved shots, Kaiser Impact and perfect passes, all used at will.', true],
+    [/^Cursed-energy resolution$/, 'Spatial awareness', true],
+    [/^Perceives cursed energy at an atomic level[^]*$/, 'Sees every player and every gap on the pitch in sharp detail.', true],
+    [/^Passive processing speed$/, 'Reaction speed', true],
+    [/^Continuous automatic computation of Infinity[^]*$/, 'Reads the next play before it happens, with no wasted movement.', true],
+    [/^Tracking$/, 'Ball tracking', true],
+    [/^Omnidirectional awareness[^]*$/, 'Always aware of where the ball and every defender are heading.', true],
+    [/^Technique efficiency$/, 'Shot efficiency', true],
+    [/^Reduces cursed-energy cost[^]*$/, 'Turns half a chance into a clean finish with fine control.', true],
+    // weapon tabs
+    [/^Infinity$/, 'Spatial Awareness', true], [/^Blue$/, 'Predator Instinct', true], [/^Red$/, 'Direct Shot', true], [/^Purple$/, 'Eat or Be Eaten', true],
+    [/^無下限 · Mukagen$/, '空間認識 · Spatial', true],
+    [/^蒼 · Cursed Technique Lapse$/, '本能 · Instinct', true], [/^赫 · Cursed Technique Reversal$/, '直 · Direct', true], [/^茈 · Hollow Technique$/, '喰 · Devour', true],
+    [/^捌 · Cleave$/, '魔法 · Magic', true], [/^解 · Dismantle$/, '突破 · Dribble', true], [/^竈 · Fuga$/, '皇帝 · Impact', true],
+    [/^Passive · Always On$/, 'Passive · Always Scanning', true],
+    [/^Attraction · Convergence$/, 'Instinct · Hunting the ball', true],
+    [/^Repulsion · Reversed Output$/, 'Shot · First time', true],
+    [/^Annihilation · Imaginary Mass$/, 'Finish · Eat or Be Eaten', true],
+    [/^Touch · Crisscross cuts$/, 'Touch · Curved shot', true],
+    [/^Ranged · Air slash$/, 'Run · Dribble', true],
+    [/^Divine Flame · “Open”$/, 'Finisher · “Impact”', true],
+    [/^Passive · Regeneration$/, 'Passive · Composure', true],
+    [/^The foundation of Limitless\.[^]*$/, 'The foundation of Isagi’s game. He reads the space between defenders and teammates and finds the gap nobody else sees. Every step puts him in a better position, so the ball always seems to arrive where he already is. Metavision makes the constant calculation possible.', true],
+    [/^Lapse: Blue amplifies[^]*$/, 'Predator Instinct pulls Isagi toward the ball before anyone else has moved. He arrives at the right place at the right moment, exactly when the chance appears.', true],
+    [/^Reversal: Red applies[^]*$/, 'Direct Shot takes the ball first time, with no trap and no extra touch. The result is a sharp strike that beats the keeper before they can react.', true],
+    [/^Hollow Purple fires Blue and Red together[^]*$/, 'Eat or Be Eaten is Isagi’s ego in action: read the play, steal the chance and finish before anyone else can. It is the pinnacle of his game — if he does not score, someone else will.', true],
+    [/^Zeno-style convergence[^]*$/, 'Reads gaps in the defence before they open', true],
+    [/^Automatically sustained by the Six Eyes$/, 'Automatically sustained by Metavision', true],
+    [/^Can be selectively lowered[^]*$/, 'Can be sharpened to track a single player', true],
+    [/^Attractive force from an amplified[^]*$/, 'An instinct for where the ball will land', true],
+    [/^Draws in targets and surrounding debris$/, 'Pulls him to the loose ball ahead of defenders', true],
+    [/^Output can be scaled and positioned freely$/, 'Position and timing adjust on the fly', true],
+    [/^Requires reverse cursed technique[^]*$/, 'First-time shooting with no touch', true],
+    [/^Repulsion — the mirror of Blue$/, 'The finishing partner of Predator Instinct', true],
+    [/^High-impact, concentrated blast$/, 'High-impact, concentrated shot', true],
+    [/^Fusion of Blue \(attract\) and Red \(repel\)$/, 'Fusion of Predator Instinct (hunt) and Direct Shot (strike)', true],
+    [/^Imaginary mass — erases matter[^]*$/, 'Awareness plus finishing instinct in one move', true],
+    [/^Peak offensive output of Limitless$/, 'Peak scoring output of Ego', true],
+    [/^Sukuna heals wounds mid-fight[^]*$/, 'Kaiser stays calm and composed in every match, shrugging off pressure that would shake any other striker. Where others panic, he simply keeps playing.', true],
+    [/^Positive cursed energy repairs the body$/, 'Calm confidence resets him after every miss', true],
+    [/^Recovers from wounds during battle$/, 'Bounces back mid-match', true],
+    [/^Lets him fight on through heavy damage$/, 'Lets him keep playing through heavy pressure', true],
+    [/^Cleave is a brutal mesh[^]*$/, 'Magic is a curling shot that bends around defenders and finds its mark. Kaiser shapes the ball’s flight with a perfect touch, and the curve seems impossible until it goes in.', true],
+    [/^Dismantle is an invisible, flying blade[^]*$/, 'Kaiser Dribble glides past defenders with effortless acceleration — just a shimmer of movement and the ball is gone, with royal style.', true],
+    [/^Fuga is a Divine Flame[^]*$/, 'Kaiser Impact is the Emperor’s signature strike. He winds up with a regal stance and fires a thunderous shot that ends in a stadium-shaking goal.', true],
+    [/^Overlapping cuts that adapt[^]*$/, 'A curve that adapts to the defenders in the way', true],
+    [/^Usually needs physical contact$/, 'Needs a perfect touch on the ball', true],
+    [/^Bursts into criss-crossing red-and-black cuts at once$/, 'Bends late and surprises the keeper', true],
+    [/^Invisible blade — only a ripple in the air$/, 'A shimmer of movement — then he is gone', true],
+    [/^Flies outward in fast, sweeping lines$/, 'Glides outward in long, sweeping lines', true],
+    [/^Slices clean through objects in a single cut$/, 'Cuts through a defence in a single run', true],
+    [/^Archer.s pose: a bowstring drawn from fire$/, 'An imposing, regal pose before the strike', true],
+    [/^Fire arrow at supersonic speed[^]*$/, 'A shot at full power, rocketing at goal', true],
+    [/^Ends in a colossal, apocalyptic firestorm$/, 'Ends in a stadium-shaking goal', true],
+    [/Blue \(attract\)/, 'Predator Instinct (hunt)'], [/Red \(repel\)/, 'Direct Shot (strike)'], [/Purple \(erase\)/, 'Eat or Be Eaten (finish)'],
+    [/\(shred\)/, '(curve)'], [/\(cut\)/, '(glide)'], [/\(open\)/, '(impact)'],
+    // domain section
+    [/^Domain Absolute State$/, 'Flow State', true],
+    [/^Paralysed$/, 'Outplayed', true], [/^Carved$/, 'Dazzled', true], [/^∞ copies$/, '∞ options', true], [/^Input$/, 'Passing lanes', true],
+    [/^None \(open\)$/, 'None (open pitch)', true],
+    [/^Sure-hit$/, 'Sure-goal', true],
+    [/^Slash$/, 'Strike', true],
+    [/^The sign is formed\. His cursed energy surges outward\.$/, 'He takes his stance. Confidence surges outward.', true],
+    [/^The Shrine rises: a temple of skulls and ribs[^]*$/, 'The Stadium rises: floodlights, banners and a roaring crowd, with no walls around it.', true],
+    [/^Cleave and Dismantle begin to rain on everything inside\.$/, 'Magic and Kaiser Dribble begin to rain on everything inside.', true],
+    [/^Every slash lands\. Everything in range is carved apart\.$/, 'Every shot lands. Every defender in range is left behind.', true],
+    [/^Hands form the sign\. Cursed energy surges outward\.$/, 'He takes a breath. Focus surges outward.', true],
+    [/^Innate Domain unfolds[^]*$/, 'Flow State opens up — the whole pitch laid out in his mind.', true],
+    [/^Infinite copies of information[^]*$/, 'Endless streams of passes, gaps and runs begin to pour in.', true],
+    [/^Effect locks onto the target\.[^]*$/, 'Everything locks together. He sees the whole play — and the defenders cannot react.', true],
+    [/^Infinite Void · 無量空処$/, 'Flow State · フロー', true],
+    [/^Malevolent Shrine · 伏魔御廚子$/, 'Emperor’s Stadium · 皇帝の舞台', true],
+    [/^Malevolent Shrine manifests a temple[^]*$/, 'Emperor’s Stadium raises a roaring arena of floodlights and banners. Unlike most set-pieces it has no walls, so it can spread across the entire pitch — and every Magic curve and Kaiser Dribble inside it is guaranteed to land.', true],
+    [/^Domain Expansion renders the inside[^]*$/, 'Flow State renders the whole pitch in Isagi’s mind. Every pass, gap and run that would otherwise be hidden from him is laid out at once, in endless variations, and he picks the one that scores.', true],
+    [/^Nothing inside survives untouched: the victim is $/, 'Nobody inside keeps up: the defenders are ', true],
+    [/^sliced apart from every direction at once$/, 'left behind from every direction at once', true],
+    [/^\. It is not calm — it is raw, wasteful and absolute\.$/, '. It is not subtle — it is loud, proud and absolutely royal.', true],
+    [/^The mind is overwhelmed, so the victim $/, 'The mind is wide open, so the player ', true],
+    [/^can see and feel everything, but cannot do anything$/, 'sees every option and still picks the best one', true],
+    [/^\. It is not violent — it is calm, total and inescapable\.$/, '. It is not frantic — it is calm, total and unstoppable.', true],
+    [/^Sure-hit slashes[^]*$/, 'Sure-hit shots — every one lands inside the stadium', true],
+    [/^No barrier: the domain is open[^]*$/, 'No walls: the stadium is open and can span the whole pitch', true],
+    [/^Countered only by domain-level defences[^]*$/, 'Countered only by a world-class defence or a stronger striker', true],
+    [/^Sure-hit effect — applied[^]*$/, 'Sure-goal setup — applied the instant Flow State opens', true],
+    [/^Cognitive paralysis[^]*$/, 'Total clarity: no hesitation, no wasted movement', true],
+    [/^Domain Expansion$/, function () { return sk() ? 'Open the Stadium' : 'Enter Flow State'; }, true],
+    [/^Expanding…$/, 'Playing…', true],
+    [/^Target carved\. Nothing remains\.$/, 'Defence dazzled. The net is shaking.', true],
+    [/^Target locked — sees everything\. Moves nothing\.$/, 'Defence frozen — the whole pitch is his.', true],
+    // duel (arenas)
+    [/^Boss encounter · Special Grade$/, 'Final Match · World-class', true],
+    [/^Satoru Gojo has not moved\. He does not need to\.$/, 'Yoichi Isagi is calm on the ball. He is reading the play.', true],
+    [/^Satoru Gojo stands before you\. Cut him down\.$/, 'Yoichi Isagi stands before you. Beat him to the ball.', true],
+    [/^Attack$/, 'Dribble', true], [/^Strike with everything physical$/, 'Take on the defender with everything you have', true],
+    [/^Cursed Energy Burst$/, 'Power Shot', true], [/^Release raw cursed energy$/, 'Unleash a full-power shot', true],
+    [/^Domain Counter$/, 'Defend', true], [/^Raise a Simple Domain[^]*$/, 'Set your stance to block the next attack', true],
+    [/^You use Attack\.$/, 'You use Dribble.', true], [/^You use Cursed Energy Burst\.$/, 'You use Power Shot.', true], [/^You use Domain Counter\.$/, 'You use Defend.', true],
+    [/\[Simple Domain raised\]/, '[Defensive stance]', true],
+    [/Gojo vanishes — Teleportation Strike!/, 'Isagi vanishes into space — Surprise Run!', true],
+    [/Sukuna lunges — a brutal strike!/, 'Kaiser strides in — a royal tackle!', true],
+    [/Lapse: Blue — space collapses toward a single point\./, 'Predator Instinct — the whole pitch narrows toward one point.', true],
+    [/Cleave — a mesh of cuts bursts across your body\./, 'Magic — a curling shot bends right past you.', true],
+    [/\[Spacial Disorientation\] — your actions are locked for 1 turn\./, '[Lost the Ball] — you cannot act for 1 turn.', true],
+    [/\[Shredded\] — your actions are locked for 1 turn\./, '[Outplayed] — you cannot act for 1 turn.', true],
+    [/Reversal: Red — everything is thrown away from him\./, 'Direct Shot — a first-time strike fires straight at goal.', true],
+    [/Gojo — Reversal: Red! Everything is thrown away from him\./, 'Isagi — Direct Shot! A first-time strike at goal.', true],
+    [/Dismantle — an invisible blade slices through everything\./, 'Kaiser Dribble — he glides through the whole defence.', true],
+    [/You can see everything\. You can feel everything\. You cannot do anything\./, 'You can see the whole play. You can feel the rhythm. You cannot touch the ball.', true],
+    [/The Shrine is open\. Every cut lands\. You cannot do anything\./, 'The Stadium is open. Every shot lands. You cannot touch the ball.', true],
+    [/\[0 Damage - Blocked by Infinity\]/, '[0 Damage - Blocked by Spatial Awareness]', true],
+    [/\[ACTIONS LOCKED\]/, '[OUT OF PLAY]', true],
+    [/\[Passive Active: Infinity\]/, '[Passive Active: Spatial Awareness]', true],
+    [/^LOCKED$/, 'MARKED', true],
+    [/^YOU CAN SEE EVERYTHING\.$/, 'WHAT A PLAY.', true], [/^YOU CANNOT DO ANYTHING\.$/, 'OFFSIDE — TRY AGAIN.', true],
+    [/^Infinity cannot be broken here[^]*$/, 'Isagi’s awareness cannot be broken here — this match is built to be lost.', true],
+    [/^Sukuna.s trial · Special Grade$/, 'Kaiser’s Duel · World-class', true],
+    [/Cleave — rapid cuts shred Gojo\. Cursed Energy Debris ×(\d+)\./, 'Magic — a curling shot bends past Isagi. Pressure ×$1.'],
+    [/Dismantle — the blades detonate (\d+) Debris for bonus damage!/, 'Kaiser Dribble — he cashes in $1 Pressure for bonus damage!'],
+    [/Dismantle — an invisible blade sweeps the field\./, 'Kaiser Dribble — he glides across the field.'],
+    [/DEBRIS ×(\d+) DETONATED/, 'PRESSURE ×$1 CASHED IN'],
+    [/Fūga — “Open\.”/, 'Kaiser Impact — “Impact.”', true],
+    [/^Rapid close-range cuts\.[^]*$/, 'Curling shot. +1 Pressure', true],
+    [/^Wide-area cut\.[^]*$/, 'Long glide. Cashes in Pressure for bonus damage', true],
+    [/^Divine Flame — “Open”$/, 'Signature strike — “Impact”', true],
+    [/^Domain Expansion — sure-hit cuts \(once\)$/, 'Stadium — sure-hit shots (once)', true],
+    [/^Infinity held$/, 'Defence held', true],
+    [/^KNOW YOUR PLACE\.$/, 'THE EMPEROR SCORES.', true], [/^EVERY CUT HAS LANDED\.$/, 'EVERY SHOT HAS LANDED.', true], [/^GOJO IS ASH\.$/, 'GOAL!', true],
+    [/^YOU FELL\.$/, 'OFFSIDE.', true],
+    [/^Fūga — and nothing remained[^]*$/, 'Kaiser Impact — and the rival’s health bar is empty.', true],
+    [/^Alternate Cleave and Dismantle to charge Fūga[^]*$/, 'Alternate Magic and Kaiser Dribble to charge Kaiser Impact before Isagi wears you down.', true],
+    [/^The King of Curses cannot be beaten here[^]*$/, 'The Emperor cannot be beaten here — this match is built to be lost.', true],
+    [/^The Shrine closes\.$/, 'The Stadium closes.', true],
+    [/^■ 開$/, '⚽ 撃', true], [/^\(Open\)$/, '(Impact)', true],
+    [/領域展開/g, 'ブルーロック'], [/伏魔御廚子/g, '皇帝の舞台'],
+    // names (last, so the sentences above stay intact)
+    [/Malevolent Shrine/g, 'Emperor’s Stadium'], [/MALEVOLENT SHRINE/g, 'EMPEROR’S STADIUM'],
+    [/Fukuma Mizushi/g, 'Emperor’s Stage'], [/Muryōkūsho/g, 'Flow'],
+    [/Slaughter Technique Matrix/g, 'Emperor Weapon Matrix'], [/Limitless Paradox Matrix/g, 'Ego Weapon Matrix'],
+    [/Reverse Cursed Technique/g, 'Emperor’s Composure'], [/Cursed Energy Debris/g, 'Pressure'], [/Debris/g, 'Pressure'],
+    [/Cleave/g, 'Magic'], [/CLEAVE/g, 'MAGIC'], [/Dismantle/g, 'Kaiser Dribble'], [/DISMANTLE/g, 'KAISER DRIBBLE'],
+    [/F[ūu]ga/g, 'Kaiser Impact'], [/F[ŪU]GA/g, 'KAISER IMPACT'],
+    [/King of Curses/g, 'The Emperor'], [/Four Eyes/g, 'Emperor’s Eyes'], [/Six Eyes/g, 'Metavision'],
+    [/^Limitless$/, 'Ego', true], [/^Domain$/, 'The Field', true], [/^Shrine$/, 'Magic', true],
+    [/Lapse: Blue/g, 'Predator Instinct'], [/Reversal: Red/g, 'Direct Shot'],
+    [/Hollow Purple/g, 'Eat or Be Eaten'], [/HOLLOW PURPLE/g, 'EAT OR BE EATEN'],
+    [/Infinite Void/g, 'Flow State'], [/INFINITE VOID/g, 'FLOW STATE'],
+    [/Spacial Disorientation/g, 'Lost the Ball'], [/\[Shredded\]/g, '[Outplayed]'],
+    [/Ryomen Sukuna/g, 'Michael Kaiser'], [/RYOMEN SUKUNA/g, 'MICHAEL KAISER'], [/Satoru Gojo/g, 'Yoichi Isagi'], [/SATORU GOJO/g, 'YOICHI ISAGI'],
+    [/Sukuna/g, 'Kaiser'], [/Gojo/g, 'Isagi']
+  ];
+
+  // kindness + Blue Lock: Kaiser is the gentle Kindness Emperor, Isagi the silly (harmless) villain; anything not listed falls back to BL_RULES
+  var BLK_RULES = [
+    [/^GOJO · CODEX$/, 'ISAGI · SILLY VILLAIN FILE', true],
+    [/^SUKUNA · CODEX$/, 'KAISER · KINDNESS FILE', true],
+    [/^The Strongest$/, 'The Silly Villain', true],
+    [/^King of Curses$/, 'The Kindness Emperor', true],
+    [/^五条悟 · The Strongest$/, '潔世一 · Silly Villain', true],
+    [/^両面宿儺 · King of Curses$/, 'ミヒャエル・カイザー · Kindness Emperor', true],
+    [/^Digital Codex · File /, function () { return sk() ? 'Kindness Codex · File ' : 'Villain Codex · File '; }, true],
+    [/^Crimson red$/, 'Rosy pink', true],
+    [/The King of Curses\. Four arms[^]*?through /, 'The Kindness Emperor. A warm smile, a gentle touch and a very big heart. Kind passes through ', true],
+    [/^, a Divine Flame arrow called $/, ', a heartwarming finishing touch called ', true],
+    [/^, and a domain with no barrier — the $/, ', and a cozy stadium with no walls — the ', true],
+    [/The strongest jujutsu sorcerer\. Absolute perception through the /, 'The silliest striker in Blue Lock. Suspicious squinting through ', true],
+    [/^, god-like control of space through $/, ', a sneaky feel for the half-time snack box through ', true],
+    [/^, and a domain that shows its victim everything — and lets them do nothing\.$/, ', and a Flow State full of petty crimes — mostly hogging the ball and eating the last orange slice.', true],
+    [/^Malice Incarnate$/, 'Kindness Incarnate', true],
+    [/^Passive Perception$/, 'Passive Snooping', true],
+    [/^Sukuna watches the world[^]*$/, 'Kaiser reads the whole pitch with kind eyes — he spots a teammate who needs a pass, a hug or a snack before they ask. He treats every match as a chance to make someone smile.', true],
+    [/^The Six Eyes let Gojo see[^]*$/, 'Metavision lets Isagi spot exactly where the last orange slice is hiding. Nothing in the half-time snack box is hidden from him, and the readout never stops running — he squints suspiciously at every cooler, all day long.', true],
+    [/^His perception feeds his ego[^]*$/, 'His vision feeds his kindness: he notices a bad day before the whistle even blows.', true],
+    [/^The same perception is what makes Infinity sustainable[^]*$/, 'The same awareness is how he spots an unguarded water bottle from across the pitch, effortlessly.', true],
+    [/^Cursed-energy output$/, 'Kindness output', true],
+    [/^Overwhelming reserves[^]*$/, 'Endless warmth — the Kindness Emperor gives and gives without ever running out.', true],
+    [/^Slash precision$/, 'Compliment accuracy', true],
+    [/^Cleave adjusts to the toughness[^]*$/, 'Every compliment lands exactly where it is needed, like a perfect pass.', true],
+    [/^Combat instinct$/, 'Patience', true],
+    [/^A thousand years of battle[^]*$/, 'A thousand training sessions of waiting politely. He never rushes anyone, and always lets them finish talking.', true],
+    [/^Technique versatility$/, 'Hug radius', true],
+    [/^Slashes, Divine Flame[^]*$/, 'Two arms, one big heart. Everything in range gets a warm, fluffy hug.', true],
+    [/^Cursed-energy resolution$/, 'Orange-slice resolution', true],
+    [/^Perceives cursed energy at an atomic level[^]*$/, 'Spots a crumb of the half-time snack from three rooms away.', true],
+    [/^Passive processing speed$/, 'Sneakiness speed', true],
+    [/^Continuous automatic computation of Infinity[^]*$/, 'Plans tiny mischief automatically, with almost no effort wasted.', true],
+    [/^Tracking$/, 'Water-bottle tracking', true],
+    [/^Omnidirectional awareness[^]*$/, 'Always knows exactly where the nearest unguarded water bottle is.', true],
+    [/^Technique efficiency$/, 'Prank efficiency', true],
+    [/^Reduces cursed-energy cost[^]*$/, 'Reduces effort and brings fine control to extreme tiny crimes.', true],
+    [/^Limitless Paradox Matrix$/, 'Ego Mischief Matrix', true],
+    [/^Slaughter Technique Matrix$/, 'Kindness Weapon Matrix', true],
+    [/^Sukuna heals wounds mid-fight[^]*$/, 'Kaiser heals hurt feelings with warm, gentle energy, patching up anyone who had a rough match. Where others walk away from a problem, he simply stays and helps.', true],
+    [/^Cleave is a brutal mesh[^]*$/, 'Magic is a soft curling pass that bends around everyone and lands exactly where a teammate needs it. Kaiser shapes the ball’s flight with a gentle touch, and everyone cheers.', true],
+    [/^Dismantle is an invisible, flying blade[^]*$/, 'Kaiser Dribble glides across the pitch like a warm breeze, with a smile and a wave for every defender he passes.', true],
+    [/^Fuga is a Divine Flame[^]*$/, 'Kaiser Impact is a heartwarming finish: he strikes the ball gently, it rolls into the net, and the whole stadium gets a group hug.', true],
+    [/^Domain Absolute State$/, 'Flow State of Petty Crimes', true],
+    [/^Paralysed$/, 'Giggling', true], [/^Carved$/, 'Comforted', true],
+    [/^Sure-hit$/, function () { return sk() ? 'Sure-hug' : 'Sure-giggle'; }, true],
+    [/^Malevolent Shrine manifests a temple[^]*$/, 'Emperor’s Stadium raises a cozy arena of cushions, lanterns and tea at half-time. Unlike most set-pieces it has no walls, so it can spread across the entire pitch — and every pass inside it is guaranteed to land warmly.', true],
+    [/^Domain Expansion renders the inside[^]*$/, 'Flow State of Petty Crimes shows the whole pitch in Isagi’s mind. Every tiny crime — a hogged ball, a stolen water bottle, a missing orange slice — is shown to the target all at once, with a very smug grin.', true],
+    [/^Nothing inside survives untouched: the victim is $/, 'Everyone inside leaves smiling: the visitor is ', true],
+    [/^sliced apart from every direction at once$/, 'hugged from every direction at once', true],
+    [/^\. It is not calm — it is raw, wasteful and absolute\.$/, '. It is not scary — it is warm, fluffy and absolutely lovely.', true],
+    [/^The mind is overwhelmed, so the victim $/, 'The mind is distracted, so the player ', true],
+    [/^can see and feel everything, but cannot do anything$/, 'giggles and forgives him immediately', true],
+    [/^\. It is not violent — it is calm, total and inescapable\.$/, '. It is not violent — it is silly, total and a little sticky.', true],
+    [/^Sure-hit slashes[^]*$/, 'Sure-hug passes — applied continuously to everything in range', true],
+    [/^No barrier: the domain is open[^]*$/, 'No walls: the stadium is open and welcoming', true],
+    [/^Countered only by domain-level defences[^]*$/, 'Countered only by a stronger hug', true],
+    [/^Sure-hit effect — applied[^]*$/, 'Sure-giggle effect — applied the instant Flow State opens', true],
+    [/^Cognitive paralysis[^]*$/, 'Mild distraction: everyone forgets what they were saying', true],
+    [/^Domain Expansion$/, function () { return sk() ? 'Open the Tea Room' : 'Commit a Petty Crime'; }, true],
+    [/^Expanding…$/, 'Giggling…', true],
+    [/^Target carved\. Nothing remains\.$/, 'Visitor comforted. Everyone has tea.', true],
+    [/^Target locked — sees everything\. Moves nothing\.$/, 'Target giggling — forgives everything. Moves nothing.', true]
+  ].concat(BL_RULES);
+
+  window.BlueLockRules = function () {
+    if (!body.classList.contains('bluelock')) return null;
+    return body.classList.contains('kindness') ? BLK_RULES : BL_RULES;
+  };
+
+  // swap the pictures: Gojo -> Isagi, Sukuna -> Kaiser (originals kept in data-attributes so "off" can restore them)
+  var IMG = { 'gojo.jpg': 'isagi.jpg', 'gojo full body.jpg': 'isagi.jpg', 'sukuna.jpg': 'kaiser.jpg' };
+  var ALT = { 'Satoru Gojo': 'Yoichi Isagi', 'Satoru Gojo, full body': 'Yoichi Isagi', 'Ryomen Sukuna': 'Michael Kaiser' };
+  function swapImg(img) {
+    var s = img.getAttribute('src'), a = img.getAttribute('alt');
+    if (IMG[s]) { img.setAttribute('data-bl-src', s); img.setAttribute('src', IMG[s]); }
+    if (ALT[a]) { img.setAttribute('data-bl-alt', a); img.setAttribute('alt', ALT[a]); }
+  }
+  function swapAll(root) { if (root.tagName === 'IMG') swapImg(root); else root.querySelectorAll('img').forEach(swapImg); }
+  var io = new MutationObserver(function (list) {
+    list.forEach(function (m) {
+      if (m.type === 'attributes') swapImg(m.target);
+      else m.addedNodes.forEach(function (n) { if (n.nodeType === 1) swapAll(n); });
+    });
+  });
+  function startImages() { swapAll(body); io.observe(body, { childList: true, subtree: true, attributes: true, attributeFilter: ['src', 'alt'] }); }
+  function stopImages() {
+    io.disconnect();
+    document.querySelectorAll('img[data-bl-src],img[data-bl-alt]').forEach(function (img) {
+      if (img.hasAttribute('data-bl-src')) { img.setAttribute('src', img.getAttribute('data-bl-src')); img.removeAttribute('data-bl-src'); }
+      if (img.hasAttribute('data-bl-alt')) { img.setAttribute('alt', img.getAttribute('data-bl-alt')); img.removeAttribute('data-bl-alt'); }
+    });
+  }
+
+  var rise = document.querySelector('#bl-root .rise');
+  for (var i = 0; i < 14; i++) {
+    var b = document.createElement('span');
+    b.textContent = BALLS[i % BALLS.length];
+    b.style.cssText = 'left:' + rand(0, 96) + '%;font-size:' + rand(20, 34) + 'px;animation-duration:' + rand(12, 22) + 's;animation-delay:-' + rand(0, 20) + 's;--sx:' + rand(-60, 60) + 'px;--r:' + rand(-360, 360) + 'deg';
+    rise.appendChild(b);
+  }
+
+  function setBL(on, save) {
+    body.classList.toggle('bluelock', on);
+    toggle.textContent = '⚽ Blue Lock: ' + (on ? 'ON' : 'OFF');
+    toggle.setAttribute('aria-pressed', on);
+    var finger = document.getElementById('sukuna-finger');
+    var E = window.KindEngine;
+    if (on) {
+      body.classList.remove('party');                // the party button is replaced while Blue Lock is installed
+      if (finger) finger.title = 'Kaiser’s Ball';
+      startImages();
+      if (E) E.start();
+    } else {
+      var p = null;
+      try { p = localStorage.getItem('party-mode'); } catch (e) {}
+      var partyOn = p !== 'off', pt = document.getElementById('party-toggle');
+      body.classList.toggle('party', partyOn);
+      if (pt) { pt.textContent = '🪩 Party: ' + (partyOn ? 'ON' : 'OFF'); pt.setAttribute('aria-pressed', partyOn); }
+      if (finger) finger.title = body.classList.contains('kindness') ? 'Sukuna\'s Hug Button' : 'Sukuna\'s Finger';
+      stopImages();
+      if (E) { if (body.classList.contains('kindness')) E.refresh(); else E.stop(); }
+      greet.hidden = true;
+    }
+    if (save) { try { localStorage.setItem(KEY, on ? 'on' : 'off'); } catch (e) {} }
+  }
+
+  var saved = null;
+  try { saved = localStorage.getItem(KEY); } catch (e) {}
+  var startOn = saved !== 'off';
+  setBL(startOn, false);
+  if (startOn) {
+    ['party-greet', 'kind-greet'].forEach(function (id) { var g = document.getElementById(id); if (g) g.hidden = true; });
+    document.getElementById('bl-greet-sub').textContent = SUBS[Math.floor(Math.random() * SUBS.length)];
+    greet.hidden = false;
+  }
+  toggle.addEventListener('click', function () { setBL(!body.classList.contains('bluelock'), true); });
+  function closeGreet() { greet.hidden = true; }
+  document.getElementById('bl-greet-ok').addEventListener('click', closeGreet);
+  document.addEventListener('keydown', function (e) { if (e.key === 'Escape' && !greet.hidden) closeGreet(); });
+})();
+// BLUELOCK:END
 </script>
 </body>
 </html>
