@@ -1784,6 +1784,24 @@ function Arena(props) {
   return document.body.classList.contains('sukuna-mode') ? <SukunaArena {...props} /> : <GojoArena {...props} />;
 }
 
+// SECTION-1:START
+function CustomSection1() {
+  // edit the text here
+  const txt = {
+    kicker: 'Totally fair and balanced',
+    title: 'My Favourite Characters',
+    body: 'Bush Camper has been sitting in the same bush since the match started and still calls it "strategy". Potential Man has so much potential that he has never once needed to use it. Kitkat is always on a break, so nobody has ever seen a snack, a level or a plan actually finished.',
+  };
+  return (
+    <Section id="custom-1" kicker={txt.kicker} title={txt.title}>
+      <Card>
+        <p className="text-lg text-white/90 leading-relaxed text-left">{txt.body}</p>
+      </Card>
+    </Section>
+  );
+}
+// SECTION-1:END
+
 function Footer() {
   return <footer className="text-center py-12 px-5 font-display text-[11px] tracking-[.4em] uppercase text-white/50"><p>Made by Porsche</p><p className="mt-3">Share the link with friends</p></footer>;
 }
@@ -1803,7 +1821,7 @@ function App() {
       <div className="vignette" aria-hidden="true" />
       <div id="page" className="reveal relative z-10" style={{ opacity: shown ? 1 : 0, display: arenaUp ? 'none' : undefined }}>
         <Header />
-        <main><Hero /><EyesSection /><LimitlessSection /><DomainSection /></main>
+        <main><Hero /><EyesSection /><LimitlessSection /><DomainSection /><CustomSection1 /></main>
         <Footer />
       </div>
       {shown && event === 'idle' && <HiddenOrbs onCollide={(pt) => { setAt(pt); setEvent('hollow'); }} />}
